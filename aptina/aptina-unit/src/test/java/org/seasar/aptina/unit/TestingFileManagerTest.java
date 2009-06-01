@@ -41,7 +41,8 @@ public class TestingFileManagerTest extends TestCase {
         final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
         final StandardJavaFileManager standardFileManager = compiler
                 .getStandardFileManager(diagnostics, null, null);
-        testingFileManager = new TestingJavaFileManager(standardFileManager, null);
+        testingFileManager = new TestingJavaFileManager(standardFileManager,
+                null);
     }
 
     /**

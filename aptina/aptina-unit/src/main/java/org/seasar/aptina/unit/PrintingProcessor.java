@@ -41,13 +41,13 @@ import javax.lang.model.util.ElementScanner6;
  * {@link AptinaTestCase#addProcessor(Processor...)} にこのクラスを加えることで， コンパイル対象の
  * {@link Element} 階層を確認することができます．
  * </p>
- *
+ * 
  * <p>
  * 次のサンプルは， <code>src/test/java</code> フォルダにある <code>TestSource.java</code>
  * をコンパイルし， <code>PrintingProcessor</code> で {@link Element}
  * 階層をコンソールに出力するテストクラスです．
  * </p>
- *
+ * 
  * <pre>
  * public class XxxProcessorTest extends AptinaTestCase {
  *
@@ -70,7 +70,7 @@ import javax.lang.model.util.ElementScanner6;
  *     }
  * }
  * </pre>
- *
+ * 
  * @author koichik
  */
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
@@ -117,7 +117,7 @@ public class PrintingProcessor extends AbstractProcessor {
 
     /**
      * {@link Element} の階層をトラバースしてコンソールに出力する {@link ElementVisitor} です．
-     *
+     * 
      * @author koichik
      */
     class PrintingVisitor extends ElementScanner6<Void, Void> {
@@ -179,7 +179,7 @@ public class PrintingProcessor extends AbstractProcessor {
 
     /**
      * {@link Element}が開始されたことを出力します．
-     *
+     * 
      * @param e
      *            {@link Element}
      */
@@ -193,7 +193,7 @@ public class PrintingProcessor extends AbstractProcessor {
 
     /**
      * {@link Element}が終了したことを出力します．
-     *
+     * 
      * @param e
      *            {@link Element}
      */
@@ -204,7 +204,7 @@ public class PrintingProcessor extends AbstractProcessor {
 
     /**
      * インデントを出力します．
-     *
+     * 
      * @param depth
      *            インデントの深さ
      */

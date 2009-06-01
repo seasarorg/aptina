@@ -32,7 +32,7 @@ import javax.tools.JavaFileObject.Kind;
 
 /**
  * {@link Processor}をテストする環境用の{@link JavaFileManager}の実装です。
- *
+ * 
  * @author koichik
  */
 class TestingJavaFileManager extends
@@ -46,7 +46,7 @@ class TestingJavaFileManager extends
 
     /**
      * インスタンスを構築します。
-     *
+     * 
      * @param fileManager
      *            移譲先となる{@link StandardJavaFileManager}
      * @param charset
@@ -102,7 +102,7 @@ class TestingJavaFileManager extends
 
     /**
      * 生成された {@link JavaFileObject} を返します．
-     *
+     * 
      * @param location
      *            ロケーション
      * @param className

@@ -19,8 +19,10 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
+import javax.lang.model.element.TypeElement;
+
 /**
- *
+ * 
  * @author koichik
  */
 public class AptinaTestCaseTest extends AptinaTestCase {
@@ -68,10 +70,91 @@ public class AptinaTestCaseTest extends AptinaTestCase {
         assertFalse(getDiagnostics().isEmpty());
         assertNotNull(getProcessingEnvironment());
         assertNotNull(getTypeElement(TestSource.class));
+        assertNull(getTypeElement("Hoge"));
         assertNotNull(getTypeMirror(TestSource.class));
+        assertNull(getTypeMirror("Hoge"));
         assertTrue(processor.called);
         assertEqualsGeneratedSource("package foo.bar;public class Baz {}",
                 "foo.bar.Baz");
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetFieldElement() throws Exception {
+        addCompilationUnit(TestSource.class);
+
+        compile();
+
+        final TypeElement typeElement = getTypeElement(TestSource.class);
+        assertNotNull(typeElement);
+        assertNotNull(getFieldElement(typeElement, "aaa"));
+        assertNotNull(getFieldElement(typeElement, "bbb"));
+        assertNull(getFieldElement(typeElement, "zzz"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetConstructorElement() throws Exception {
+        addCompilationUnit(TestSource.class);
+
+        compile();
+
+        final TypeElement typeElement = getTypeElement(TestSource.class);
+        assertNotNull(typeElement);
+
+        assertNotNull(getConstructorElement(typeElement));
+
+        assertNotNull(getConstructorElement(typeElement, int.class));
+        assertNotNull(getConstructorElement(typeElement, String[].class));
+        assertNull(getConstructorElement(typeElement, TestSource.class));
+
+        assertNotNull(getConstructorElement(typeElement, "int"));
+        assertNotNull(getConstructorElement(typeElement, "java.lang.String[]"));
+        assertNull(getConstructorElement(typeElement, "java.lang.Object"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetMethodElement() throws Exception {
+        addCompilationUnit(TestSource.class);
+
+        compile();
+
+        final TypeElement typeElement = getTypeElement(TestSource.class);
+        assertNotNull(typeElement);
+
+        assertNotNull(getMethodElement(typeElement, "hoge"));
+        assertNull(getMethodElement(typeElement, "unknown"));
+
+        assertNotNull(getMethodElement(typeElement, "setAaa", int.class));
+        assertNotNull(getMethodElement(typeElement, "setBbb", String[].class));
+        assertNull(getMethodElement(typeElement, "unknown", TestSource.class));
+
+        assertNotNull(getMethodElement(typeElement, "setAaa", "int"));
+        assertNotNull(getMethodElement(typeElement, "setBbb",
+                "java.lang.String[]"));
+        assertNull(getMethodElement(typeElement, "unknown", "java.lang.Object"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetTypeMirror() throws Exception {
+        final TestProcessor processor = new TestProcessor();
+        addProcessor(processor);
+        addCompilationUnit(TestSource.class);
+
+        compile();
+        assertNotNull(getTypeMirror(boolean.class));
+        assertNotNull(getTypeMirror(int[].class));
+        assertNotNull(getTypeMirror(String[][].class));
+
+        assertNotNull(getTypeMirror("boolean"));
+        assertNotNull(getTypeMirror("java.lang.String[]"));
+        assertNotNull(getTypeMirror(String[][].class.getName()));
     }
 
     /**

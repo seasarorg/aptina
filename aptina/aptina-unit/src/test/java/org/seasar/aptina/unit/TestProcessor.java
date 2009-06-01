@@ -15,7 +15,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.Diagnostic.Kind;
 
 /**
- *
+ * 
  * @author koichik
  */
 @SupportedSourceVersion(SourceVersion.RELEASE_6)

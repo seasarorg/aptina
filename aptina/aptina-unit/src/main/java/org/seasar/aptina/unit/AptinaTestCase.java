@@ -22,12 +22,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -37,8 +40,12 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
@@ -67,19 +74,19 @@ import junit.framework.TestCase;
  * </dt>
  * <dd>
  * <ul>
- * <li>{@link #setLocale(String)}</li>
  * <li>{@link #setLocale(Locale)}</li>
- * <li>{@link #setCharset(String)}</li>
+ * <li>{@link #setLocale(String)}</li>
  * <li>{@link #setCharset(Charset)}</li>
+ * <li>{@link #setCharset(String)}</li>
  * <li>{@link #setOut(Writer)}</li>
- * <li>{@link #addSourcePath(String...)}</li>
  * <li>{@link #addSourcePath(File...)}</li>
+ * <li>{@link #addSourcePath(String...)}</li>
  * <li>{@link #addOption(String...)}</li>
  * <li>{@link #addProcessor(Processor...)}</li>
- * <li>{@link #addCompilationUnit(String)}</li>
  * <li>{@link #addCompilationUnit(Class)}</li>
- * <li>{@link #addCompilationUnit(String, CharSequence)}</li>
+ * <li>{@link #addCompilationUnit(String)}</li>
  * <li>{@link #addCompilationUnit(Class, CharSequence)}</li>
+ * <li>{@link #addCompilationUnit(String, CharSequence)}</li>
  * </ul>
  * </dd>
  * <dt>{@link #compile()} 後に以下のメソッドを呼び出して情報を取得することができます．</dt>
@@ -91,37 +98,47 @@ import junit.framework.TestCase;
  * <li>{@link #getElementUtils()}</li>
  * <li>{@link #getTypeUtils()}</li>
  * <li>{@link #getTypeElement(Class)}</li>
+ * <li>{@link #getTypeElement(String)}</li>
+ * <li>{@link #getFieldElement(TypeElement, Field)}</li>
+ * <li>{@link #getFieldElement(TypeElement, String)}</li>
+ * <li>{@link #getConstructorElement(TypeElement)}</li>
+ * <li>{@link #getConstructorElement(TypeElement, Class...)}</li>
+ * <li>{@link #getConstructorElement(TypeElement, String...)}</li>
+ * <li>{@link #getMethodElement(TypeElement, String)}</li>
+ * <li>{@link #getMethodElement(TypeElement, String, Class...)}</li>
+ * <li>{@link #getMethodElement(TypeElement, String, String...)}</li>
  * <li>{@link #getTypeMirror(Class)}</li>
- * <li>{@link #getGeneratedSource(String)}</li>
+ * <li>{@link #getTypeMirror(String)}</li>
  * <li>{@link #getGeneratedSource(Class)}</li>
+ * <li>{@link #getGeneratedSource(String)}</li>
  * </ul>
  * </dd>
- * <dt>{@link #compile()} 後に以下のメソッドを呼び出して検証することができます．</dt>
+ * <dt>{@link #compile()} 後に以下のメソッドを呼び出して生成されたソースの内容を検証することができます．</dt>
  * <dd>
  * <ul>
- * <li>{@link #assertEqualsGeneratedSource(CharSequence, String)}</li>
  * <li>{@link #assertEqualsGeneratedSource(CharSequence, Class)}</li>
- * <li>{@link #assertEqualsGeneratedSourceWithFile(String, String)}</li>
- * <li>{@link #assertEqualsGeneratedSourceWithFile(String, Class)}</li>
- * <li>{@link #assertEqualsGeneratedSourceWithFile(File, String)}</li>
+ * <li>{@link #assertEqualsGeneratedSource(CharSequence, String)}</li>
  * <li>{@link #assertEqualsGeneratedSourceWithFile(File, Class)}</li>
- * <li>{@link #assertEqualsGeneratedSourceWithResource(String, String)}</li>
- * <li>{@link #assertEqualsGeneratedSourceWithResource(String, Class)}</li>
- * <li>{@link #assertEqualsGeneratedSourceWithResource(URL, String)}</li>
+ * <li>{@link #assertEqualsGeneratedSourceWithFile(File, String)}</li>
+ * <li>{@link #assertEqualsGeneratedSourceWithFile(String, Class)}</li>
+ * <li>{@link #assertEqualsGeneratedSourceWithFile(String, String)}</li>
  * <li>{@link #assertEqualsGeneratedSourceWithResource(URL, Class)}</li>
+ * <li>{@link #assertEqualsGeneratedSourceWithResource(URL, String)}</li>
+ * <li>{@link #assertEqualsGeneratedSourceWithResource(String, Class)}</li>
+ * <li>{@link #assertEqualsGeneratedSourceWithResource(String, String)}</li>
  * </ul>
  * </dd>
  * </dl>
  * <p>
  * {@link #compile()} を呼び出した後に状態をリセットしてコンパイル前の状態に戻すには， {@link #reset()} を呼び出します．
  * </p>
- *
+ * 
  * <p>
  * 次のサンプルは， <code>src/test/java</code> フォルダにある <code>TestSource.java</code>
  * をコンパイルし， <code>TestProcessor</code> が生成する <code>foo.bar.Baz</code>
  * クラスのソースを検証するテストクラスです．
  * </p>
- *
+ * 
  * <pre>
  * public class XxxProcessorTest extends AptinaTestCase {
  *
@@ -149,7 +166,7 @@ import junit.framework.TestCase;
  *     }
  * }
  * </pre>
- *
+ * 
  * @author koichik
  */
 public abstract class AptinaTestCase extends TestCase {
@@ -183,6 +200,19 @@ public abstract class AptinaTestCase extends TestCase {
 
     Boolean compiledResult;
 
+    final Map<String, TypeKind> primitiveTypes = new HashMap<String, TypeKind>();
+    {
+        primitiveTypes.put(void.class.getName(), TypeKind.VOID);
+        primitiveTypes.put(boolean.class.getName(), TypeKind.BOOLEAN);
+        primitiveTypes.put(char.class.getName(), TypeKind.CHAR);
+        primitiveTypes.put(byte.class.getName(), TypeKind.BYTE);
+        primitiveTypes.put(short.class.getName(), TypeKind.SHORT);
+        primitiveTypes.put(int.class.getName(), TypeKind.INT);
+        primitiveTypes.put(long.class.getName(), TypeKind.LONG);
+        primitiveTypes.put(float.class.getName(), TypeKind.FLOAT);
+        primitiveTypes.put(double.class.getName(), TypeKind.DOUBLE);
+    }
+
     /**
      * インスタンスを構築します．
      */
@@ -191,7 +221,7 @@ public abstract class AptinaTestCase extends TestCase {
 
     /**
      * インスタンスを構築します．
-     *
+     * 
      * @param name
      *            名前
      */
@@ -204,21 +234,7 @@ public abstract class AptinaTestCase extends TestCase {
      * <p>
      * 設定されなかった場合はプラットフォームデフォルトのロケールが使われます．
      * </p>
-     *
-     * @param locale
-     *            ロケール
-     * @see Locale#getDefault()
-     */
-    protected void setLocale(final String locale) {
-        setLocale(new Locale(locale));
-    }
-
-    /**
-     * ロケールを設定します．
-     * <p>
-     * 設定されなかった場合はプラットフォームデフォルトのロケールが使われます．
-     * </p>
-     *
+     * 
      * @param locale
      *            ロケール
      * @see Locale#getDefault()
@@ -228,17 +244,18 @@ public abstract class AptinaTestCase extends TestCase {
     }
 
     /**
-     * 文字セットを設定します．
+     * ロケールを設定します．
      * <p>
-     * 設定されなかった場合はプラットフォームデフォルトの文字セットが使われます．
+     * 設定されなかった場合はプラットフォームデフォルトのロケールが使われます．
      * </p>
-     *
-     * @param charset
-     *            文字セット
-     * @see Charset#defaultCharset()
+     * 
+     * @param locale
+     *            ロケール
+     * @see Locale#getDefault()
      */
-    protected void setCharset(final String charset) {
-        setCharset(Charset.forName(charset));
+    protected void setLocale(final String locale) {
+        checkNotEmpty("locale", locale);
+        setLocale(new Locale(locale));
     }
 
     /**
@@ -246,7 +263,7 @@ public abstract class AptinaTestCase extends TestCase {
      * <p>
      * 設定されなかった場合はプラットフォームデフォルトの文字セットが使われます．
      * </p>
-     *
+     * 
      * @param charset
      *            文字セット
      * @see Charset#defaultCharset()
@@ -256,11 +273,26 @@ public abstract class AptinaTestCase extends TestCase {
     }
 
     /**
+     * 文字セットを設定します．
+     * <p>
+     * 設定されなかった場合はプラットフォームデフォルトの文字セットが使われます．
+     * </p>
+     * 
+     * @param charset
+     *            文字セット
+     * @see Charset#defaultCharset()
+     */
+    protected void setCharset(final String charset) {
+        checkNotEmpty("charset", charset);
+        setCharset(Charset.forName(charset));
+    }
+
+    /**
      * コンパイラがメッセージを出力する{@link Writer}を設定します．
      * <p>
      * 設定されなかった場合は標準エラーが使われます．
      * </p>
-     *
+     * 
      * @param out
      *            コンパイラがメッセージを出力する{@link Writer}
      */
@@ -270,12 +302,22 @@ public abstract class AptinaTestCase extends TestCase {
 
     /**
      * コンパイル時に参照するソースパスを追加します．
-     *
+     * 
+     * @param sourcePaths
+     *            コンパイル時に参照するソースパスの並び
+     */
+    protected void addSourcePath(final File... sourcePaths) {
+        checkNotEmpty("sourcePaths", sourcePaths);
+        this.sourcePaths.addAll(Arrays.asList(sourcePaths));
+    }
+
+    /**
+     * コンパイル時に参照するソースパスを追加します．
+     * 
      * @param sourcePaths
      *            コンパイル時に参照するソースパスの並び
      */
     protected void addSourcePath(final String... sourcePaths) {
-        checkNotNull("sourcePaths", sourcePaths);
         checkNotEmpty("sourcePaths", sourcePaths);
         for (final String path : sourcePaths) {
             this.sourcePaths.add(new File(path));
@@ -283,37 +325,23 @@ public abstract class AptinaTestCase extends TestCase {
     }
 
     /**
-     * コンパイル時に参照するソースパスを追加します．
-     *
-     * @param sourcePaths
-     *            コンパイル時に参照するソースパスの並び
-     */
-    protected void addSourcePath(final File... sourcePaths) {
-        checkNotNull("sourcePaths", sourcePaths);
-        checkNotEmpty("sourcePaths", sourcePaths);
-        this.sourcePaths.addAll(Arrays.asList(sourcePaths));
-    }
-
-    /**
      * コンパイラオプションを追加します．
-     *
+     * 
      * @param options
      *            形式のコンパイラオプションの並び
      */
     protected void addOption(final String... options) {
-        checkNotNull("options", options);
         checkNotEmpty("options", options);
         this.options.addAll(Arrays.asList(options));
     }
 
     /**
      * 注釈を処理する{@link Processor}を追加します．
-     *
+     * 
      * @param processors
      *            注釈を処理する{@link Processor}の並び
      */
     protected void addProcessor(final Processor... processors) {
-        checkNotNull("processors", processors);
         checkNotEmpty("processors", processors);
         this.processors.addAll(Arrays.asList(processors));
     }
@@ -323,21 +351,7 @@ public abstract class AptinaTestCase extends TestCase {
      * <p>
      * 指定されたクラスのソースはソースパス上に存在していなければなりません．
      * </p>
-     *
-     * @param className
-     *            コンパイル対象クラスの完全限定名
-     */
-    protected void addCompilationUnit(final String className) {
-        checkNotNull("className", className);
-        compilationUnits.add(new FileCompilationUnit(className));
-    }
-
-    /**
-     * コンパイル対象のクラスを追加します．
-     * <p>
-     * 指定されたクラスのソースはソースパス上に存在していなければなりません．
-     * </p>
-     *
+     * 
      * @param clazz
      *            コンパイル対象クラス
      */
@@ -347,24 +361,22 @@ public abstract class AptinaTestCase extends TestCase {
     }
 
     /**
-     * コンパイル対象のクラスをソースとともに追加します．
-     *
+     * コンパイル対象のクラスを追加します．
+     * <p>
+     * 指定されたクラスのソースはソースパス上に存在していなければなりません．
+     * </p>
+     * 
      * @param className
      *            コンパイル対象クラスの完全限定名
-     * @param source
-     *            ソース
      */
-    protected void addCompilationUnit(final String className,
-            final CharSequence source) {
-        checkNotNull("className", className);
-        checkNotNull("source", source);
-        compilationUnits.add(new InMemoryCompilationUnit(className, source
-                .toString()));
+    protected void addCompilationUnit(final String className) {
+        checkNotEmpty("className", className);
+        compilationUnits.add(new FileCompilationUnit(className));
     }
 
     /**
      * コンパイル対象のクラスをソースとともに追加します．
-     *
+     * 
      * @param clazz
      *            コンパイル対象クラス
      * @param source
@@ -373,13 +385,29 @@ public abstract class AptinaTestCase extends TestCase {
     protected void addCompilationUnit(final Class<?> clazz,
             final CharSequence source) {
         checkNotNull("clazz", clazz);
-        checkNotNull("source", source);
+        checkNotEmpty("source", source);
         addCompilationUnit(clazz.getName(), source);
     }
 
     /**
+     * コンパイル対象のクラスをソースとともに追加します．
+     * 
+     * @param className
+     *            コンパイル対象クラスの完全限定名
+     * @param source
+     *            ソース
+     */
+    protected void addCompilationUnit(final String className,
+            final CharSequence source) {
+        checkNotEmpty("className", className);
+        checkNotEmpty("source", source);
+        compilationUnits.add(new InMemoryCompilationUnit(className, source
+                .toString()));
+    }
+
+    /**
      * コンパイルを実行します．
-     *
+     * 
      * @throws IOException
      *             入出力例外が発生した場合
      */
@@ -405,7 +433,7 @@ public abstract class AptinaTestCase extends TestCase {
 
     /**
      * コンパイラの実行結果を返します．
-     *
+     * 
      * @return コンパイラの実行結果
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
@@ -418,7 +446,7 @@ public abstract class AptinaTestCase extends TestCase {
 
     /**
      * コンパイル中に作成された {@link Diagnostic} のリストを返します．
-     *
+     * 
      * @return コンパイル中に作成された {@link Diagnostic} のリスト
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
@@ -431,7 +459,7 @@ public abstract class AptinaTestCase extends TestCase {
 
     /**
      * {@link ProcessingEnvironment} を返します．
-     *
+     * 
      * @return {@link ProcessingEnvironment}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
@@ -444,7 +472,7 @@ public abstract class AptinaTestCase extends TestCase {
 
     /**
      * {@link Elements} を返します．
-     *
+     * 
      * @return {@link Elements}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
@@ -457,7 +485,7 @@ public abstract class AptinaTestCase extends TestCase {
 
     /**
      * {@link Types} を返します．
-     *
+     * 
      * @return {@link Types}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
@@ -470,10 +498,10 @@ public abstract class AptinaTestCase extends TestCase {
 
     /**
      * クラスに対応する {@link TypeElement} を返します．
-     *
+     * 
      * @param clazz
      *            クラス
-     * @return クラスに対応する{@link TypeElement}
+     * @return クラスに対応する{@link TypeElement}， 存在しない場合は {@link null}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      */
@@ -485,11 +513,242 @@ public abstract class AptinaTestCase extends TestCase {
     }
 
     /**
+     * クラスに対応する {@link TypeElement} を返します．
+     * 
+     * @param className
+     *            クラスの完全限定名
+     * @return クラスに対応する{@link TypeElement}， 存在しない場合は {@link null}
+     * @throws IllegalStateException
+     *             {@link #compile()} が呼び出されていない場合
+     */
+    protected TypeElement getTypeElement(final String className)
+            throws IllegalStateException {
+        checkNotEmpty("className", className);
+        checkCompiled();
+        try {
+            // 仕様では存在しないクラスを引数に Elements#getTypeElement(String) を呼び出すと
+            // null が返されるはずだが， コンパイラの実行が終わった後だと NPE がスローされる
+            return getElementUtils().getTypeElement(className);
+        } catch (final NullPointerException e) {
+            return null;
+        }
+    }
+
+    /**
+     * 型エレメントに定義されたフィールドの変数エレメントを返します．
+     * 
+     * @param typeElement
+     *            型エレメント
+     * @param field
+     *            フィールド
+     * @return 型エレメントに定義されたフィールドの変数エレメント． 存在しない場合は {@literal null}
+     */
+    protected VariableElement getFieldElement(final TypeElement typeElement,
+            final Field field) {
+        checkNotNull("typeElement", typeElement);
+        checkNotNull("field", field);
+        checkCompiled();
+        return getFieldElement(typeElement, field.getName());
+    }
+
+    /**
+     * 型エレメントに定義されたフィールドの変数エレメントを返します．
+     * 
+     * @param typeElement
+     *            型エレメント
+     * @param fieldName
+     *            フィールド名
+     * @return 型エレメントに定義されたフィールドの変数エレメント． 存在しない場合は {@literal null}
+     */
+    protected VariableElement getFieldElement(final TypeElement typeElement,
+            final String fieldName) {
+        checkNotNull("typeElement", typeElement);
+        checkNotEmpty("fieldName", fieldName);
+        checkCompiled();
+        for (final VariableElement variableElement : ElementFilter
+                .fieldsIn(typeElement.getEnclosedElements())) {
+            if (fieldName.equals(variableElement.getSimpleName().toString())) {
+                return variableElement;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 型エレメントに定義されたデフォルトコンストラクタの実行可能エレメントを返します．
+     * 
+     * @param typeElement
+     *            型エレメント
+     * @return 型エレメントに定義されたデフォルトコンストラクタの実行可能エレメント． 存在しない場合は {@literal null}
+     */
+    protected ExecutableElement getConstructorElement(
+            final TypeElement typeElement) {
+        checkNotNull("typeElement", typeElement);
+        checkCompiled();
+        for (final ExecutableElement executableElement : ElementFilter
+                .constructorsIn(typeElement.getEnclosedElements())) {
+            if (executableElement.getParameters().size() == 0) {
+                return executableElement;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 型エレメントに定義されたコンストラクタの実行可能エレメントを返します．
+     * 
+     * @param typeElement
+     *            型エレメント
+     * @param parameterTypes
+     *            引数型の並び
+     * @return 型エレメントに定義されたコンストラクタの実行可能エレメント． 存在しない場合は {@literal null}
+     */
+    protected ExecutableElement getConstructorElement(
+            final TypeElement typeElement, final Class<?>... parameterTypes) {
+        checkNotNull("typeElement", typeElement);
+        checkNotNull("parameterTypes", parameterTypes);
+        checkCompiled();
+        final List<TypeMirror> parameterTypeMirros = toTypeMirrors(parameterTypes);
+        for (final ExecutableElement executableElement : ElementFilter
+                .constructorsIn(typeElement.getEnclosedElements())) {
+            if (isMatchParameterTypes(parameterTypeMirros, executableElement
+                    .getParameters())) {
+                return executableElement;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 型エレメントに定義されたコンストラクタの実行可能エレメントを返します．
+     * <p>
+     * 引数がの型が配列の場合は， 要素型の名前の後に <code>[]</code> を連ねる形式と， <code>[[LString;</code>
+     * のような形式のどちらでも指定することができます．
+     * </p>
+     * 
+     * @param typeElement
+     *            型エレメント
+     * @param parameterTypeNames
+     *            引数の型名の並び
+     * @return 型エレメントに定義されたコンストラクタの実行可能エレメント． 存在しない場合は {@literal null}
+     */
+    protected ExecutableElement getConstructorElement(
+            final TypeElement typeElement, final String... parameterTypeNames) {
+        checkNotNull("typeElement", typeElement);
+        checkNotNull("parameterTypeNames", parameterTypeNames);
+        checkCompiled();
+        final List<TypeMirror> parameterTypeMirros = toTypeMirrors(parameterTypeNames);
+        for (final ExecutableElement executableElement : ElementFilter
+                .constructorsIn(typeElement.getEnclosedElements())) {
+            if (isMatchParameterTypes(parameterTypeMirros, executableElement
+                    .getParameters())) {
+                return executableElement;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 型エレメントに定義されたメソッドの実行可能エレメントを返します．
+     * 
+     * @param typeElement
+     *            型エレメント
+     * @param methodName
+     *            メソッド名
+     * @return 型エレメントに定義されたメソッドの実行可能エレメント．存在しない場合は {@literal null}
+     */
+    protected ExecutableElement getMethodElement(final TypeElement typeElement,
+            final String methodName) {
+        checkNotNull("typeElement", typeElement);
+        checkNotEmpty("methodName", methodName);
+        checkCompiled();
+        for (final ExecutableElement executableElement : ElementFilter
+                .methodsIn(typeElement.getEnclosedElements())) {
+            if (!methodName
+                    .equals(executableElement.getSimpleName().toString())) {
+                continue;
+            }
+            if (executableElement.getParameters().size() == 0) {
+                return executableElement;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 型エレメントに定義されたメソッドの実行可能エレメントを返します．
+     * 
+     * @param typeElement
+     *            型エレメント
+     * @param methodName
+     *            メソッド名
+     * @param parameterTypes
+     *            引数型の並び
+     * @return 型エレメントに定義されたメソッドの実行可能エレメント． 存在しない場合は {@literal null}
+     */
+    protected ExecutableElement getMethodElement(final TypeElement typeElement,
+            final String methodName, final Class<?>... parameterTypes) {
+        checkNotNull("typeElement", typeElement);
+        checkNotEmpty("methodName", methodName);
+        checkNotNull("parameterTypes", parameterTypes);
+        checkCompiled();
+        final List<TypeMirror> parameterTypeMirros = toTypeMirrors(parameterTypes);
+        for (final ExecutableElement executableElement : ElementFilter
+                .methodsIn(typeElement.getEnclosedElements())) {
+            if (!methodName
+                    .equals(executableElement.getSimpleName().toString())) {
+                continue;
+            }
+            if (isMatchParameterTypes(parameterTypeMirros, executableElement
+                    .getParameters())) {
+                return executableElement;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 型エレメントに定義されたメソッドの実行可能エレメントを返します．
+     * <p>
+     * 引数がの型が配列の場合は， 要素型の名前の後に <code>[]</code> を連ねる形式と， <code>[[LString;</code>
+     * のような形式のどちらでも指定することができます．
+     * </p>
+     * 
+     * @param typeElement
+     *            型エレメント
+     * @param methodName
+     *            メソッド名
+     * @param parameterTypeNames
+     *            引数の型名の並び
+     * @return 型エレメントに定義されたメソッドの実行可能エレメント． 存在しない場合は {@literal null}
+     */
+    protected ExecutableElement getMethodElement(final TypeElement typeElement,
+            final String methodName, final String... parameterTypeNames) {
+        checkNotNull("typeElement", typeElement);
+        checkNotEmpty("methodName", methodName);
+        checkNotNull("parameterTypeNames", parameterTypeNames);
+        checkCompiled();
+        final List<TypeMirror> parameterTypeMirros = toTypeMirrors(parameterTypeNames);
+        for (final ExecutableElement executableElement : ElementFilter
+                .methodsIn(typeElement.getEnclosedElements())) {
+            if (!methodName
+                    .equals(executableElement.getSimpleName().toString())) {
+                continue;
+            }
+            if (isMatchParameterTypes(parameterTypeMirros, executableElement
+                    .getParameters())) {
+                return executableElement;
+            }
+        }
+        return null;
+    }
+
+    /**
      * クラスに対応する {@link TypeMirror} を返します．
-     *
+     * 
      * @param clazz
      *            クラス
-     * @return クラスに対応する{@link TypeMirror}
+     * @return クラスに対応する{@link TypeMirror}， クラスが存在しない場合は {@link null}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      */
@@ -497,43 +756,58 @@ public abstract class AptinaTestCase extends TestCase {
             throws IllegalStateException {
         checkNotNull("clazz", clazz);
         checkCompiled();
-        return getTypeElement(clazz).asType();
+        if (clazz.isArray()) {
+            return toArrayTypeMirror(getTypeMirror(clazz.getComponentType()));
+        }
+        return getTypeMirror(clazz.getName());
     }
 
     /**
-     * {@link Processor} が生成したソースを返します．
-     *
+     * クラスに対応する {@link TypeMirror} を返します．
+     * <p>
+     * 配列の場合は要素型の名前の後に <code>[]</code> を連ねる形式と， <code>[[LString;</code> のような
+     * 形式のどちらでも指定することができます．
+     * </p>
+     * 
      * @param className
-     *            生成されたクラスの完全限定名
-     * @return 生成されたソースの内容
+     *            クラスの完全限定名
+     * @return クラスに対応する{@link TypeMirror}， クラスが存在しない場合は {@link null}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
-     * @throws IOException
-     *             入出力例外が発生した場合
-     * @throws SourceNotGeneratedException
-     *             ソースが生成されなかった場合
      */
-    protected String getGeneratedSource(final String className)
-            throws IllegalStateException, IOException,
-            SourceNotGeneratedException {
-        checkNotNull("className", className);
+    protected TypeMirror getTypeMirror(final String className)
+            throws IllegalStateException {
+        checkNotEmpty("className", className);
         checkCompiled();
-        final JavaFileObject javaFileObject = testingJavaFileManager
-                .getJavaFileForInput(StandardLocation.SOURCE_OUTPUT, className,
-                        Kind.SOURCE);
-        if (javaFileObject == null) {
-            throw new SourceNotGeneratedException(className);
+        if (className.endsWith("[]")) {
+            final String componentTypeName = className.substring(0, className
+                    .length() - 2);
+            return toArrayTypeMirror(getTypeMirror(componentTypeName));
         }
-        final CharSequence content = javaFileObject.getCharContent(false);
-        if (content == null) {
-            throw new SourceNotGeneratedException(className);
+        if (className.startsWith("[") && className.endsWith(";")) {
+            final int pos = className.indexOf("L");
+            final String componentTypeName = className.substring(pos + 1,
+                    className.length() - 1);
+            TypeMirror typeMirror = getTypeMirror(componentTypeName);
+            for (int i = 0; i < pos - 1; ++i) {
+                typeMirror = toArrayTypeMirror(getTypeMirror(componentTypeName));
+            }
+            return typeMirror;
         }
-        return content.toString();
+        if (primitiveTypes.containsKey(className)) {
+            final TypeKind typeKind = primitiveTypes.get(className);
+            return getTypeUtils().getPrimitiveType(typeKind);
+        }
+        final TypeElement typeElement = getTypeElement(className);
+        if (typeElement == null) {
+            return null;
+        }
+        return typeElement.asType();
     }
 
     /**
      * {@link Processor} が生成したソースを返します．
-     *
+     * 
      * @param clazz
      *            生成されたクラス
      * @return 生成されたソースの内容
@@ -553,34 +827,39 @@ public abstract class AptinaTestCase extends TestCase {
     }
 
     /**
-     * {@link Processor} が生成したソースを文字列と比較・検証します．
-     *
-     * @param expected
-     *            生成されたソースに期待される内容の文字列
+     * {@link Processor} が生成したソースを返します．
+     * 
      * @param className
      *            生成されたクラスの完全限定名
+     * @return 生成されたソースの内容
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      * @throws IOException
      *             入出力例外が発生した場合
      * @throws SourceNotGeneratedException
      *             ソースが生成されなかった場合
-     * @throws ComparisonFailure
-     *             生成されたソースが期待される内容と一致しなかった場合
      */
-    protected void assertEqualsGeneratedSource(final CharSequence expected,
-            final String className) throws IllegalStateException, IOException,
-            SourceNotGeneratedException, ComparisonFailure {
-        checkNotNull("expected", expected);
-        checkNotNull("className", className);
+    protected String getGeneratedSource(final String className)
+            throws IllegalStateException, IOException,
+            SourceNotGeneratedException {
+        checkNotEmpty("className", className);
         checkCompiled();
-        assertEquals(className, expected.toString(),
-                getGeneratedSource(className));
+        final JavaFileObject javaFileObject = testingJavaFileManager
+                .getJavaFileForInput(StandardLocation.SOURCE_OUTPUT, className,
+                        Kind.SOURCE);
+        if (javaFileObject == null) {
+            throw new SourceNotGeneratedException(className);
+        }
+        final CharSequence content = javaFileObject.getCharContent(false);
+        if (content == null) {
+            throw new SourceNotGeneratedException(className);
+        }
+        return content.toString();
     }
 
     /**
      * {@link Processor} が生成したソースを文字列と比較・検証します．
-     *
+     * 
      * @param expected
      *            生成されたソースに期待される内容の文字列
      * @param clazz
@@ -597,17 +876,17 @@ public abstract class AptinaTestCase extends TestCase {
     protected void assertEqualsGeneratedSource(final CharSequence expected,
             final Class<?> clazz) throws IllegalStateException, IOException,
             SourceNotGeneratedException, ComparisonFailure {
-        checkNotNull("expected", expected);
+        checkNotEmpty("expected", expected);
         checkNotNull("clazz", clazz);
         checkCompiled();
         assertEqualsGeneratedSource(expected, clazz.getName());
     }
 
     /**
-     * {@link Processor} が生成したソースをファイルと比較・検証します．
-     *
-     * @param expectedSourceFilePath
-     *            生成されたソースに期待される内容を持つファイルのパス
+     * {@link Processor} が生成したソースを文字列と比較・検証します．
+     * 
+     * @param expected
+     *            生成されたソースに期待される内容の文字列
      * @param className
      *            生成されたクラスの完全限定名
      * @throws IllegalStateException
@@ -619,73 +898,19 @@ public abstract class AptinaTestCase extends TestCase {
      * @throws ComparisonFailure
      *             生成されたソースが期待される内容と一致しなかった場合
      */
-    protected void assertEqualsGeneratedSourceWithFile(
-            final String expectedSourceFilePath, final String className)
-            throws IllegalStateException, IOException,
+    protected void assertEqualsGeneratedSource(final CharSequence expected,
+            final String className) throws IllegalStateException, IOException,
             SourceNotGeneratedException, ComparisonFailure {
-        checkNotNull("expectedSourceFilePath", expectedSourceFilePath);
-        checkNotNull("className", className);
+        checkNotEmpty("expected", expected);
+        checkNotEmpty("className", className);
         checkCompiled();
-        assertEqualsGeneratedSourceWithFile(new File(expectedSourceFilePath),
-                className);
+        assertEquals(className, expected.toString(),
+                getGeneratedSource(className));
     }
 
     /**
      * {@link Processor} が生成したソースをファイルと比較・検証します．
-     *
-     * @param expectedSourceFilePath
-     *            生成されたソースに期待される内容を持つファイルのパス
-     * @param clazz
-     *            生成されたクラス
-     * @throws IllegalStateException
-     *             {@link #compile()} が呼び出されていない場合
-     * @throws IOException
-     *             入出力例外が発生した場合
-     * @throws SourceNotGeneratedException
-     *             ソースが生成されなかった場合
-     * @throws ComparisonFailure
-     *             生成されたソースが期待される内容と一致しなかった場合
-     */
-    protected void assertEqualsGeneratedSourceWithFile(
-            final String expectedSourceFilePath, final Class<?> clazz)
-            throws IllegalStateException, IOException,
-            SourceNotGeneratedException, ComparisonFailure {
-        checkNotNull("expectedSourceFilePath", expectedSourceFilePath);
-        checkNotNull("clazz", clazz);
-        checkCompiled();
-        assertEqualsGeneratedSourceWithFile(expectedSourceFilePath, clazz
-                .getName());
-    }
-
-    /**
-     * {@link Processor} が生成したソースをファイルと比較・検証します．
-     *
-     * @param expectedSourceFile
-     *            生成されたソースに期待される内容を持つファイル
-     * @param className
-     *            クラスの完全限定名
-     * @throws IllegalStateException
-     *             {@link #compile()} が呼び出されていない場合
-     * @throws IOException
-     *             入出力例外が発生した場合
-     * @throws SourceNotGeneratedException
-     *             ソースが生成されなかった場合
-     * @throws ComparisonFailure
-     *             生成されたソースが期待される内容と一致しなかった場合
-     */
-    protected void assertEqualsGeneratedSourceWithFile(
-            final File expectedSourceFile, final String className)
-            throws IllegalStateException, IOException,
-            SourceNotGeneratedException, ComparisonFailure {
-        checkNotNull("expectedSourceFile", expectedSourceFile);
-        checkNotNull("className", className);
-        checkCompiled();
-        assertEqualsGeneratedSource(readFromFile(expectedSourceFile), className);
-    }
-
-    /**
-     * {@link Processor} が生成したソースをファイルと比較・検証します．
-     *
+     * 
      * @param expectedSourceFile
      *            生成されたソースに期待される内容を持つファイル
      * @param clazz
@@ -710,12 +935,12 @@ public abstract class AptinaTestCase extends TestCase {
     }
 
     /**
-     * {@link Processor} が生成したソースをクラスパス上のリソースと比較・検証します．
-     *
-     * @param expectedResource
-     *            生成されたソースに期待される内容を持つリソースのパス
+     * {@link Processor} が生成したソースをファイルと比較・検証します．
+     * 
+     * @param expectedSourceFile
+     *            生成されたソースに期待される内容を持つファイル
      * @param className
-     *            生成されたクラスの完全限定名
+     *            クラスの完全限定名
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      * @throws IOException
@@ -725,26 +950,21 @@ public abstract class AptinaTestCase extends TestCase {
      * @throws ComparisonFailure
      *             生成されたソースが期待される内容と一致しなかった場合
      */
-    protected void assertEqualsGeneratedSourceWithResource(
-            final String expectedResource, final String className)
+    protected void assertEqualsGeneratedSourceWithFile(
+            final File expectedSourceFile, final String className)
             throws IllegalStateException, IOException,
             SourceNotGeneratedException, ComparisonFailure {
-        checkNotNull("expectedResource", expectedResource);
-        checkNotNull("className", className);
+        checkNotNull("expectedSourceFile", expectedSourceFile);
+        checkNotEmpty("className", className);
         checkCompiled();
-        final URL url = Thread.currentThread().getContextClassLoader()
-                .getResource(expectedResource);
-        if (url == null) {
-            throw new FileNotFoundException(expectedResource);
-        }
-        assertEqualsGeneratedSourceWithResource(url, className);
+        assertEqualsGeneratedSource(readFromFile(expectedSourceFile), className);
     }
 
     /**
-     * {@link Processor} が生成したソースをクラスパス上のリソースと比較・検証します．
-     *
-     * @param expectedResource
-     *            生成されたソースに期待される内容を持つリソースのパス
+     * {@link Processor} が生成したソースをファイルと比較・検証します．
+     * 
+     * @param expectedSourceFilePath
+     *            生成されたソースに期待される内容を持つファイルのパス
      * @param clazz
      *            生成されたクラス
      * @throws IllegalStateException
@@ -756,22 +976,22 @@ public abstract class AptinaTestCase extends TestCase {
      * @throws ComparisonFailure
      *             生成されたソースが期待される内容と一致しなかった場合
      */
-    protected void assertEqualsGeneratedSourceWithResource(
-            final String expectedResource, final Class<?> clazz)
+    protected void assertEqualsGeneratedSourceWithFile(
+            final String expectedSourceFilePath, final Class<?> clazz)
             throws IllegalStateException, IOException,
             SourceNotGeneratedException, ComparisonFailure {
-        checkNotNull("expectedResource", expectedResource);
+        checkNotEmpty("expectedSourceFilePath", expectedSourceFilePath);
         checkNotNull("clazz", clazz);
         checkCompiled();
-        assertEqualsGeneratedSourceWithResource(clazz.getName(),
-                expectedResource);
+        assertEqualsGeneratedSourceWithFile(expectedSourceFilePath, clazz
+                .getName());
     }
 
     /**
-     * {@link Processor} が生成したソースをクラスパス上のリソースと比較・検証します．
-     *
-     * @param expectedResourceUrl
-     *            生成されたソースに期待される内容を持つリソースのURL
+     * {@link Processor} が生成したソースをファイルと比較・検証します．
+     * 
+     * @param expectedSourceFilePath
+     *            生成されたソースに期待される内容を持つファイルのパス
      * @param className
      *            生成されたクラスの完全限定名
      * @throws IllegalStateException
@@ -783,20 +1003,20 @@ public abstract class AptinaTestCase extends TestCase {
      * @throws ComparisonFailure
      *             生成されたソースが期待される内容と一致しなかった場合
      */
-    protected void assertEqualsGeneratedSourceWithResource(
-            final URL expectedResourceUrl, final String className)
+    protected void assertEqualsGeneratedSourceWithFile(
+            final String expectedSourceFilePath, final String className)
             throws IllegalStateException, IOException,
             SourceNotGeneratedException, ComparisonFailure {
-        checkNotNull("expectedResourceUrl", expectedResourceUrl);
-        checkNotNull("className", className);
+        checkNotEmpty("expectedSourceFilePath", expectedSourceFilePath);
+        checkNotEmpty("className", className);
         checkCompiled();
-        assertEqualsGeneratedSource(readFromResource(expectedResourceUrl),
+        assertEqualsGeneratedSourceWithFile(new File(expectedSourceFilePath),
                 className);
     }
 
     /**
      * {@link Processor} が生成したソースをクラスパス上のリソースと比較・検証します．
-     *
+     * 
      * @param expectedResourceUrl
      *            生成されたソースに期待される内容を持つリソースのURL
      * @param clazz
@@ -819,6 +1039,91 @@ public abstract class AptinaTestCase extends TestCase {
         checkCompiled();
         assertEqualsGeneratedSourceWithResource(expectedResourceUrl, clazz
                 .getName());
+    }
+
+    /**
+     * {@link Processor} が生成したソースをクラスパス上のリソースと比較・検証します．
+     * 
+     * @param expectedResourceUrl
+     *            生成されたソースに期待される内容を持つリソースのURL
+     * @param className
+     *            生成されたクラスの完全限定名
+     * @throws IllegalStateException
+     *             {@link #compile()} が呼び出されていない場合
+     * @throws IOException
+     *             入出力例外が発生した場合
+     * @throws SourceNotGeneratedException
+     *             ソースが生成されなかった場合
+     * @throws ComparisonFailure
+     *             生成されたソースが期待される内容と一致しなかった場合
+     */
+    protected void assertEqualsGeneratedSourceWithResource(
+            final URL expectedResourceUrl, final String className)
+            throws IllegalStateException, IOException,
+            SourceNotGeneratedException, ComparisonFailure {
+        checkNotNull("expectedResourceUrl", expectedResourceUrl);
+        checkNotEmpty("className", className);
+        checkCompiled();
+        assertEqualsGeneratedSource(readFromResource(expectedResourceUrl),
+                className);
+    }
+
+    /**
+     * {@link Processor} が生成したソースをクラスパス上のリソースと比較・検証します．
+     * 
+     * @param expectedResource
+     *            生成されたソースに期待される内容を持つリソースのパス
+     * @param clazz
+     *            生成されたクラス
+     * @throws IllegalStateException
+     *             {@link #compile()} が呼び出されていない場合
+     * @throws IOException
+     *             入出力例外が発生した場合
+     * @throws SourceNotGeneratedException
+     *             ソースが生成されなかった場合
+     * @throws ComparisonFailure
+     *             生成されたソースが期待される内容と一致しなかった場合
+     */
+    protected void assertEqualsGeneratedSourceWithResource(
+            final String expectedResource, final Class<?> clazz)
+            throws IllegalStateException, IOException,
+            SourceNotGeneratedException, ComparisonFailure {
+        checkNotEmpty("expectedResource", expectedResource);
+        checkNotNull("clazz", clazz);
+        checkCompiled();
+        assertEqualsGeneratedSourceWithResource(clazz.getName(),
+                expectedResource);
+    }
+
+    /**
+     * {@link Processor} が生成したソースをクラスパス上のリソースと比較・検証します．
+     * 
+     * @param expectedResource
+     *            生成されたソースに期待される内容を持つリソースのパス
+     * @param className
+     *            生成されたクラスの完全限定名
+     * @throws IllegalStateException
+     *             {@link #compile()} が呼び出されていない場合
+     * @throws IOException
+     *             入出力例外が発生した場合
+     * @throws SourceNotGeneratedException
+     *             ソースが生成されなかった場合
+     * @throws ComparisonFailure
+     *             生成されたソースが期待される内容と一致しなかった場合
+     */
+    protected void assertEqualsGeneratedSourceWithResource(
+            final String expectedResource, final String className)
+            throws IllegalStateException, IOException,
+            SourceNotGeneratedException, ComparisonFailure {
+        checkNotEmpty("expectedResource", expectedResource);
+        checkNotEmpty("className", className);
+        checkCompiled();
+        final URL url = Thread.currentThread().getContextClassLoader()
+                .getResource(expectedResource);
+        if (url == null) {
+            throw new FileNotFoundException(expectedResource);
+        }
+        assertEqualsGeneratedSourceWithResource(url, className);
     }
 
     /**
@@ -846,8 +1151,87 @@ public abstract class AptinaTestCase extends TestCase {
     }
 
     /**
+     * 引数の型を要素とする配列の {@link TypeMirror} を返します．
+     * 
+     * @param componentTypeMirror
+     *            配列の要素となる型
+     * @return 引数の型を要素とする配列の {@link TypeMirror}
+     * @see Types#getArrayType(TypeMirror)
+     */
+    TypeMirror toArrayTypeMirror(final TypeMirror componentTypeMirror) {
+        if (componentTypeMirror == null) {
+            return null;
+        }
+        return getTypeUtils().getArrayType(componentTypeMirror);
+    }
+
+    /**
+     * クラスの配列を {@link TypeMirror} の配列に変換して返します．
+     * 
+     * @param types
+     *            クラスの配列
+     * @return {@link TypeMirror} の配列
+     * @throws IllegalArgumentException
+     *             配列の要素のクラスに対応する {@link TypeMirror} が存在しない場合
+     */
+    List<TypeMirror> toTypeMirrors(final Class<?>... types)
+            throws IllegalArgumentException {
+        final List<TypeMirror> typeMirrors = new ArrayList<TypeMirror>();
+        for (final Class<?> type : types) {
+            final TypeMirror typeMirror = getTypeMirror(type);
+            if (typeMirror == null) {
+                throw new IllegalArgumentException("unknown type : " + type);
+            }
+            typeMirrors.add(typeMirror);
+        }
+        return typeMirrors;
+    }
+
+    /**
+     * クラス名の配列を {@link TypeMirror} の配列に変換して返します．
+     * 
+     * @param types
+     *            クラス名の配列
+     * @return {@link TypeMirror} の配列
+     * @throws IllegalArgumentException
+     *             配列の要素のクラスに対応する {@link TypeMirror} が存在しない場合
+     */
+    List<TypeMirror> toTypeMirrors(final String... typeNames) {
+        final List<TypeMirror> typeMirrors = new ArrayList<TypeMirror>();
+        for (final String typeName : typeNames) {
+            final TypeMirror typeMirror = getTypeMirror(typeName);
+            if (typeMirror == null) {
+                throw new IllegalArgumentException("unknown type : " + typeName);
+            }
+            typeMirrors.add(typeMirror);
+        }
+        return typeMirrors;
+    }
+
+    /**
+     * 二つの配列のそれぞれの要素の型がマッチすれば {@link true} を返します．
+     * 
+     * @param typeMirros
+     * @param variableElements
+     * @return 二つの配列のそれぞれの要素の型がマッチすれば {@link true}
+     */
+    boolean isMatchParameterTypes(final List<? extends TypeMirror> typeMirros,
+            final List<? extends VariableElement> variableElements) {
+        if (typeMirros.size() != variableElements.size()) {
+            return false;
+        }
+        for (int i = 0; i < typeMirros.size(); ++i) {
+            if (!getTypeUtils().isSameType(typeMirros.get(i),
+                    variableElements.get(i).asType())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * パラメータが {@literal null} であれば例外をスローします．
-     *
+     * 
      * @param name
      *            パラメータの名前
      * @param param
@@ -864,24 +1248,56 @@ public abstract class AptinaTestCase extends TestCase {
 
     /**
      * 配列が空であれば例外をスローします．
-     *
+     * 
      * @param name
      *            配列の名前
-     * @param array
-     *            配列
+     * @param string
+     *            文字列
+     * @throws NullPointerException
+     *             文字列が {@literal null} の場合
      * @throws IllegalArgumentException
      *             配列が {@literal null} の場合
      */
-    void checkNotEmpty(final String name, final Object[] array)
+    void checkNotEmpty(final String name, final CharSequence string)
             throws IllegalArgumentException {
-        if (array.length == 0) {
+        if (string == null) {
+            throw new NullPointerException(name);
+        }
+        if (string.length() == 0) {
             throw new IllegalArgumentException(name + " must not be empty");
         }
     }
 
     /**
+     * 配列が {@literal null} または空であれば例外をスローします．
+     * 
+     * @param name
+     *            配列の名前
+     * @param array
+     *            配列
+     * @throws NullPointerException
+     *             配列が {@literal null} の場合
+     * @throws IllegalArgumentException
+     *             配列が空の場合
+     */
+    void checkNotEmpty(final String name, final Object[] array)
+            throws IllegalArgumentException {
+        if (array == null) {
+            throw new NullPointerException(name);
+        }
+        if (array.length == 0) {
+            throw new IllegalArgumentException(name + " must not be empty");
+        }
+        for (final Object element : array) {
+            if (element == null) {
+                throw new NullPointerException("element of " + name);
+            }
+        }
+    }
+
+    /**
      * {@link #compile()} が呼び出されていなければ例外をスローします．
-     *
+     * 
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      */
@@ -893,7 +1309,7 @@ public abstract class AptinaTestCase extends TestCase {
 
     /**
      * 追加されたコンパイル対象のリストを返します．
-     *
+     * 
      * @return 追加されたコンパイル対象のリスト
      * @throws IOException
      *             入出力例外が発生した場合
@@ -913,7 +1329,7 @@ public abstract class AptinaTestCase extends TestCase {
      * ファイルの内容は， {@link #charset} で指定された文字セットでエンコード (未設定時はプラットフォームデフォルトの文字セット)
      * されていなければなりません．
      * </p>
-     *
+     * 
      * @param file
      *            ファイル
      * @return ファイルから読み込んだ内容の文字列
@@ -938,7 +1354,7 @@ public abstract class AptinaTestCase extends TestCase {
      * URLで表されるリソースの内容は， {@link #charset} で指定された文字セットでエンコード
      * (未設定時はプラットフォームデフォルトの文字セット) されていなければなりません．
      * </p>
-     *
+     * 
      * @param url
      *            リソースのURL
      * @return URL から読み込んだ内容の文字列
@@ -963,7 +1379,7 @@ public abstract class AptinaTestCase extends TestCase {
      * ファイルの内容は {@link #charset} で指定された文字セットでエンコード (未設定時はプラットフォームデフォルトの文字セット)
      * されていなければなりません．
      * </p>
-     *
+     * 
      * @param is
      *            入力ストリーム
      * @param size
@@ -988,7 +1404,7 @@ public abstract class AptinaTestCase extends TestCase {
      * <p>
      * 例外が発生しても無視します．
      * </p>
-     *
+     * 
      * @param closeable
      *            クローズ可能なオブジェクト
      */
@@ -1004,7 +1420,7 @@ public abstract class AptinaTestCase extends TestCase {
      * <p>
      * {@link Diagnostic} コンソールに出力した後，後続の {@link DiagnosticListener} へ通知します．
      * </p>
-     *
+     * 
      * @author koichik
      */
     static class LoggingDiagnosticListener implements
@@ -1014,7 +1430,7 @@ public abstract class AptinaTestCase extends TestCase {
 
         /**
          * インスタンスを構築します．
-         *
+         * 
          * @param listener
          *            後続の {@link DiagnosticListener}
          */
@@ -1034,7 +1450,7 @@ public abstract class AptinaTestCase extends TestCase {
     /**
      * コンパイル時に {@link Processor} に渡される @ ProcessingEnvironment} を取得するための
      * {@link Processor} です．
-     *
+     * 
      * @author koichik
      */
     @SupportedSourceVersion(SourceVersion.RELEASE_6)
@@ -1058,14 +1474,14 @@ public abstract class AptinaTestCase extends TestCase {
 
     /**
      * コンパイル対象を表すインタフェースです．
-     *
+     * 
      * @author koichik
      */
     interface CompilationUnit {
 
         /**
          * このコンパイル対象に対応する {@link JavaFileObject} を返します．
-         *
+         * 
          * @return このコンパイル対象に対応する {@link JavaFileObject}
          * @throws IOException
          *             入出力例外が発生した場合
@@ -1076,7 +1492,7 @@ public abstract class AptinaTestCase extends TestCase {
 
     /**
      * ソースパス上のファイルとして存在するコンパイル対象を表すクラスです．
-     *
+     * 
      * @author koichik
      */
     class FileCompilationUnit implements CompilationUnit {
@@ -1085,7 +1501,7 @@ public abstract class AptinaTestCase extends TestCase {
 
         /**
          * インスタンスを構築します．
-         *
+         * 
          * @param className
          *            クラス名
          */
@@ -1103,7 +1519,7 @@ public abstract class AptinaTestCase extends TestCase {
 
     /**
      * メモリ上に存在するコンパイル対象を表すクラスです．
-     *
+     * 
      * @author koichik
      */
     class InMemoryCompilationUnit implements CompilationUnit {
@@ -1114,7 +1530,7 @@ public abstract class AptinaTestCase extends TestCase {
 
         /**
          * インスタンスを構築します．
-         *
+         * 
          * @param className
          *            クラス名
          * @param source

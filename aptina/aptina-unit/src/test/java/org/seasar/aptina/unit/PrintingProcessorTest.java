@@ -19,7 +19,7 @@ import java.nio.charset.Charset;
 import java.util.Locale;
 
 /**
- *
+ * 
  * @author koichik
  */
 public class PrintingProcessorTest extends AptinaTestCase {

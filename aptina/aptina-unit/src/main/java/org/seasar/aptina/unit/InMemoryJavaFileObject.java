@@ -28,7 +28,7 @@ import javax.tools.SimpleJavaFileObject;
 
 /**
  * 生成されたリソースをメモリ上に保持する{@link JavaFileObject}の実装です。
- *
+ * 
  * @author koichik
  */
 class InMemoryJavaFileObject extends SimpleJavaFileObject {
@@ -39,7 +39,7 @@ class InMemoryJavaFileObject extends SimpleJavaFileObject {
 
     /**
      * インスタンスを構築します。
-     *
+     * 
      * @param uri
      *            ファイルオブジェクトの{@link URI}
      * @param kind
