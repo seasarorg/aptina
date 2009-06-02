@@ -6,7 +6,9 @@
 	<body>
 		<section name="Aptina Project">
 			<p>
-				Aptina プロジェクトは，Annotation Processing API (JSR 269) を利用する注釈処理ツールや，
+				Aptina プロジェクトは， Pluggable Annotation Processing API (
+				<a href="http://jcp.org/en/jsr/detail?id=269">JSR 269</a>
+				) を利用する注釈処理ツールや，
 				注釈処理ツールを開発するためのコンポーネントを提供します．
 			</p>
 		</section>
@@ -30,8 +32,9 @@
 		<section name="News">
 			<dl>
 				<!--
-					<dt>2009/06/01</dt> <dd> <div> Aptina 0.0.0 をリリースしました． ( <a href="downloads.html">ダウンロード</a> )
-					( <a href="">変更履歴</a> ) </div> </dd>
+					<dt>2009/06/01</dt> <dd> <div> Aptina 0.0.0 をリリースしました． ( <a
+					href="downloads.html">ダウンロード</a> ) ( <a href="">変更履歴</a> ) </div>
+					</dd>
 				-->
 				<dt>2009/06/01</dt>
 				<dd>

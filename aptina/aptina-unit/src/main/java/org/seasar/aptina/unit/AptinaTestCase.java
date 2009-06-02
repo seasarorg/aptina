@@ -429,6 +429,7 @@ public abstract class AptinaTestCase extends TestCase {
                 getCompilationUnits());
         task.setProcessors(processors);
         compiledResult = task.call();
+        compilationUnits.clear();
     }
 
     /**
@@ -542,9 +543,11 @@ public abstract class AptinaTestCase extends TestCase {
      * @param field
      *            フィールド
      * @return 型エレメントに定義されたフィールドの変数エレメント． 存在しない場合は {@literal null}
+     * @throws IllegalStateException
+     *             {@link #compile()} が呼び出されていない場合
      */
     protected VariableElement getFieldElement(final TypeElement typeElement,
-            final Field field) {
+            final Field field) throws IllegalStateException {
         checkNotNull("typeElement", typeElement);
         checkNotNull("field", field);
         checkCompiled();
@@ -559,9 +562,11 @@ public abstract class AptinaTestCase extends TestCase {
      * @param fieldName
      *            フィールド名
      * @return 型エレメントに定義されたフィールドの変数エレメント． 存在しない場合は {@literal null}
+     * @throws IllegalStateException
+     *             {@link #compile()} が呼び出されていない場合
      */
     protected VariableElement getFieldElement(final TypeElement typeElement,
-            final String fieldName) {
+            final String fieldName) throws IllegalStateException {
         checkNotNull("typeElement", typeElement);
         checkNotEmpty("fieldName", fieldName);
         checkCompiled();
@@ -580,9 +585,11 @@ public abstract class AptinaTestCase extends TestCase {
      * @param typeElement
      *            型エレメント
      * @return 型エレメントに定義されたデフォルトコンストラクタの実行可能エレメント． 存在しない場合は {@literal null}
+     * @throws IllegalStateException
+     *             {@link #compile()} が呼び出されていない場合
      */
     protected ExecutableElement getConstructorElement(
-            final TypeElement typeElement) {
+            final TypeElement typeElement) throws IllegalStateException {
         checkNotNull("typeElement", typeElement);
         checkCompiled();
         for (final ExecutableElement executableElement : ElementFilter
@@ -602,9 +609,12 @@ public abstract class AptinaTestCase extends TestCase {
      * @param parameterTypes
      *            引数型の並び
      * @return 型エレメントに定義されたコンストラクタの実行可能エレメント． 存在しない場合は {@literal null}
+     * @throws IllegalStateException
+     *             {@link #compile()} が呼び出されていない場合
      */
     protected ExecutableElement getConstructorElement(
-            final TypeElement typeElement, final Class<?>... parameterTypes) {
+            final TypeElement typeElement, final Class<?>... parameterTypes)
+            throws IllegalStateException {
         checkNotNull("typeElement", typeElement);
         checkNotNull("parameterTypes", parameterTypes);
         checkCompiled();
@@ -631,9 +641,12 @@ public abstract class AptinaTestCase extends TestCase {
      * @param parameterTypeNames
      *            引数の型名の並び
      * @return 型エレメントに定義されたコンストラクタの実行可能エレメント． 存在しない場合は {@literal null}
+     * @throws IllegalStateException
+     *             {@link #compile()} が呼び出されていない場合
      */
     protected ExecutableElement getConstructorElement(
-            final TypeElement typeElement, final String... parameterTypeNames) {
+            final TypeElement typeElement, final String... parameterTypeNames)
+            throws IllegalStateException {
         checkNotNull("typeElement", typeElement);
         checkNotNull("parameterTypeNames", parameterTypeNames);
         checkCompiled();
@@ -656,9 +669,11 @@ public abstract class AptinaTestCase extends TestCase {
      * @param methodName
      *            メソッド名
      * @return 型エレメントに定義されたメソッドの実行可能エレメント．存在しない場合は {@literal null}
+     * @throws IllegalStateException
+     *             {@link #compile()} が呼び出されていない場合
      */
     protected ExecutableElement getMethodElement(final TypeElement typeElement,
-            final String methodName) {
+            final String methodName) throws IllegalStateException {
         checkNotNull("typeElement", typeElement);
         checkNotEmpty("methodName", methodName);
         checkCompiled();
@@ -685,9 +700,12 @@ public abstract class AptinaTestCase extends TestCase {
      * @param parameterTypes
      *            引数型の並び
      * @return 型エレメントに定義されたメソッドの実行可能エレメント． 存在しない場合は {@literal null}
+     * @throws IllegalStateException
+     *             {@link #compile()} が呼び出されていない場合
      */
     protected ExecutableElement getMethodElement(final TypeElement typeElement,
-            final String methodName, final Class<?>... parameterTypes) {
+            final String methodName, final Class<?>... parameterTypes)
+            throws IllegalStateException {
         checkNotNull("typeElement", typeElement);
         checkNotEmpty("methodName", methodName);
         checkNotNull("parameterTypes", parameterTypes);
@@ -721,9 +739,12 @@ public abstract class AptinaTestCase extends TestCase {
      * @param parameterTypeNames
      *            引数の型名の並び
      * @return 型エレメントに定義されたメソッドの実行可能エレメント． 存在しない場合は {@literal null}
+     * @throws IllegalStateException
+     *             {@link #compile()} が呼び出されていない場合
      */
     protected ExecutableElement getMethodElement(final TypeElement typeElement,
-            final String methodName, final String... parameterTypeNames) {
+            final String methodName, final String... parameterTypeNames)
+            throws IllegalStateException {
         checkNotNull("typeElement", typeElement);
         checkNotEmpty("methodName", methodName);
         checkNotNull("parameterTypeNames", parameterTypeNames);
@@ -789,8 +810,8 @@ public abstract class AptinaTestCase extends TestCase {
             final String componentTypeName = className.substring(pos + 1,
                     className.length() - 1);
             TypeMirror typeMirror = getTypeMirror(componentTypeName);
-            for (int i = 0; i < pos - 1; ++i) {
-                typeMirror = toArrayTypeMirror(getTypeMirror(componentTypeName));
+            for (int i = 0; i < pos; ++i) {
+                typeMirror = toArrayTypeMirror(typeMirror);
             }
             return typeMirror;
         }
@@ -1209,11 +1230,12 @@ public abstract class AptinaTestCase extends TestCase {
     }
 
     /**
-     * 二つの配列のそれぞれの要素の型がマッチすれば {@link true} を返します．
+     * {@link TypeMirror}のリストと{@link VariableElement}のリストの， それぞれの要素の型がマッチすれば
+     * {@link true} を返します．
      * 
      * @param typeMirros
      * @param variableElements
-     * @return 二つの配列のそれぞれの要素の型がマッチすれば {@link true}
+     * @return 二つのリストのそれぞれの要素の型がマッチすれば {@link true}
      */
     boolean isMatchParameterTypes(final List<? extends TypeMirror> typeMirros,
             final List<? extends VariableElement> variableElements) {

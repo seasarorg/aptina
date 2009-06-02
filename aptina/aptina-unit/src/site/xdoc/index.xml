@@ -16,7 +16,9 @@
 				は JUnit3 の
 				<code>TestCase</code>
 				を拡張したクラスで，
-				テストメソッドの中で Java Compiler API (JSR 199) を使用して実際に Java コンパイラを起動し，
+				テストメソッドの中で Java Compiler API (
+				<a href="http://jcp.org/en/jsr/detail?id=199">JSR 199</a>
+				) を使用して実際に Java コンパイラを起動し，
 				Annotation Processor
 				のテストを可能にします．
 			</p>
@@ -26,7 +28,7 @@
 			<p>
 				Annotation Processor のテストクラスを作成するには，
 				<code>AptinaTestCase</code>
-				のサブクラスを作成し，テストメソッドで次の手順を実行します．
+				のサブクラスを作成します．
 				詳細は
 				<a href="apidocs/index.html">Javadoc</a>
 				を参照してください．

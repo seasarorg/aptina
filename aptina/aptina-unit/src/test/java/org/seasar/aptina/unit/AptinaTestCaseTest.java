@@ -88,8 +88,10 @@ public class AptinaTestCaseTest extends AptinaTestCase {
 
         final TypeElement typeElement = getTypeElement(TestSource.class);
         assertNotNull(typeElement);
-        assertNotNull(getFieldElement(typeElement, "aaa"));
-        assertNotNull(getFieldElement(typeElement, "bbb"));
+        assertEquals("aaa", getFieldElement(typeElement, "aaa").getSimpleName()
+                .toString());
+        assertEquals("bbb", getFieldElement(typeElement, "bbb").getSimpleName()
+                .toString());
         assertNull(getFieldElement(typeElement, "zzz"));
     }
 
@@ -126,16 +128,20 @@ public class AptinaTestCaseTest extends AptinaTestCase {
         final TypeElement typeElement = getTypeElement(TestSource.class);
         assertNotNull(typeElement);
 
-        assertNotNull(getMethodElement(typeElement, "hoge"));
+        assertEquals("hoge", getMethodElement(typeElement, "hoge")
+                .getSimpleName().toString());
         assertNull(getMethodElement(typeElement, "unknown"));
 
-        assertNotNull(getMethodElement(typeElement, "setAaa", int.class));
-        assertNotNull(getMethodElement(typeElement, "setBbb", String[].class));
+        assertEquals("setAaa", getMethodElement(typeElement, "setAaa",
+                int.class).getSimpleName().toString());
+        assertEquals("setBbb", getMethodElement(typeElement, "setBbb",
+                String[].class).getSimpleName().toString());
         assertNull(getMethodElement(typeElement, "unknown", TestSource.class));
 
-        assertNotNull(getMethodElement(typeElement, "setAaa", "int"));
-        assertNotNull(getMethodElement(typeElement, "setBbb",
-                "java.lang.String[]"));
+        assertEquals("setAaa", getMethodElement(typeElement, "setAaa", "int")
+                .getSimpleName().toString());
+        assertEquals("setBbb", getMethodElement(typeElement, "setBbb",
+                "java.lang.String[]").getSimpleName().toString());
         assertNull(getMethodElement(typeElement, "unknown", "java.lang.Object"));
     }
 
@@ -148,13 +154,16 @@ public class AptinaTestCaseTest extends AptinaTestCase {
         addCompilationUnit(TestSource.class);
 
         compile();
-        assertNotNull(getTypeMirror(boolean.class));
-        assertNotNull(getTypeMirror(int[].class));
-        assertNotNull(getTypeMirror(String[][].class));
+        assertEquals("boolean", getTypeMirror(boolean.class).toString());
+        assertEquals("int[]", getTypeMirror(int[].class).toString());
+        assertEquals("java.lang.String[][]", getTypeMirror(String[][].class)
+                .toString());
 
-        assertNotNull(getTypeMirror("boolean"));
-        assertNotNull(getTypeMirror("java.lang.String[]"));
-        assertNotNull(getTypeMirror(String[][].class.getName()));
+        assertEquals("boolean", getTypeMirror("boolean").toString());
+        assertEquals("java.lang.String[]", getTypeMirror("java.lang.String[]")
+                .toString());
+        assertEquals("java.lang.String[][][]", getTypeMirror(
+                String[][][].class.getName()).toString());
     }
 
     /**
