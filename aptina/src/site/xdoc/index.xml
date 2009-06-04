@@ -1,12 +1,13 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <document>
 	<properties>
-		<title>Welcome to Annotation Project</title>
+		<title>Welcome to Aptina Project</title>
 	</properties>
 	<body>
-		<section name="Welcome to Annotation Project">
+		<section name="Aptina Project">
 			<p>
-				Aptina プロジェクトは，
+				<strong>Aptina</strong>
+				プロジェクトは，
 				<a href="http://jcp.org/en/jsr/detail?id=269">
 					Pluggable Annotation Processing API (JSR 269)
 				</a>

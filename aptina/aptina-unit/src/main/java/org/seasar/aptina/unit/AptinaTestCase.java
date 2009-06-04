@@ -135,12 +135,12 @@ import junit.framework.TestCase;
  * 
  * <p>
  * 次のサンプルは， <code>src/test/java</code> フォルダにある <code>TestSource.java</code>
- * をコンパイルし， <code>TestProcessor</code> が生成する <code>foo.bar.Baz</code>
- * クラスのソースを検証するテストクラスです．
+ * をコンパイルすると， <code>foo.bar.Baz</code> クラスのソースを生成する <code>TestProcessor</code>
+ * のテストクラスです．
  * </p>
  * 
  * <pre>
- * public class XxxProcessorTest extends AptinaTestCase {
+ * public class TestProcessorTest extends AptinaTestCase {
  *
  *     &#x40;Override
  *     protected void setUp() throws Exception {
@@ -151,7 +151,7 @@ import junit.framework.TestCase;
  *
  *     public void test() throws Exception {
  *         // テスト対象の Annotation Processor を生成して追加
- *         final TestProcessor processor = new TestProcessor();
+ *         TestProcessor processor = new TestProcessor();
  *         addProcessor(processor);
  *
  *         // コンパイル対象を追加
@@ -164,6 +164,7 @@ import junit.framework.TestCase;
  *         assertEqualsGeneratedSource("package foo.bar; public class Baz {}",
  *                 "foo.bar.Baz");
  *     }
+ * 
  * }
  * </pre>
  * 

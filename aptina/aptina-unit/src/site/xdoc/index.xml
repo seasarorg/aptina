@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <document>
 	<properties>
 		<title>Unit Testing for an Annotation Processing Tools</title>
@@ -39,6 +39,48 @@
 				Annotation Processor のテストクラスを作成するには，
 				<code>AptinaTestCase</code>
 				のサブクラスを作成します．
+			</p>
+			<p>
+				次のサンプルは，
+				<code>src/test/java</code>
+				フォルダにある
+				<code>TestSource.java</code>
+				がコンパイルすると，
+				<code>foo.bar.Baz</code>
+				クラスのソースを生成する
+				<code>TestProcessor</code>
+				のテストクラスです．
+			</p>
+
+			<source><![CDATA[
+public class TestProcessorTest extends AptinaTestCase {
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        // ソースパスを追加
+        addSourcePath("src/test/java");
+    }
+
+    public void test() throws Exception {
+        // テスト対象の Annotation Processor を生成して追加
+        TestProcessor processor = new TestProcessor();
+        addProcessor(processor);
+
+        // コンパイル対象を追加
+        addCompilationUnit(TestSource.class);
+
+        // コンパイル実行
+        compile();
+
+        // テスト対象の Annotation Processor が生成したソースを検証
+        assertEqualsGeneratedSource("package foo.bar; public class Baz {}",
+                "foo.bar.Baz");
+    }
+
+}
+]]></source>
+			<p>
 				詳細は
 				<a href="apidocs/index.html">Javadoc</a>
 				を参照してください．
