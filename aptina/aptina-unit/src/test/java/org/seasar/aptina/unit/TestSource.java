@@ -5,6 +5,7 @@ import java.util.List;
 /**
  * 
  * @author koichik
+ * @param <T>
  */
 @Hoge
 public class TestSource<T> {

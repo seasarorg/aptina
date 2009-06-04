@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <document>
 	<properties>
-		<title>Aptina Unit</title>
+		<title>Unit Testing for an Annotation Processing Tools</title>
 	</properties>
 	<body>
 		<section name="Aptina Unit">
 			<p>
-				Aptina Unitは，
+				<strong>Aptina Unit</strong>
+				は，
 				<a href="http://jcp.org/en/jsr/detail?id=269">
 					Pluggable Annotation Processing API (JSR 269)
 				</a>
@@ -18,7 +19,9 @@
 
 		<section name="AptinaTestCase">
 			<p>
-				<code>AptinaTestCase</code>
+				<strong>
+					<code>AptinaTestCase</code>
+				</strong>
 				は JUnit の
 				<code>TestCase</code>
 				を拡張したクラスで， テストメソッドの中で
@@ -27,7 +30,7 @@
 				</a>
 				を使用して実際に Java コンパイラを起動し，
 				Annotation Processor
-				のテストを可能にします．
+				の単体テストを可能にします．
 			</p>
 			<p>
 				テストクラスを IDE で起動すれば， Annotation Processor のデバッグも容易にできます．
