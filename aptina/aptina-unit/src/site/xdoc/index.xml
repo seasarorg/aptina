@@ -6,19 +6,26 @@
 	<body>
 		<section name="Aptina Unit">
 			<p>
-				Aptina Unitは，注釈処理ツールの単体テストを支援する JUnit 拡張を提供します．
+				Aptina Unitは，
+				<a href="http://jcp.org/en/jsr/detail?id=269">
+					Pluggable Annotation Processing API (JSR 269)
+				</a>
+				を利用した注釈処理ツールの単体テストを支援する
+				<a href="http://www.junit.org/">JUnit</a>
+				拡張を提供します．
 			</p>
 		</section>
 
 		<section name="AptinaTestCase">
 			<p>
 				<code>AptinaTestCase</code>
-				は JUnit3 の
+				は JUnit の
 				<code>TestCase</code>
-				を拡張したクラスで，
-				テストメソッドの中で Java Compiler API (
-				<a href="http://jcp.org/en/jsr/detail?id=199">JSR 199</a>
-				) を使用して実際に Java コンパイラを起動し，
+				を拡張したクラスで， テストメソッドの中で
+				<a href="http://jcp.org/en/jsr/detail?id=199">
+					Java Compiler API (JSR 199)
+				</a>
+				を使用して実際に Java コンパイラを起動し，
 				Annotation Processor
 				のテストを可能にします．
 			</p>

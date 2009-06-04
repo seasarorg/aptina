@@ -92,6 +92,8 @@ public class AptinaTestCaseTest extends AptinaTestCase {
                 .toString());
         assertEquals("bbb", getFieldElement(typeElement, "bbb").getSimpleName()
                 .toString());
+        assertEquals("ccc", getFieldElement(typeElement, "ccc").getSimpleName()
+                .toString());
         assertNull(getFieldElement(typeElement, "zzz"));
     }
 
@@ -114,6 +116,7 @@ public class AptinaTestCaseTest extends AptinaTestCase {
 
         assertNotNull(getConstructorElement(typeElement, "int"));
         assertNotNull(getConstructorElement(typeElement, "java.lang.String[]"));
+        assertNotNull(getConstructorElement(typeElement, "java.util.List<T>"));
         assertNull(getConstructorElement(typeElement, "java.lang.Object"));
     }
 
@@ -142,6 +145,9 @@ public class AptinaTestCaseTest extends AptinaTestCase {
                 .getSimpleName().toString());
         assertEquals("setBbb", getMethodElement(typeElement, "setBbb",
                 "java.lang.String[]").getSimpleName().toString());
+        assertEquals("setCcc", getMethodElement(typeElement, "setCcc",
+                "java.util.List<T>")
+                .getSimpleName().toString());
         assertNull(getMethodElement(typeElement, "unknown", "java.lang.Object"));
     }
 

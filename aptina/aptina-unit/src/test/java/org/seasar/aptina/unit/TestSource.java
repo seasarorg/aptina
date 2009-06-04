@@ -1,15 +1,19 @@
 package org.seasar.aptina.unit;
 
+import java.util.List;
+
 /**
  * 
  * @author koichik
  */
 @Hoge
-public class TestSource {
+public class TestSource<T> {
 
     int aaa;
 
     String[] bbb;
+
+    List<T> ccc;
 
     TestSource() {
     }
@@ -22,6 +26,10 @@ public class TestSource {
         this.bbb = bbb;
     }
 
+    TestSource(final List<T> ccc) {
+        this.ccc = ccc;
+    }
+
     void hoge() {
     }
 
@@ -32,4 +40,9 @@ public class TestSource {
     void setBbb(final String... bbb) {
         this.bbb = bbb;
     }
+
+    void setCcc(final List<T> ccc) {
+        this.ccc = ccc;
+    }
+
 }

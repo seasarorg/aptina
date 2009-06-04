@@ -603,6 +603,10 @@ public abstract class AptinaTestCase extends TestCase {
 
     /**
      * 型エレメントに定義されたコンストラクタの実行可能エレメントを返します．
+     * <p>
+     * 引数型が型引数を持つ場合は
+     * {@link #getConstructorElement(TypeElement, String, String...)} を使用してください．
+     * </p>
      * 
      * @param typeElement
      *            型エレメント
@@ -618,10 +622,9 @@ public abstract class AptinaTestCase extends TestCase {
         checkNotNull("typeElement", typeElement);
         checkNotNull("parameterTypes", parameterTypes);
         checkCompiled();
-        final List<TypeMirror> parameterTypeMirros = toTypeMirrors(parameterTypes);
         for (final ExecutableElement executableElement : ElementFilter
                 .constructorsIn(typeElement.getEnclosedElements())) {
-            if (isMatchParameterTypes(parameterTypeMirros, executableElement
+            if (isMatchParameterTypes(parameterTypes, executableElement
                     .getParameters())) {
                 return executableElement;
             }
@@ -634,6 +637,9 @@ public abstract class AptinaTestCase extends TestCase {
      * <p>
      * 引数がの型が配列の場合は， 要素型の名前の後に <code>[]</code> を連ねる形式と， <code>[[LString;</code>
      * のような形式のどちらでも指定することができます．
+     * </p>
+     * <p>
+     * 引数型が型引数を持つ場合は <code>"java.util.List&lt;T&gt;"</code> のようにそのまま指定します．
      * </p>
      * 
      * @param typeElement
@@ -650,10 +656,9 @@ public abstract class AptinaTestCase extends TestCase {
         checkNotNull("typeElement", typeElement);
         checkNotNull("parameterTypeNames", parameterTypeNames);
         checkCompiled();
-        final List<TypeMirror> parameterTypeMirros = toTypeMirrors(parameterTypeNames);
         for (final ExecutableElement executableElement : ElementFilter
                 .constructorsIn(typeElement.getEnclosedElements())) {
-            if (isMatchParameterTypes(parameterTypeMirros, executableElement
+            if (isMatchParameterTypes(parameterTypeNames, executableElement
                     .getParameters())) {
                 return executableElement;
             }
@@ -692,6 +697,10 @@ public abstract class AptinaTestCase extends TestCase {
 
     /**
      * 型エレメントに定義されたメソッドの実行可能エレメントを返します．
+     * <p>
+     * 引数型が型引数を持つ場合は {@link #getMethodElement(TypeElement, String, String...)}
+     * を使用してください．
+     * </p>
      * 
      * @param typeElement
      *            型エレメント
@@ -710,14 +719,13 @@ public abstract class AptinaTestCase extends TestCase {
         checkNotEmpty("methodName", methodName);
         checkNotNull("parameterTypes", parameterTypes);
         checkCompiled();
-        final List<TypeMirror> parameterTypeMirros = toTypeMirrors(parameterTypes);
         for (final ExecutableElement executableElement : ElementFilter
                 .methodsIn(typeElement.getEnclosedElements())) {
             if (!methodName
                     .equals(executableElement.getSimpleName().toString())) {
                 continue;
             }
-            if (isMatchParameterTypes(parameterTypeMirros, executableElement
+            if (isMatchParameterTypes(parameterTypes, executableElement
                     .getParameters())) {
                 return executableElement;
             }
@@ -730,6 +738,9 @@ public abstract class AptinaTestCase extends TestCase {
      * <p>
      * 引数がの型が配列の場合は， 要素型の名前の後に <code>[]</code> を連ねる形式と， <code>[[LString;</code>
      * のような形式のどちらでも指定することができます．
+     * </p>
+     * <p>
+     * 引数型が型引数を持つ場合は <code>"java.util.List&lt;T&gt;"</code> のようにそのまま指定します．
      * </p>
      * 
      * @param typeElement
@@ -749,14 +760,13 @@ public abstract class AptinaTestCase extends TestCase {
         checkNotEmpty("methodName", methodName);
         checkNotNull("parameterTypeNames", parameterTypeNames);
         checkCompiled();
-        final List<TypeMirror> parameterTypeMirros = toTypeMirrors(parameterTypeNames);
         for (final ExecutableElement executableElement : ElementFilter
                 .methodsIn(typeElement.getEnclosedElements())) {
             if (!methodName
                     .equals(executableElement.getSimpleName().toString())) {
                 continue;
             }
-            if (isMatchParameterTypes(parameterTypeMirros, executableElement
+            if (isMatchParameterTypes(parameterTypeNames, executableElement
                     .getParameters())) {
                 return executableElement;
             }
@@ -1237,14 +1247,37 @@ public abstract class AptinaTestCase extends TestCase {
      * @param variableElements
      * @return 二つのリストのそれぞれの要素の型がマッチすれば {@link true}
      */
-    boolean isMatchParameterTypes(final List<? extends TypeMirror> typeMirros,
+    boolean isMatchParameterTypes(final Class<?>[] parameterTypes,
             final List<? extends VariableElement> variableElements) {
-        if (typeMirros.size() != variableElements.size()) {
+        final List<? extends TypeMirror> typeMirrors = toTypeMirrors(parameterTypes);
+        if (typeMirrors.size() != variableElements.size()) {
             return false;
         }
-        for (int i = 0; i < typeMirros.size(); ++i) {
-            if (!getTypeUtils().isSameType(typeMirros.get(i),
+        for (int i = 0; i < typeMirrors.size(); ++i) {
+            if (!getTypeUtils().isSameType(typeMirrors.get(i),
                     variableElements.get(i).asType())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * {@link TypeMirror}のリストと{@link VariableElement}のリストの， それぞれの要素の型がマッチすれば
+     * {@link true} を返します．
+     * 
+     * @param typeMirros
+     * @param variableElements
+     * @return 二つのリストのそれぞれの要素の型がマッチすれば {@link true}
+     */
+    boolean isMatchParameterTypes(final String[] typeNames,
+            final List<? extends VariableElement> variableElements) {
+        if (typeNames.length != variableElements.size()) {
+            return false;
+        }
+        for (int i = 0; i < typeNames.length; ++i) {
+            if (!typeNames[i].equals(variableElements.get(i).asType()
+                    .toString())) {
                 return false;
             }
         }
