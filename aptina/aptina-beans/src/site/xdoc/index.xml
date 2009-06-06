@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>Unit Testing for an Annotation Processing Tools</title>
+	</properties>
+	<body>
+		<section name="Aptina Beans">
+			<p>
+				<strong>Aptina Beans</strong>
+				は，
+				<a href="http://jcp.org/en/jsr/detail?id=269">
+					Pluggable Annotation Processing API (JSR 269)
+				</a>
+				を利用して，フィールドだけを定義したクラス (状態クラス) から， getter/setter
+				メソッドを定義したサブクラス (Bean クラス) を生成する Annotation
+				Processor を提供します．
+			</p>
+		</section>
+
+		<section name="BeanProcessor">
+			<p>
+				<strong>
+					<code>BeanProcessor</code>
+				</strong>
+			</p>
+		</section>
+	</body>
+</document>
