@@ -15,7 +15,10 @@
  */
 package org.seasar.aptina.unit;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -184,6 +187,24 @@ public class PrintingProcessor extends AbstractProcessor {
      *            {@link Element}
      */
     protected void printEnterMessage(final Element e) {
+        final String comment = processingEnv.getElementUtils().getDocComment(e);
+        if (comment != null) {
+            indent(depth * 2);
+            out.println("/**");
+            final BufferedReader reader = new BufferedReader(new StringReader(
+                    comment));
+            try {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    indent(depth * 2);
+                    out.print(" * ");
+                    out.println(line);
+                }
+            } catch (final IOException ignore) {
+            }
+            indent(depth * 2);
+            out.println(" */");
+        }
         indent(depth * 2);
         out.print(e.getKind().name());
         out.print(' ');
