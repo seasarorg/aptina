@@ -15,7 +15,9 @@
  */
 package org.seasar.aptina.unit;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
@@ -146,8 +148,7 @@ public class AptinaTestCaseTest extends AptinaTestCase {
         assertEquals("setBbb", getMethodElement(typeElement, "setBbb",
                 "java.lang.String[]").getSimpleName().toString());
         assertEquals("setCcc", getMethodElement(typeElement, "setCcc",
-                "java.util.List<T>")
-                .getSimpleName().toString());
+                "java.util.List<T>").getSimpleName().toString());
         assertNull(getMethodElement(typeElement, "unknown", "java.lang.Object"));
     }
 
@@ -180,16 +181,21 @@ public class AptinaTestCaseTest extends AptinaTestCase {
         if (!f.exists()) {
             f = new File("src/test/resources/a.txt");
         }
-        assertEquals("abc", readFromFile(f));
-
+        final BufferedReader reader = new BufferedReader(new StringReader(
+                readFromFile(f)));
+        assertEquals("abc", reader.readLine());
+        assertEquals("あいう", reader.readLine());
     }
 
     /**
      * @throws Exception
      */
     public void testReadFromResource() throws Exception {
-        assertEquals("abc", readFromResource(Thread.currentThread()
-                .getContextClassLoader().getResource("a.txt")));
+        final BufferedReader reader = new BufferedReader(new StringReader(
+                readFromResource(Thread.currentThread().getContextClassLoader()
+                        .getResource("a.txt"))));
+        assertEquals("abc", reader.readLine());
+        assertEquals("あいう", reader.readLine());
     }
 
 }

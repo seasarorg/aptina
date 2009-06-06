@@ -40,6 +40,7 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -500,6 +501,11 @@ public abstract class AptinaTestCase extends TestCase {
 
     /**
      * クラスに対応する {@link TypeElement} を返します．
+     * <p>
+     * このメソッドが返す {@link TypeElement} およびその {@link Element#getEnclosedElements()}
+     * が返す {@link Element} から， {@link Elements#getDocComment(Element)} を使って
+     * Javadoc コメントを取得することはできません．
+     * </p>
      * 
      * @param clazz
      *            クラス
@@ -516,6 +522,11 @@ public abstract class AptinaTestCase extends TestCase {
 
     /**
      * クラスに対応する {@link TypeElement} を返します．
+     * <p>
+     * このメソッドが返す {@link TypeElement} およびその {@link Element#getEnclosedElements()}
+     * が返す {@link Element} から， {@link Elements#getDocComment(Element)} を使って
+     * Javadoc コメントを取得することはできません．
+     * </p>
      * 
      * @param className
      *            クラスの完全限定名
@@ -882,7 +893,7 @@ public abstract class AptinaTestCase extends TestCase {
         if (javaFileObject == null) {
             throw new SourceNotGeneratedException(className);
         }
-        final CharSequence content = javaFileObject.getCharContent(false);
+        final CharSequence content = javaFileObject.getCharContent(true);
         if (content == null) {
             throw new SourceNotGeneratedException(className);
         }
