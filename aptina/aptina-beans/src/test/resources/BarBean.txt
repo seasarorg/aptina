@@ -53,6 +53,8 @@ public class BarBean<E, T extends java.util.List<E> & java.io.Serializable> exte
 
     /**
      * あああを返します。
+     * 
+     * @return あああ
      */
     public T getAaa() {
         return aaa;
@@ -69,6 +71,8 @@ public class BarBean<E, T extends java.util.List<E> & java.io.Serializable> exte
 
     /**
      * いいいを返します。
+     * 
+     * @return いいい
      */
     public T[] getBbb() {
         return bbb;
@@ -85,6 +89,8 @@ public class BarBean<E, T extends java.util.List<E> & java.io.Serializable> exte
 
     /**
      * うううを返します。
+     * 
+     * @return ううう
      */
     public java.util.List<? extends T> getCcc() {
         return ccc;

@@ -3,7 +3,7 @@ package example;
 import org.seasar.aptina.beans.BeanState;
 
 /**
- * テスト用Bean。
+ * Foo な JavaBeans。
  * 
  * @author koichik
  */

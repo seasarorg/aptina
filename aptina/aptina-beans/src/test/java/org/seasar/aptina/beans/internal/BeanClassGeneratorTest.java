@@ -197,6 +197,8 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
                 stringWriter.toString()));
         assertEquals("    /**", reader.readLine());
         assertEquals("     * aを返します。", reader.readLine());
+        assertEquals("     * ", reader.readLine());
+        assertEquals("     * @return a", reader.readLine());
         assertEquals("     */", reader.readLine());
         assertEquals("    public int getA() {", reader.readLine());
         assertEquals("        return a;", reader.readLine());
@@ -204,6 +206,8 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
         assertEquals("", reader.readLine());
         assertEquals("    /**", reader.readLine());
         assertEquals("     * bを返します。", reader.readLine());
+        assertEquals("     * ", reader.readLine());
+        assertEquals("     * @return b", reader.readLine());
         assertEquals("     */", reader.readLine());
         assertEquals("    public java.lang.String getB() {", reader.readLine());
         assertEquals("        return b;", reader.readLine());
@@ -231,6 +235,8 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
         assertEquals("    /**", reader.readLine());
         // テストケースでは Javadoc コメントは取得できないのでフィールド名になる
         assertEquals("     * aaaを返します。", reader.readLine());
+        assertEquals("     * ", reader.readLine());
+        assertEquals("     * @return aaa", reader.readLine());
         assertEquals("     */", reader.readLine());
         assertEquals("    public T getAaa() {", reader.readLine());
         assertEquals("        return aaa;", reader.readLine());
@@ -239,6 +245,8 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
         assertEquals("    /**", reader.readLine());
         // テストケースでは Javadoc コメントは取得できないのでフィールド名になる
         assertEquals("     * bbbを返します。", reader.readLine());
+        assertEquals("     * ", reader.readLine());
+        assertEquals("     * @return bbb", reader.readLine());
         assertEquals("     */", reader.readLine());
         assertEquals("    public T[] getBbb() {", reader.readLine());
         assertEquals("        return bbb;", reader.readLine());
@@ -247,6 +255,8 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
         assertEquals("    /**", reader.readLine());
         // テストケースでは Javadoc コメントは取得できないのでフィールド名になる
         assertEquals("     * cccを返します。", reader.readLine());
+        assertEquals("     * ", reader.readLine());
+        assertEquals("     * @return ccc", reader.readLine());
         assertEquals("     */", reader.readLine());
         assertEquals("    public java.util.List<? extends T> getCcc() {",
                 reader.readLine());

@@ -51,7 +51,8 @@ public enum MessageCode {
     /** */
     CTOR0001(Kind.ERROR, "", "サブクラスから可視のコンストラクタがありません"),
     /** */
-    JDOC0000(Kind.OTHER, " Return the %1$s.%n", " %1$sを返します。%n"),
+    JDOC0000(Kind.OTHER, " Return the %1$s.%n %n @return %1$s%n",
+            " %1$sを返します。%n %n @return %1$s%n"),
     /** */
     JDOC0001(Kind.OTHER, " Set the %1$s.%n %n @param %2$n %1$s%n",
             " %1$sを設定します。%n %n @param %2$s %1$s%n"), ;
