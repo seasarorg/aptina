@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URI;
+import java.nio.charset.Charset;
 
 import javax.tools.JavaFileObject.Kind;
 
@@ -37,16 +38,31 @@ public class InMemoryJavaFileObjectTest extends TestCase {
      */
     public void test() throws Exception {
         final InMemoryJavaFileObject fileObject = new InMemoryJavaFileObject(
-                new URI("/foo"), Kind.SOURCE, null);
+                new URI("/foo"), Kind.SOURCE, Charset.forName("UTF-8"));
         final OutputStream os = fileObject.openOutputStream();
         final PrintWriter pw = new PrintWriter(os);
-        pw.print("hoge hoge");
+        pw.print("hoge hoge ほげ");
         pw.close();
 
         final InputStream is = fileObject.openInputStream();
         final BufferedReader reader = new BufferedReader(new InputStreamReader(
                 is));
-        assertEquals("hoge hoge", reader.readLine());
+        assertEquals("hoge hoge ほげ", reader.readLine());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testReaderWriter() throws Exception {
+        final InMemoryJavaFileObject fileObject = new InMemoryJavaFileObject(
+                new URI("/foo"), Kind.SOURCE, Charset.forName("UTF-8"));
+        final PrintWriter pw = new PrintWriter(fileObject.openWriter());
+        pw.print("hoge hoge ほげ");
+        pw.close();
+
+        final BufferedReader reader = new BufferedReader(fileObject
+                .openReader(true));
+        assertEquals("hoge hoge ほげ", reader.readLine());
     }
 
 }

@@ -20,6 +20,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URI;
 import java.nio.charset.Charset;
 
@@ -61,6 +63,11 @@ class InMemoryJavaFileObject extends SimpleJavaFileObject {
     @Override
     public OutputStream openOutputStream() throws IOException {
         return outputStream;
+    }
+
+    @Override
+    public Writer openWriter() throws IOException {
+        return new OutputStreamWriter(openOutputStream(), charset);
     }
 
     @Override
