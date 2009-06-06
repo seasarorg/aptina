@@ -26,7 +26,11 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 
+import org.seasar.aptina.beans.BeanState;
+
 /**
+ * {@link BeanState} で注釈されたクラス (状態クラス) のフィールドに対する getter/setter メソッドを持つサブクラス
+ * (Bean クラス) を生成する Annotation Processor です．
  * 
  * @author koichik
  */
@@ -34,6 +38,10 @@ import javax.lang.model.util.ElementFilter;
 @SupportedAnnotationTypes("org.seasar.aptina.beans.BeanState")
 public class BeansProcessor extends AbstractProcessor {
 
+    /**
+     * {@link BeanState} で注釈されたクラス (状態クラス) のフィールドに対する getter/setter メソッドを持つサブクラス
+     * (Bean クラス) を生成します．
+     */
     @Override
     public boolean process(final Set<? extends TypeElement> annotations,
             final RoundEnvironment roundEnv) {

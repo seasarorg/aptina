@@ -23,8 +23,8 @@ import java.lang.annotation.Target;
 /**
  * プロパティとしてアクセス可能なフィールドを注釈します．
  * <p>
- * デフォルトでは注釈されなかったフィールドは {@link AccessType#READ_WRITE} ({@literal final} フィールドは
- * {@link AccessType#READ_ONLY}) のプロパティとして扱われます．
+ * デフォルトでは， 注釈されなかったフィールドは {@link AccessType#READ_WRITE} ({@literal final}
+ * フィールドは {@link AccessType#READ_ONLY}) のプロパティとして扱われます．
  * 特定のフィールドをプロパティとしてアクセスしたくない場合やアクセス型を変更したい場合は， そのフィールドにこの注釈を付与します．
  * </p>
  * 

@@ -16,6 +16,7 @@
 package org.seasar.aptina.beans.internal;
 
 /**
+ * 生成するプロパティの情報を保持するクラスです．
  * 
  * @author koichik
  */
