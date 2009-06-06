@@ -6,13 +6,15 @@ import org.seasar.aptina.beans.BeanState;
  * Baz な JavaBeans。
  * 
  * @author koichik
+ * @param <T>
+ *            何かの型
  */
 @BeanState
-public class BazBeanState {
+public class BazBeanState<T> {
 
     int aaa;
 
-    String bbb;
+    T bbb;
 
     /**
      * インスタンスを構築します。

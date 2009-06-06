@@ -65,7 +65,7 @@ public class FooBean extends FooBeanState {
 						で注釈されていること．
 					</li>
 					<li>通常のクラスであること (インタフェースやアノテーション，列挙は状態クラスにできません)．</li>
-					<li>トップレベルであること (ネストしたクラスは状態クラスにできません)．</li>
+					<li>トップレベルのクラスであること (ネストしたクラスは状態クラスにできません)．</li>
 					<li>
 						<code>public</code>
 						なクラスであること．
@@ -185,6 +185,66 @@ public class FooBean extends FooBeanState {
 						が指定されていないこと．
 					</li>
 				</ul>
+				<p>
+					状態クラスのプロパティが配列型の場合，
+					Bean クラスにはインデックス付きの getter/setter メソッドが生成されます．
+				</p>
+				<p>
+					状態クラスのフィールドに
+					<code>Property</code>
+					アノテーションを付与し，
+					<code>access</code>
+					要素で getter/setter をどのように生成するか指定することができます．
+					<code>access</code>
+					要素の型は
+					<code>AcessType</code>
+					です．
+				</p>
+				<table>
+					<tr>
+						<th>
+							<code>AccessType</code>
+							の値
+						</th>
+						<th>説明</th>
+					</tr>
+					<tr>
+						<td>
+							<code>NONE</code>
+						</td>
+						<td>プロパティとしてアクセスしません (getter/setter とも生成されません)．</td>
+					</tr>
+					<tr>
+						<td>
+							<code>READ_ONLY</code>
+						</td>
+						<td>参照のみ可能なプロパティです (getter のみ生成されます)．</td>
+					</tr>
+					<tr>
+						<td>
+							<code>WRITE_ONLY</code>
+						</td>
+						<td>
+							変更のみ可能なプロパティです (setter のみ生成されます)．
+							フィールドが
+							<code>final</code>
+							の場合はエラーになります．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>READ_WRITE</code>
+							<br />
+							(デフォルト)
+						</td>
+						<td>
+							参照・変更とも可能なプロパティです (getter/setter とも生成されます)．
+							フィールドが
+							<code>final</code>
+							の場合， setter は生成されません．
+						</td>
+					</tr>
+				</table>
 			</subsection>
 
 			<subsection name="コンストラクタ">
@@ -274,6 +334,15 @@ public class FooBean extends FooBeanState {
 javac -classpath aptina-beans-x.y.z.jar ...
 ]]></source>
 			</subsection>
+		</section>
+
+		<section name="ToDo">
+			<ul>
+				<li>ライセンスファイルのサポート</li>
+				<li>bound プロパティのサポート</li>
+				<li>constrained プロパティのサポート</li>
+				<li>もしかしたら状態クラスの継承サポート (たぶんやらない)</li>
+			</ul>
 		</section>
 	</body>
 </document>

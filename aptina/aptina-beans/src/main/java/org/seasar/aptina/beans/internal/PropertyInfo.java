@@ -31,6 +31,12 @@ public class PropertyInfo {
     /** プロパティの型 */
     protected String type;
 
+    /** プロパティの型が配列型なら {@literal true} */
+    protected boolean array;
+
+    /** プロパティの型が配列の場合の要素型 */
+    protected String componentType;
+
     /** プロパティが参照可能なら {@literal true} */
     protected boolean readable = true;
 
@@ -98,6 +104,44 @@ public class PropertyInfo {
      */
     public void setType(final String type) {
         this.type = type;
+    }
+
+    /**
+     * プロパティの型が配列型なら {@literal true} を返します．
+     * 
+     * @return プロパティの型が配列型なら {@literal true}
+     */
+    public boolean isArray() {
+        return array;
+    }
+
+    /**
+     * プロパティの型が配列型なら {@literal true} を設定します．
+     * 
+     * @param array
+     *            プロパティの型が配列型なら {@literal true}
+     */
+    public void setArray(final boolean array) {
+        this.array = array;
+    }
+
+    /**
+     * プロパティの型が配列の場合の要素型を返します．
+     * 
+     * @return プロパティの型が配列の場合の要素型
+     */
+    public String getComponentType() {
+        return componentType;
+    }
+
+    /**
+     * プロパティの型が配列の場合の要素型を設定します．
+     * 
+     * @param componentType
+     *            プロパティの型が配列の場合の要素型
+     */
+    public void setComponentType(final String componentType) {
+        this.componentType = componentType;
     }
 
     /**

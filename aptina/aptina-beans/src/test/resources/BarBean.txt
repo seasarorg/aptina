@@ -79,12 +79,34 @@ public class BarBean<E, T extends java.util.List<E> & java.io.Serializable> exte
     }
 
     /**
+     * いいいのn番目の要素を返します。
+     * 
+     * @param n 返される要素のインデックス
+     * @return n番目のいいい
+     * @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合
+     */
+    public T getBbb(int n) throws ArrayIndexOutOfBoundsException {
+        return bbb[n];
+    }
+
+    /**
      * いいいを設定します。
      * 
      * @param bbb いいい
      */
     public void setBbb(T[] bbb) {
         this.bbb = bbb;
+    }
+
+    /**
+     * いいいのn番目の要素を設定します。
+     * 
+     * @param n 設定される要素のインデックス
+     * @param bbb いいい
+     * @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合
+     */
+    public void setBbb(int n, T bbb) throws ArrayIndexOutOfBoundsException {
+        this.bbb[n] = bbb;
     }
 
     /**

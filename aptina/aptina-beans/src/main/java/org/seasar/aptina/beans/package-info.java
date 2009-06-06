@@ -28,7 +28,7 @@
  * </p>
  * <ul>
  * <li>通常のクラスであること (インタフェースやアノテーション，列挙は状態クラスにできません)．</li>
- * <li>トップレベルであること (ネストしたクラスは状態クラスにできません)．</li>
+ * <li>トップレベルのクラスであること (ネストしたクラスは状態クラスにできません)．</li>
  * <li>{@literal public} なクラスであること．</li>
  * <li>{@literal final} クラスではないこと．</li>
  * </ul>
@@ -82,9 +82,55 @@
  * <li>{@link org.seasar.aptina.beans.Property} アノテーションで 
  * {@link org.seasar.aptina.beans.AccessType#NONE} が指定されていないこと．</li>
  * </ul>
+ * <p>
+ * 状態クラスのプロパティが配列型の場合， Bean クラスにはインデックス付きの getter/setter メソッドが生成されます．
+ * </p>
+ * <p>
+ * 状態クラスのフィールドに
+ * {@link org.seasar.aptina.beans.Property}
+ * アノテーションを付与し，
+ * {@link org.seasar.aptina.beans.Property#access}
+ * 要素で getter/setter をどのように生成するか指定することができます．
+ * {@link org.seasar.aptina.beans.Property#access}
+ * 要素の型は
+ * {@link org.seasar.aptina.beans.AccessType}
+ * です．
+ * </p>
+ * <table border="1">
+ * <tr>
+ * <th>
+ * {@link org.seasar.aptina.beans.AccessType}
+ * の値
+ * </th>
+ * <th>説明</th>
+ * </tr>
+ * <tr>
+ * <td>{@link org.seasar.aptina.beans.AccessType#NONE}</td>
+ * <td>プロパティとしてアクセスしません (getter/setter とも生成されません)．</td>
+ * </tr>
+ * <tr>
+ * <td>{@link org.seasar.aptina.beans.AccessType#READ_ONLY}</td>
+ * <td>参照のみ可能なプロパティです (getter のみ生成されます)．</td>
+ * </tr>
+ * <tr>
+ * <td>{@link org.seasar.aptina.beans.AccessType#WRITE_ONLY}</td>
+ * <td>
+ * 変更のみ可能なプロパティです (setter のみ生成されます)．
+ * フィールドが {@literal final} の場合はエラーになります．
+ * </td>
+ * </tr>
+ * <tr>
+ * <td>{@link org.seasar.aptina.beans.AccessType#READ_WRITE}<br />(デフォルト)</td>
+ * <td>
+ * 参照・変更とも可能なプロパティです (getter/setter とも生成されます)．
+ * フィールドが {@literal final} の場合， setter は生成されません．
+ * </td>
+ * </tr>
+ * </table>
  * <h3>コンストラクタ</h3>
  * <p>
  * Bean クラスは状態クラスの非 {@literal private} コンストラクタを引き継ぎます．
+ * 引き継ぐことのできるコンストラクタが一つもない場合はエラーとなります．
  * </p>
  * <h3>例</h3>
  * <p>
@@ -94,15 +140,27 @@
  * <pre>
  * &#x40;BeanState
  * public abstract class FooBeanState {
- *     private String aaa;   // private なので getter/setter とも生成されません
- *     final String bbb;     // final なので getter メソッドのみ生成されます
- *     protected String ccc; // getter/setter とも生成されます
- *     public String ddd;    // public なので getter/setter とも生成されません
+ *     protected String aaa; // getter/setter とも生成されます
+ * 
+ *     final String bbb;     // final なので getter のみ生成されます
+ * 
  *     &#x40;Property(access=AccessType.NONE)
- *     public String eee;    // AccessType.NONE なので getter/setter とも生成されません
+ *     public String ccc;    // AccessType.NONE なので getter/setter とも生成されません
+ * 
+ *     &#x40;Property(access=AccessType.READ_ONLY)
+ *     public String ddd;    // AccessType.READ_ONLY なので getter のみ生成されます
+ * 
  *     &#x40;Property(access=AccessType.WRITE_ONLY)
- *     public String fff;    // AccessType.WRITE_ONLY なので setter メソッドのみ生成されます
- *     static String ggg;    // static なので getter/setter とも生成されません
+ *     public String eee;    // AccessType.WRITE_ONLY なので setter のみ生成されます
+ * 
+ *     &#x40;Property(access=AccessType.READ_WRITE)
+ *     public String fff;    // AccessType.READ_WRITE なので getter/setter とも生成されます
+ * 
+ *     private String ggg;   // private なので getter/setter とも生成されません
+ * 
+ *     public String hhh;    // public なので getter/setter とも生成されません
+ * 
+ *     static String iii;    // static なので getter/setter とも生成されません
  * }
  * </pre>
  * <p>
@@ -116,14 +174,28 @@
  *     public FooBean() {
  *         super();
  *     }
+ * 
+ *     public String getAaa() {
+ *         return aaa;
+ *     }
+ *     public void setAaa(String aaa) {
+ *         this.aaa = aaa;
+ *     }
+ * 
  *     public String getBbb() {
  *         return bbb;
  *     }
- *     public String getCcc() {
- *         return ccc;
+ * 
+ *     public String getDdd() {
+ *         return ddd;
  *     }
- *     public void setCcc(String ccc) {
- *         this.ccc = ccc;
+ * 
+ *     public void setEee(String eee) {
+ *         this.eee = eee;
+ *     }
+ * 
+ *     public String getFff() {
+ *         return fff;
  *     }
  *     public void setFff(String fff) {
  *         this.fff = fff;

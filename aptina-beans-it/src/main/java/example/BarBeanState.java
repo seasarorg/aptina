@@ -10,7 +10,7 @@ import org.seasar.aptina.beans.BeanState;
 @BeanState
 public class BarBeanState {
 
-    String name;
+    String[] names;
 
     /**
      * インスタンスを構築します。

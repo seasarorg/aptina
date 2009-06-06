@@ -159,6 +159,18 @@ public class BeanClassGenerator {
                 capitalize(propertyInfo.getName()));
         put("        return %1$s;%n", propertyInfo.getName());
         put("    }%n%n");
+        if (propertyInfo.isArray()) {
+            putJavadoc(messageFormatter.getMessage(MessageCode.JDOC0002,
+                    propertyInfo.getComment()), "    ");
+            put(
+                    "    public %1$s %2$s%3$s(int n) throws ArrayIndexOutOfBoundsException {%n",
+                    propertyInfo
+                    .getComponentType(), propertyInfo.getType().equals(
+                    "boolean") ? "is" : "get", capitalize(propertyInfo
+                    .getName()));
+            put("        return %1$s[n];%n", propertyInfo.getName());
+            put("    }%n%n");
+        }
     }
 
     /**
@@ -174,6 +186,16 @@ public class BeanClassGenerator {
                 .getName()), propertyInfo.getType(), propertyInfo.getName());
         put("        this.%1$s = %1$s;%n", propertyInfo.getName());
         put("    }%n%n");
+        if (propertyInfo.isArray()) {
+            putJavadoc(messageFormatter.getMessage(MessageCode.JDOC0003,
+                    propertyInfo.getComment(), propertyInfo.getName()), "    ");
+            put(
+                    "    public void set%1$s(int n, %2$s %3$s) throws ArrayIndexOutOfBoundsException {%n",
+                    capitalize(propertyInfo.getName()), propertyInfo
+                            .getComponentType(), propertyInfo.getName());
+            put("        this.%1$s[n] = %1$s;%n", propertyInfo.getName());
+            put("    }%n%n");
+        }
     }
 
     /**

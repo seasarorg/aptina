@@ -97,6 +97,7 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         assertNotNull(propertyInfo);
         assertEquals("a", propertyInfo.getName());
         assertEquals("int", propertyInfo.getType());
+        assertFalse(propertyInfo.isArray());
         assertTrue(propertyInfo.isReadable());
         assertTrue(propertyInfo.isWritable());
 
@@ -105,6 +106,7 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         assertNotNull(propertyInfo);
         assertEquals("b", propertyInfo.getName());
         assertEquals("java.lang.String", propertyInfo.getType());
+        assertFalse(propertyInfo.isArray());
         assertTrue(propertyInfo.isReadable());
         assertFalse(propertyInfo.isWritable());
 
@@ -133,6 +135,7 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         assertNotNull(propertyInfo);
         assertEquals("aaa", propertyInfo.getName());
         assertEquals("T", propertyInfo.getType());
+        assertFalse(propertyInfo.isArray());
         assertTrue(propertyInfo.isReadable());
         assertTrue(propertyInfo.isWritable());
 
@@ -141,6 +144,8 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         assertNotNull(propertyInfo);
         assertEquals("bbb", propertyInfo.getName());
         assertEquals("T[]", propertyInfo.getType());
+        assertTrue(propertyInfo.isArray());
+        assertEquals("T", propertyInfo.getComponentType());
         assertTrue(propertyInfo.isReadable());
         assertTrue(propertyInfo.isWritable());
 
@@ -149,6 +154,7 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         assertNotNull(propertyInfo);
         assertEquals("ccc", propertyInfo.getName());
         assertEquals("java.util.List<? extends T>", propertyInfo.getType());
+        assertFalse(propertyInfo.isArray());
         assertTrue(propertyInfo.isReadable());
         assertTrue(propertyInfo.isWritable());
     }

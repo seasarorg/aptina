@@ -242,6 +242,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
         assertEquals("        return aaa;", reader.readLine());
         assertEquals("    }", reader.readLine());
         assertEquals("", reader.readLine());
+
         assertEquals("    /**", reader.readLine());
         // テストケースでは Javadoc コメントは取得できないのでフィールド名になる
         assertEquals("     * bbbを返します。", reader.readLine());
@@ -252,6 +253,23 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
         assertEquals("        return bbb;", reader.readLine());
         assertEquals("    }", reader.readLine());
         assertEquals("", reader.readLine());
+        assertEquals("    /**", reader.readLine());
+        // テストケースでは Javadoc コメントは取得できないのでフィールド名になる
+        assertEquals("     * bbbのn番目の要素を返します。", reader.readLine());
+        assertEquals("     * ", reader.readLine());
+        assertEquals("     * @param n 返される要素のインデックス", reader.readLine());
+        assertEquals("     * @return n番目のbbb", reader.readLine());
+        assertEquals(
+                "     * @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合",
+                reader.readLine());
+        assertEquals("     */", reader.readLine());
+        assertEquals(
+                "    public T getBbb(int n) throws ArrayIndexOutOfBoundsException {",
+                reader.readLine());
+        assertEquals("        return bbb[n];", reader.readLine());
+        assertEquals("    }", reader.readLine());
+        assertEquals("", reader.readLine());
+
         assertEquals("    /**", reader.readLine());
         // テストケースでは Javadoc コメントは取得できないのでフィールド名になる
         assertEquals("     * cccを返します。", reader.readLine());
@@ -320,6 +338,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
         assertEquals("        this.aaa = aaa;", reader.readLine());
         assertEquals("    }", reader.readLine());
         assertEquals("", reader.readLine());
+
         assertEquals("    /**", reader.readLine());
         // テストケースでは Javadoc コメントは取得できないのでフィールド名になる
         assertEquals("     * bbbを設定します。", reader.readLine());
@@ -330,6 +349,23 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
         assertEquals("        this.bbb = bbb;", reader.readLine());
         assertEquals("    }", reader.readLine());
         assertEquals("", reader.readLine());
+        assertEquals("    /**", reader.readLine());
+        // テストケースでは Javadoc コメントは取得できないのでフィールド名になる
+        assertEquals("     * bbbのn番目の要素を設定します。", reader.readLine());
+        assertEquals("     * ", reader.readLine());
+        assertEquals("     * @param n 設定される要素のインデックス", reader.readLine());
+        assertEquals("     * @param bbb bbb", reader.readLine());
+        assertEquals(
+                "     * @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合",
+                reader.readLine());
+        assertEquals("     */", reader.readLine());
+        assertEquals(
+                "    public void setBbb(int n, T bbb) throws ArrayIndexOutOfBoundsException {",
+                reader.readLine());
+        assertEquals("        this.bbb[n] = bbb;", reader.readLine());
+        assertEquals("    }", reader.readLine());
+        assertEquals("", reader.readLine());
+
         assertEquals("    /**", reader.readLine());
         // テストケースでは Javadoc コメントは取得できないのでフィールド名になる
         assertEquals("     * cccを設定します。", reader.readLine());

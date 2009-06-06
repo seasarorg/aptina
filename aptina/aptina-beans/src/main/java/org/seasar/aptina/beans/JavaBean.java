@@ -63,15 +63,12 @@ import java.lang.annotation.Target;
  * </table>
  * <h3>プロパティ</h3>
  * <p>
- * Bean クラスは， 状態クラスの次の条件を満たすフィールドに対する getter/setter メソッドを持ちます．
+ * Bean クラスは， 状態クラスのフィールドに対する getter/setter メソッドを持ちます．
  * </p>
- * <ul>
- * <li>{@literal static}，{@literal private}，{@literal public} の修飾子が付けられていないこと．</li>
- * <li>{@link Property} アノテーションで {@link AccessType#NONE} が指定されていないこと．</li>
- * </ul>
  * <h3>コンストラクタ</h3>
  * <p>
  * Bean クラスは状態クラスの非 {@literal private} コンストラクタを引き継ぎます．
+ * 引き継ぐことのできるコンストラクタが一つもない場合はエラーとなります．
  * </p>
  * 
  * @author koichik

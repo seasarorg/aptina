@@ -28,6 +28,8 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic.Kind;
@@ -208,7 +210,13 @@ public class BeanInfoFactory {
             propertyInfo.setComment(comment.trim());
         }
         propertyInfo.setName(propertyName);
-        propertyInfo.setType(variableElement.asType().toString());
+        final TypeMirror propertyType = variableElement.asType();
+        propertyInfo.setType(propertyType.toString());
+        if (propertyType.getKind() == TypeKind.ARRAY) {
+            propertyInfo.setArray(true);
+            propertyInfo.setComponentType(ArrayType.class.cast(propertyType)
+                    .getComponentType().toString());
+        }
         if (property != null) {
             switch (property.access()) {
             case READ_ONLY:

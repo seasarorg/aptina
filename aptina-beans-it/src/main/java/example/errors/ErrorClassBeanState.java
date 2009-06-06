@@ -12,13 +12,6 @@ public class ErrorClassBeanState {
      * 
      */
     @BeanState
-    public static class NestedInterface {
-    }
-
-    /**
-     * 
-     */
-    @BeanState
     public static class NestedClass {
     }
 

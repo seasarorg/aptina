@@ -35,7 +35,7 @@ import org.seasar.aptina.beans.internal.BeansProcessor;
  * </p>
  * <ul>
  * <li>通常のクラスであること (インタフェースやアノテーション，列挙は状態クラスにできません)．</li>
- * <li>トップレベルであること (ネストしたクラスは状態クラスにできません)．</li>
+ * <li>トップレベルのクラスであること (ネストしたクラスは状態クラスにできません)．</li>
  * <li>{@literal public} なクラスであること．</li>
  * <li>{@literal final} クラスではないこと．</li>
  * </ul>
@@ -47,9 +47,46 @@ import org.seasar.aptina.beans.internal.BeansProcessor;
  * <li>{@literal static}，{@literal private}，{@literal public} の修飾子が付けられていないこと．</li>
  * <li>{@link Property} アノテーションで {@link AccessType#NONE} が指定されていないこと．</li>
  * </ul>
+ * <p>
+ * 状態クラスのプロパティが配列型の場合， Bean クラスにはインデックス付きの getter/setter メソッドが生成されます．
+ * </p>
+ * <p>
+ * 状態クラスのフィールドに {@link Property} アノテーションを付与し， {@link Property#access} 要素で
+ * getter/setter をどのように生成するか指定することができます． {@link Property#access} 要素の型は
+ * {@link AccessType} です．
+ * </p>
+ * <table border="1">
+ * <tr>
+ * <th>
+ * {@link AccessType} の値</th>
+ * <th>説明</th>
+ * </tr>
+ * <tr>
+ * <td>{@link AccessType#NONE}</td>
+ * <td>プロパティとしてアクセスしません (getter/setter とも生成されません)．</td>
+ * </tr>
+ * <tr>
+ * <td>{@link AccessType#READ_ONLY}</td>
+ * <td>参照のみ可能なプロパティです (getter のみ生成されます)．</td>
+ * </tr>
+ * <tr>
+ * <td>{@link AccessType#WRITE_ONLY}</td>
+ * <td>
+ * 変更のみ可能なプロパティです (setter のみ生成されます)． フィールドが {@literal final} の場合はエラーになります．</td>
+ * </tr>
+ * <tr>
+ * <td>
+ * {@link AccessType#READ_WRITE}<br />
+ * (デフォルト)</td>
+ * <td>
+ * 参照・変更とも可能なプロパティです (getter/setter とも生成されます)． フィールドが {@literal final} の場合，
+ * setter は生成されません．</td>
+ * </tr>
+ * </table>
  * <h3>コンストラクタ</h3>
  * <p>
  * 状態クラスの非 {@literal private} コンストラクタは Bean クラスに引き継がれます．
+ * 引き継がれるコンストラクタが一つもない場合はエラーとなります．
  * </p>
  * 
  * @author koichik
