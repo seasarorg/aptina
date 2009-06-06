@@ -16,13 +16,15 @@
 /**
  * JavaBeans を生成するためのフィールドを定義した状態クラスに付与する注釈型や列挙型を提供します．
  * <p>
- * Aptina Beans の提供する Annotation Processor ({@link org.seasar.aptina.beans.internal.BeansProcessor}) は，
- * {@link BeanState} で注釈されたクラス (以下「状態クラス」) からサブクラス (以下「Bean クラス」) を生成します． Bean
- * クラスは，状態クラスに定義されたフィールドに対する getter/setter メソッドを持つ JavaBeans です．
+ * Aptina Beans の提供する Annotation Processor 
+ * ({@link org.seasar.aptina.beans.internal.BeansProcessor}) は，
+ * {@link org.seasar.aptina.beans.BeanState} で注釈されたクラス (以下「状態クラス」) からサブクラス 
+ * (以下「Bean クラス」) を生成します．
+ * Bean クラスは，状態クラスに定義されたフィールドに対する getter/setter メソッドを持つ JavaBeans です．
  * </p>
  * <h3>状態クラス</h3>
  * <p>
- * {@link BeanState} で注釈された状態クラスは次のようなクラスでなければなりません．
+ * {@link org.seasar.aptina.beans.BeanState} で注釈された状態クラスは次のようなクラスでなければなりません．
  * </p>
  * <ul>
  * <li>通常のクラスであること (インタフェースやアノテーション，列挙は状態クラスにできません)．</li>
@@ -32,7 +34,8 @@
  * </ul>
  * <h3>Bean クラス</h3>
  * <p>
- * 状態クラスから生成される Bean クラスは {@link JavaBean} で注釈され， 状態クラスと同じパッケージに生成されます．
+ * 状態クラスから生成される Bean クラスは {@link org.seasar.aptina.beans.JavaBean} で注釈され， 
+ * 状態クラスと同じパッケージに生成されます．
  * Bean クラスの名前は次のようになります．
  * </p>
  * <dl>
@@ -76,7 +79,8 @@
  * </p>
  * <ul>
  * <li>{@literal static}，{@literal private}，{@literal public} の修飾子が付けられていないこと．</li>
- * <li>{@link Property} アノテーションで {@link AccessType#NONE} が指定されていないこと．</li>
+ * <li>{@link org.seasar.aptina.beans.Property} アノテーションで 
+ * {@link org.seasar.aptina.beans.AccessType#NONE} が指定されていないこと．</li>
  * </ul>
  * <h3>コンストラクタ</h3>
  * <p>
@@ -102,7 +106,8 @@
  * }
  * </pre>
  * <p>
- * {@link BeansProcessor} は， 上記の状態クラスから次の Bean クラスを生成します．
+ * {@link org.seasar.aptina.beans.internal.BeansProcessor} は， 
+ * 上記の状態クラスから次の Bean クラスを生成します．
  * </p>
  * 
  * <pre>

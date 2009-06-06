@@ -509,7 +509,7 @@ public abstract class AptinaTestCase extends TestCase {
      * 
      * @param clazz
      *            クラス
-     * @return クラスに対応する{@link TypeElement}， 存在しない場合は {@link null}
+     * @return クラスに対応する{@link TypeElement}， 存在しない場合は {@literal null}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      */
@@ -530,7 +530,7 @@ public abstract class AptinaTestCase extends TestCase {
      * 
      * @param className
      *            クラスの完全限定名
-     * @return クラスに対応する{@link TypeElement}， 存在しない場合は {@link null}
+     * @return クラスに対応する{@link TypeElement}， 存在しない場合は {@literal null}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      */
@@ -616,8 +616,8 @@ public abstract class AptinaTestCase extends TestCase {
     /**
      * 型エレメントに定義されたコンストラクタの実行可能エレメントを返します．
      * <p>
-     * 引数型が型引数を持つ場合は
-     * {@link #getConstructorElement(TypeElement, String, String...)} を使用してください．
+     * 引数型が型引数を持つ場合は {@link #getConstructorElement(TypeElement, String...)}
+     * を使用してください．
      * </p>
      * 
      * @param typeElement
@@ -791,7 +791,7 @@ public abstract class AptinaTestCase extends TestCase {
      * 
      * @param clazz
      *            クラス
-     * @return クラスに対応する{@link TypeMirror}， クラスが存在しない場合は {@link null}
+     * @return クラスに対応する{@link TypeMirror}， クラスが存在しない場合は {@literal null}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      */
@@ -814,7 +814,7 @@ public abstract class AptinaTestCase extends TestCase {
      * 
      * @param className
      *            クラスの完全限定名
-     * @return クラスに対応する{@link TypeMirror}， クラスが存在しない場合は {@link null}
+     * @return クラスに対応する{@link TypeMirror}， クラスが存在しない場合は {@literal null}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      */

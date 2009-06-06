@@ -42,6 +42,7 @@
 		</menu>
 		<menu name="サブプロジェクト">
 			<item name="Aptina Unit" href="aptina-unit/index.html" />
+			<item name="Aptina Beans" href="aptina-beans/index.html" />
 		</menu>
 		${reports}
 	</body>

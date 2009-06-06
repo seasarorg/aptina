@@ -28,6 +28,18 @@
 							<a href="aptina-unit/apidocs/index.html">Javadoc</a>
 						</td>
 					</tr>
+					<tr>
+						<td>
+							<a href="aptina-beans/index.html">Aptina Beans</a>
+						</td>
+						<td>
+							フィールドを定義したクラスから， getter/setter メソッドを定義したサブクラスを生成する
+							Annotation Processor を提供します．
+						</td>
+						<td>
+							<a href="aptina-beans/apidocs/index.html">Javadoc</a>
+						</td>
+					</tr>
 				</tbody>
 			</table>
 		</section>

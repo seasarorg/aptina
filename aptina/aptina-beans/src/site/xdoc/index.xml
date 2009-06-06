@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
 	<properties>
-		<title>Unit Testing for an Annotation Processing Tools</title>
+		<title>Annotation Processing Tools for Generating JavaBeans</title>
 	</properties>
 	<body>
 		<section name="Aptina Beans">
@@ -11,18 +11,269 @@
 				<a href="http://jcp.org/en/jsr/detail?id=269">
 					Pluggable Annotation Processing API (JSR 269)
 				</a>
-				を利用して，フィールドだけを定義したクラス (状態クラス) から， getter/setter
-				メソッドを定義したサブクラス (Bean クラス) を生成する Annotation
+				を利用して，フィールドを定義したクラスから， getter/setter
+				メソッドを定義したサブクラスを生成する Annotation
 				Processor を提供します．
 			</p>
 		</section>
 
-		<section name="BeanProcessor">
+		<section name="概要">
+
+			<p>
+				次のようにフィールドを定義したクラスを用意します．
+				</p>
+			<source><![CDATA[
+@BeanState
+public abstract class FooBeanState {
+    int aaa;
+    String bbb;
+}
+]]></source>
+			<p>
+				Aptina Beans は， 上記のクラスを継承して getter/setter メソッドを持つ
+				次のようなクラスを生成します．
+			</p>
+			<source><![CDATA[
+@JavaBean
+public class FooBean extends FooBeanState {
+    public int getAaa() {
+        return aaa;
+    }
+    pubic void setAaa(int aaa) {
+        this.aaa = aaa;
+    }
+    public String getBbb() {
+        return bbb;
+    }
+    public void setBbb(String bbb) {
+        this.bbb = bbb;
+    }
+}
+]]></source>
+			<p>
+				生成元となったフィールドを持つクラスを状態クラス，
+				生成された getter/setter メソッドを持つクラスを Bean クラスと呼びます．
+			</p>
+
+			<subsection name="状態クラス">
+				<p>
+					状態クラスは 次のようなクラスでなければなりません．
+				</p>
+				<ul>
+					<li>
+						<code>BeanState</code>
+						で注釈されていること．
+					</li>
+					<li>通常のクラスであること (インタフェースやアノテーション，列挙は状態クラスにできません)．</li>
+					<li>トップレベルであること (ネストしたクラスは状態クラスにできません)．</li>
+					<li>
+						<code>public</code>
+						なクラスであること．
+					</li>
+					<li>
+						<code>final</code>
+						クラスではないこと．
+					</li>
+				</ul>
+			</subsection>
+
+			<subsection name="Bean クラス">
+				<p>
+					状態クラスから生成される Bean クラスは
+					<code>JavaBean</code>
+					で注釈され， 状態クラスと同じパッケージに生成されます．
+					Bean クラスの名前は次のようになります．
+				</p>
+				<dl>
+					<dt>
+						状態クラスの名前が
+						<code>Abstract</code>
+						で始まっている場合
+					</dt>
+					<dd>
+						状態クラスの名前の先頭から
+						<code>Abstract</code>
+						を除去した名前になります．
+					</dd>
+					<dt>
+						状態クラスの名前が
+						<code>State</code>
+						で終わっている場合
+					</dt>
+					<dd>
+						状態クラスの名前の末尾から
+						<code>State</code>
+						を除去した名前になります．
+					</dd>
+					<dt>
+						状態クラスの名前が
+						<code>Bean</code>
+						で終わっている場合
+					</dt>
+					<dd>
+						状態クラスの名前の末尾に
+						<code>Impl</code>
+						を付加した名前になります．
+					</dd>
+					<dt>その他の場合</dt>
+					<dd>
+						状態クラスの名前の末尾に
+						<code>Bean</code>
+						を付加した名前になります．
+					</dd>
+				</dl>
+				<p>
+					以下に状態クラスと生成される Bean クラスの名前の例を示します．
+				</p>
+				<table border="1" title="例">
+					<tr>
+						<th>状態クラスの名前</th>
+						<th>生成される Bean クラスの名前</th>
+					</tr>
+					<tr>
+						<td>
+							<code>AbstractHogeBean</code>
+						</td>
+						<td>
+							<code>HogeBean</code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>HogeBeanState</code>
+						</td>
+						<td>
+							<code>HogeBean</code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>HogeBean</code>
+						</td>
+						<td>
+							<code>HogeBeanImpl</code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>Hoge</code>
+						</td>
+						<td>
+							<code>HogeBean</code>
+						</td>
+					</tr>
+				</table>
+			</subsection>
+
+			<subsection name="プロパティ">
+				<p>
+					状態クラスの次の条件を満たすフィールドが Bean クラスのプロパティとなります．
+				</p>
+				<ul>
+					<li>
+						<code>static</code>
+						，
+						<code>private</code>
+						，
+						<code>public</code>
+						の修飾子が付けられていないこと．
+					</li>
+					<li>
+						<code>Property</code>
+						アノテーションで
+						<code>AccessType#NONE</code>
+						が指定されていないこと．
+					</li>
+				</ul>
+			</subsection>
+
+			<subsection name="コンストラクタ">
+				<p>
+					Bean クラスは状態クラスの非
+					<code>private</code>
+					コンストラクタを引き継ぎます．
+					引き継ぐことのできるコンストラクタが一つもない場合はエラーとなります．
+				</p>
+			</subsection>
+		</section>
+
+		<section name="BeanProcessorの使い方">
 			<p>
 				<strong>
 					<code>BeanProcessor</code>
 				</strong>
+				は， Aptina Beans の提供する Annotation Processor です．
 			</p>
+			<p>
+				<code>BeanProcessor</code>
+				は，Eclipse など Pluggable Annotation Processing に対応した IDE や，
+				Maven などのコマンドラインツールなどで使用できます．
+			</p>
+
+			<subsection name="Eclipse での使い方">
+				<p>
+					プロジェクトのプロパティで以下の設定をしてください．
+				</p>
+				<ul>
+					<li>
+						[Java Compiler]-[Annotation processing] を選択します．
+						<ul>
+							<li>[Enable project specific settings] をチェックします．</li>
+							<li>[Enable annotation processing] をチェックします．</li>
+						</ul>
+					</li>
+					<li>
+						[Java Compiler]-[Annotation processing]-[Factory Path] を選択します．
+						<ul>
+							<li>[Enable project specific settings] をチェックします．</li>
+							<li>[Add JARs] ボタンを押して Aptina Beans の Jar ファイルを追加します．</li>
+						</ul>
+					</li>
+				</ul>
+			</subsection>
+
+			<subsection name="Maven での使い方">
+				<p>
+					maven-compiler-plugin のコンパイラ引数に
+					<code>-XprintProcessorInfo</code>
+					を追加し，
+					依存ライブラリに Aptina Beans を追加してください．
+				</p>
+				<source><![CDATA[
+<build>
+  <pluginManagement>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+          <encoding>UTF-8</encoding>
+          <compilerArgument>-XprintProcessorInfo</compilerArgument>
+        </configuration>
+      </plugin>
+    </plugins>
+  </pluginManagement>
+</build>
+]]></source>
+				<source><![CDATA[
+<dependency>
+  <groupId>org.seasar.aptina</groupId>
+  <artifactId>aptina-beans</artifactId>
+  <version>x.y.z</version>
+  <scope>compile</scope>
+</dependency>
+]]></source>
+			</subsection>
+
+			<subsection name="コマンドラインでの使い方">
+				<p>
+					javac のクラスパスに Aptina Beans の Jar ファイルを含めてください．
+				</p>
+				<source><![CDATA[
+javac -classpath aptina-beans-x.y.z.jar ...
+]]></source>
+			</subsection>
 		</section>
 	</body>
 </document>
