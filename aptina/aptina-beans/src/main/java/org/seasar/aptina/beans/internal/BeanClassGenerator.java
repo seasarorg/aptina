@@ -37,6 +37,9 @@ public class BeanClassGenerator {
     /** {@link ProcessingEnvironment} */
     protected ProcessingEnvironment env;
 
+    /** メッセージフォーマッタ */
+    protected MessageFormatter messageFormatter;
+
     /** ソースの出力先 */
     protected PrintWriter writer;
 
@@ -48,6 +51,7 @@ public class BeanClassGenerator {
      */
     public BeanClassGenerator(final ProcessingEnvironment env) {
         this.env = env;
+        messageFormatter = new MessageFormatter(env.getLocale());
     }
 
     /**
@@ -100,9 +104,9 @@ public class BeanClassGenerator {
         putJavadoc(beanInfo.getComment(), "");
         put("@javax.annotation.Generated(\"Aptina Beans\")%n");
         put("@org.seasar.aptina.beans.JavaBean%n");
-        put("%1$s class %2$s%3$s extends %4$s {%n", beanInfo.getModifier(),
-                beanInfo.getBeanClassName(), beanInfo.getTypeParameter(),
-                beanInfo.getStateClassName());
+        put("public class %1$s%2$s extends %3$s {%n", beanInfo
+                .getBeanClassName(), beanInfo.getTypeParameter(), beanInfo
+                .getStateClassName());
         put("%n");
     }
 
@@ -148,7 +152,8 @@ public class BeanClassGenerator {
      *            生成するプロパティの情報
      */
     protected void putGetter(final PropertyInfo propertyInfo) {
-        putJavadoc(" " + propertyInfo.getComment() + "を返します。\n", "    ");
+        putJavadoc(messageFormatter.getMessage(MessageCode.JDOC0000,
+                propertyInfo.getComment()), "    ");
         put("    public %1$s %2$s%3$s() {%n", propertyInfo.getType(),
                 propertyInfo.getType().equals("boolean") ? "is" : "get",
                 capitalize(propertyInfo.getName()));
@@ -163,9 +168,8 @@ public class BeanClassGenerator {
      *            生成するプロパティの情報
      */
     protected void putSetter(final PropertyInfo propertyInfo) {
-        putJavadoc(" " + propertyInfo.getComment() + "を設定します。\n \n @param "
-                + propertyInfo.getName() + " " + propertyInfo.getComment(),
-                "    ");
+        putJavadoc(messageFormatter.getMessage(MessageCode.JDOC0001,
+                propertyInfo.getComment(), propertyInfo.getName()), "    ");
         put("    public void set%1$s(%2$s %3$s) {%n", capitalize(propertyInfo
                 .getName()), propertyInfo.getType(), propertyInfo.getName());
         put("        this.%1$s = %1$s;%n", propertyInfo.getName());
@@ -188,7 +192,10 @@ public class BeanClassGenerator {
         final BufferedReader reader = new BufferedReader(new StringReader(
                 comment));
         try {
-            String line;
+            String line = reader.readLine();
+            if (!line.isEmpty()) {
+                put("%1$s *%2$s%n", indent, line);
+            }
             while ((line = reader.readLine()) != null) {
                 put("%1$s *%2$s%n", indent, line);
             }

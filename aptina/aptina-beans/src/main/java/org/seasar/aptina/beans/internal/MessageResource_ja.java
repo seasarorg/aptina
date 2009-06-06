@@ -9,32 +9,24 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.aptina.beans.example;
-
-import org.seasar.aptina.beans.BeanState;
+package org.seasar.aptina.beans.internal;
 
 /**
- * ほげ
+ * {@link MessageCode} のメッセージフォーマットを対象とする，日本語ロケールのリソースバンドルです．
  * 
  * @author koichik
  */
-@BeanState
-public class FooBeanState {
+public class MessageResource_ja extends MessageResource {
 
-    int a;
-
-    final String b = "";
-
-    @SuppressWarnings("unused")
-    private boolean c;
-
-    /**  */
-    public String d;
-
-    static boolean e;
+    /**
+     * インスタンスを構築します．
+     */
+    public MessageResource_ja() {
+        super(MessageCode.LOCALE_JA);
+    }
 
 }

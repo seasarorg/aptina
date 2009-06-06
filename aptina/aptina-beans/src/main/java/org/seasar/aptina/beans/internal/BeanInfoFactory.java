@@ -30,8 +30,8 @@ import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
+import javax.tools.Diagnostic.Kind;
 
-import org.seasar.aptina.beans.AccessType;
 import org.seasar.aptina.beans.Property;
 
 import static org.seasar.aptina.beans.internal.Strings.*;
@@ -54,6 +54,9 @@ public class BeanInfoFactory {
     /** {@link ProcessingEnvironment} */
     protected ProcessingEnvironment env;
 
+    /** メッセージフォーマッタ */
+    protected MessageFormatter messageFormatter;
+
     /** 状態クラスにエラーがある場合は {@literal true} */
     protected boolean hasError;
 
@@ -65,6 +68,7 @@ public class BeanInfoFactory {
      */
     public BeanInfoFactory(final ProcessingEnvironment env) {
         this.env = env;
+        messageFormatter = new MessageFormatter(env.getLocale());
     }
 
     /**
@@ -87,6 +91,7 @@ public class BeanInfoFactory {
                 beanInfo.addPropertyInfo(propertyInfo);
             }
         }
+
         for (final ExecutableElement constructorElement : ElementFilter
                 .constructorsIn(typeElement.getEnclosedElements())) {
             final ConstructorInfo constructorInfo = processConstructor(constructorElement);
@@ -94,10 +99,15 @@ public class BeanInfoFactory {
                 beanInfo.addConstructor(constructorInfo);
             }
         }
+        if (beanInfo.getConstructors().isEmpty()) {
+            printMessage(typeElement, MessageCode.CTOR0001);
+        }
+
         for (final ExecutableElement methodElement : ElementFilter
                 .methodsIn(typeElement.getEnclosedElements())) {
             processMethod(methodElement, beanInfo);
         }
+
         return hasError ? null : beanInfo;
     }
 
@@ -110,10 +120,37 @@ public class BeanInfoFactory {
      */
     protected BeanInfo processType(final TypeElement typeElement) {
         final BeanInfo beanInfo = new BeanInfo();
-        beanInfo.setComment(env.getElementUtils().getDocComment(typeElement));
-        if (typeElement.getModifiers().contains(Modifier.PUBLIC)) {
-            beanInfo.setModifier("public");
+
+        switch (typeElement.getKind()) {
+        case INTERFACE:
+            printMessage(typeElement, MessageCode.CLS0000);
+            return null;
+        case ENUM:
+            printMessage(typeElement, MessageCode.CLS0001);
+            return null;
+        case ANNOTATION_TYPE:
+            printMessage(typeElement, MessageCode.CLS0002);
+            return null;
         }
+        switch (typeElement.getNestingKind()) {
+        case LOCAL:
+            printMessage(typeElement, MessageCode.CLS0003);
+            return null;
+        case MEMBER:
+        case ANONYMOUS:
+            printMessage(typeElement, MessageCode.CLS0004);
+            return null;
+        }
+        if (typeElement.getModifiers().contains(Modifier.FINAL)) {
+            printMessage(typeElement, MessageCode.CLS0005);
+            return null;
+        }
+        if (!typeElement.getModifiers().contains(Modifier.PUBLIC)) {
+            printMessage(typeElement, MessageCode.CLS0006);
+            return null;
+        }
+
+        beanInfo.setComment(env.getElementUtils().getDocComment(typeElement));
         final String stateClassName = typeElement.getQualifiedName().toString();
         final String packageName = toPackageName(stateClassName);
         beanInfo.setPackageName(packageName);
@@ -135,15 +172,33 @@ public class BeanInfoFactory {
      * @return Bean クラスのプロパティ情報
      */
     protected PropertyInfo processField(final VariableElement variableElement) {
-        if (!Collections.disjoint(variableElement.getModifiers(),
-                IGNORE_FIELD_MODIFIERS)) {
-            return null;
-        }
-        final Property property = variableElement.getAnnotation(Property.class);
-        if (property != null && property.access() == AccessType.NONE) {
-            return null;
-        }
         final PropertyInfo propertyInfo = new PropertyInfo();
+        final Property property = variableElement.getAnnotation(Property.class);
+        final Set<Modifier> modifiers = variableElement.getModifiers();
+        if (property == null) {
+            if (!Collections.disjoint(modifiers, IGNORE_FIELD_MODIFIERS)) {
+                return null;
+            }
+        } else {
+            if (modifiers.contains(Modifier.PRIVATE)) {
+                printMessage(variableElement, MessageCode.FLD0000);
+            } else if (modifiers.contains(Modifier.PUBLIC)) {
+                printMessage(variableElement, MessageCode.FLD0001);
+            } else if (modifiers.contains(Modifier.STATIC)) {
+                printMessage(variableElement, MessageCode.FLD0002);
+            }
+            switch (property.access()) {
+            case NONE:
+                return null;
+            case WRITE_ONLY:
+                if (modifiers.contains(Modifier.FINAL)) {
+                    printMessage(variableElement, MessageCode.FLD0003);
+                    return null;
+                }
+                break;
+            }
+        }
+
         final String propertyName = variableElement.getSimpleName().toString();
         final String comment = env.getElementUtils().getDocComment(
                 variableElement);
@@ -154,9 +209,6 @@ public class BeanInfoFactory {
         }
         propertyInfo.setName(propertyName);
         propertyInfo.setType(variableElement.asType().toString());
-        if (variableElement.getModifiers().contains(Modifier.FINAL)) {
-            propertyInfo.setWritable(false);
-        }
         if (property != null) {
             switch (property.access()) {
             case READ_ONLY:
@@ -166,6 +218,9 @@ public class BeanInfoFactory {
                 propertyInfo.setReadable(false);
                 break;
             }
+        }
+        if (modifiers.contains(Modifier.FINAL)) {
+            propertyInfo.setWritable(false);
         }
         return propertyInfo;
     }
@@ -180,10 +235,19 @@ public class BeanInfoFactory {
      */
     protected ConstructorInfo processConstructor(
             final ExecutableElement executableElement) {
-        if (executableElement.getModifiers().contains(Modifier.PRIVATE)) {
-            return null;
-        }
         final ConstructorInfo constructorInfo = new ConstructorInfo();
+        final List<? extends VariableElement> parameters = executableElement
+                .getParameters();
+        final Set<Modifier> modifiers = executableElement.getModifiers();
+        if (modifiers.contains(Modifier.PRIVATE)) {
+            if (parameters.isEmpty()) {
+                printMessage(executableElement, MessageCode.CTOR0000);
+            }
+            return null;
+        } else if (modifiers.contains(Modifier.PROTECTED)
+                || !modifiers.contains(Modifier.PUBLIC)) {
+            printMessage(executableElement, MessageCode.CTOR0000);
+        }
         constructorInfo.setComment(env.getElementUtils().getDocComment(
                 executableElement));
         if (executableElement.getModifiers().contains(Modifier.PUBLIC)) {
@@ -197,8 +261,7 @@ public class BeanInfoFactory {
         constructorInfo
                 .setTypeParameters(toStringTypeParameterDecl(executableElement
                         .getTypeParameters()));
-        for (final VariableElement variableElement : executableElement
-                .getParameters()) {
+        for (final VariableElement variableElement : parameters) {
             constructorInfo.addParameterType(variableElement.asType()
                     .toString());
             constructorInfo.addParameterName(variableElement.getSimpleName()
@@ -369,6 +432,25 @@ public class BeanInfoFactory {
             result.add(typeMirror.toString());
         }
         return result;
+    }
+
+    /**
+     * メッセージを出力します．
+     * 
+     * @param element
+     *            メッセージの対象となる要素
+     * @param messageCode
+     *            メッセージコード
+     * @param args
+     *            メッセージに埋め込む引数
+     */
+    protected void printMessage(final Element element,
+            final MessageCode messageCode, final Object... args) {
+        if (messageCode.getKind() == Kind.ERROR) {
+            hasError = true;
+        }
+        env.getMessager().printMessage(messageCode.getKind(),
+                messageFormatter.getMessage(messageCode, args), element);
     }
 
 }

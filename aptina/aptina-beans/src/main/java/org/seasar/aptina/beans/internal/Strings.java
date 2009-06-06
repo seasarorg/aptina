@@ -85,15 +85,15 @@ public class Strings {
     /**
      * 文字列の先頭文字を大文字化した文字列を返します．
      * 
-     * @param name
+     * @param s
      *            文字列
      * @return 文字列の先頭文字を大文字化した文字列
      */
-    public static String capitalize(final String name) {
-        if (name == null || name.isEmpty()) {
-            return name;
+    public static String capitalize(final String s) {
+        if (s == null || s.isEmpty()) {
+            return s;
         }
-        return Character.toUpperCase(name.charAt(0)) + name.substring(1);
+        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
 
     /**
@@ -102,22 +102,22 @@ public class Strings {
      * JavaBeans の仕様に従い， 先頭の2文字がともに大文字の場合はそのまま返します．
      * </p>
      * 
-     * @param name
+     * @param s
      *            文字列
      * @return 文字列の先頭文字を小文字化した文字列
      */
-    public static String decapitalize(final String name) {
-        if (name == null || name.isEmpty()) {
-            return name;
+    public static String decapitalize(final String s) {
+        if (s == null || s.isEmpty()) {
+            return s;
         }
-        if (name.length() == 1) {
-            return name.toLowerCase();
+        if (s.length() == 1) {
+            return s.toLowerCase();
         }
-        if (Character.isUpperCase(name.charAt(0))
-                && Character.isUpperCase(name.charAt(1))) {
-            return name;
+        if (Character.isUpperCase(s.charAt(0))
+                && Character.isUpperCase(s.charAt(1))) {
+            return s;
         }
-        return Character.toLowerCase(name.charAt(0)) + name.substring(1);
+        return Character.toLowerCase(s.charAt(0)) + s.substring(1);
     }
 
 }

@@ -34,9 +34,6 @@ public class BeanInfo {
     /** パッケージ名 */
     protected String packageName;
 
-    /** 修飾子 */
-    protected String modifier;
-
     /** Bean クラスの単純名 */
     protected String beanClassName;
 
@@ -94,25 +91,6 @@ public class BeanInfo {
      */
     public void setPackageName(final String packageName) {
         this.packageName = packageName;
-    }
-
-    /**
-     * 修飾子を返します．
-     * 
-     * @return 修飾子
-     */
-    public String getModifier() {
-        return modifier;
-    }
-
-    /**
-     * 修飾子を設定します．
-     * 
-     * @param modifier
-     *            修飾子
-     */
-    public void setModifier(final String modifier) {
-        this.modifier = modifier;
     }
 
     /**
