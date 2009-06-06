@@ -1,0 +1,38 @@
+package org.seasar.aptina.beans.example;
+
+/**
+ * 
+ * @author koichik
+ */
+@javax.annotation.Generated("Aptina Beans")
+@org.seasar.aptina.beans.JavaBean
+public class FooBean extends org.seasar.aptina.beans.example.FooBeanState {
+
+    public  FooBean() {
+        super();
+    }
+
+    /**
+     * aを返します。
+     */
+    public int getA() {
+        return a;
+    }
+
+    /**
+     * aを設定します。
+     * 
+     * @param a a
+     */
+    public void setA(int a) {
+        this.a = a;
+    }
+
+    /**
+     * bを返します。
+     */
+    public java.lang.String getB() {
+        return b;
+    }
+
+}

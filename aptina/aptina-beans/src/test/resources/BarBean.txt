@@ -1,0 +1,102 @@
+package org.seasar.aptina.beans.example;
+
+/**
+ * テスト
+ * 
+ * @author koichik
+ * @param <E>
+ * @param <T>
+ */
+@javax.annotation.Generated("Aptina Beans")
+@org.seasar.aptina.beans.JavaBean
+public class BarBean<E, T extends java.util.List<E> & java.io.Serializable> extends org.seasar.aptina.beans.example.BarBeanState<E, T> {
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param aaa
+     *            あああ
+     */
+    protected  BarBean(T aaa) {
+        super(aaa);
+    }
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param <S>
+     *            いいいの型
+     * @param bbb
+     *            いいい
+     * @param hoge
+     *            ほげ
+     * @throws NullPointerException
+     *             何かが{@literal null}だった場合
+     */
+     <S> BarBean(T[] bbb, S hoge) throws java.lang.NullPointerException {
+        super(bbb, hoge);
+    }
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param aaa
+     *            あああ
+     * @param bbb
+     *            いいい
+     * @param ccc
+     *            ううう
+     */
+    public  BarBean(T aaa, T[] bbb, java.util.List<? extends T> ccc) {
+        super(aaa, bbb, ccc);
+    }
+
+    /**
+     * あああを返します。
+     */
+    public T getAaa() {
+        return aaa;
+    }
+
+    /**
+     * あああを設定します。
+     * 
+     * @param aaa あああ
+     */
+    public void setAaa(T aaa) {
+        this.aaa = aaa;
+    }
+
+    /**
+     * いいいを返します。
+     */
+    public T[] getBbb() {
+        return bbb;
+    }
+
+    /**
+     * いいいを設定します。
+     * 
+     * @param bbb いいい
+     */
+    public void setBbb(T[] bbb) {
+        this.bbb = bbb;
+    }
+
+    /**
+     * うううを返します。
+     */
+    public java.util.List<? extends T> getCcc() {
+        return ccc;
+    }
+
+    /**
+     * うううを設定します。
+     * 
+     * @param ccc ううう
+     */
+    public void setCcc(java.util.List<? extends T> ccc) {
+        this.ccc = ccc;
+    }
+
+}

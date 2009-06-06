@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<!-- The Basics -->
-	<artifactId>aptina-unit</artifactId>
+	<artifactId>aptina-beans</artifactId>
 	<packaging>jar</packaging>
 	<parent>
 		<groupId>org.seasar.aptina</groupId>
@@ -12,10 +12,16 @@
 	</parent>
 
 	<!-- More Project Information -->
-	<name>Aptina Unit</name>
-	<description>Unit Testing Framework for Annotation Processing Tools</description>
+	<name>Aptina Beans</name>
+	<description>Annotation Processing Tool for JavaBeans</description>
 
 	<!-- Dependency Settings -->
 	<dependencies>
+		<dependency>
+			<groupId>org.seasar.aptina</groupId>
+			<artifactId>aptina-unit</artifactId>
+			<version>0.0.0-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>
