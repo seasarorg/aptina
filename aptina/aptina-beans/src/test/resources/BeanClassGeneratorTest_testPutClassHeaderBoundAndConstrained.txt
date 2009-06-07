@@ -1,0 +1,12 @@
+package org.seasar.aptina.beans.example;
+
+@javax.annotation.Generated("Aptina Beans")
+@org.seasar.aptina.beans.JavaBean
+public class BoundAndConstrainedBean extends org.seasar.aptina.beans.example.BoundAndConstrainedBeanState {
+
+    java.beans.PropertyChangeSupport propertyChangeSupport =
+        new java.beans.PropertyChangeSupport(this);
+
+    java.beans.VetoableChangeSupport vetoableChangeSupport =
+        new java.beans.VetoableChangeSupport(this);
+

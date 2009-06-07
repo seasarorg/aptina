@@ -1,0 +1,165 @@
+package org.seasar.aptina.beans.example;
+
+/**
+ * 
+ * @author koichik
+ */
+@javax.annotation.Generated("Aptina Beans")
+@org.seasar.aptina.beans.JavaBean
+public class BoundBean extends org.seasar.aptina.beans.example.BoundBeanState {
+
+    java.beans.PropertyChangeSupport propertyChangeSupport =
+        new java.beans.PropertyChangeSupport(this);
+
+    public  BoundBean() {
+        super();
+    }
+
+    /**
+     * {@link java.beans.PropertyChangeListener} をリスナーリストに追加します。
+     * 
+     * @param listener 追加する {@link java.beans.PropertyChangeListener}
+     */
+    public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    /**
+     * 特定のプロパティーの {@link java.beans.PropertyChangeListener} をリスナーリストに追加します。
+     * 
+     * @param propertyName 待機しているプロパティーの名前
+     * @param listener 追加する {@link java.beans.PropertyChangeListener}
+     */
+    public void addPropertyChangeListener(String propertyName, java.beans.PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+    }
+
+    /**
+     * {@link java.beans.PropertyChangeListener} をリスナーリストから削除します。
+     * 
+     * @param listener 削除する {@link java.beans.PropertyChangeListener}
+     */
+    public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
+    }
+
+    /**
+     * 特定のプロパティーの {@link java.beans.PropertyChangeListener} をリスナーリストから削除します。
+     * 
+     * @param propertyName 待機していたプロパティーの名前
+     * @param listener 削除する {@link java.beans.PropertyChangeListener}
+     */
+    public void removePropertyChangeListener(String propertyName, java.beans.PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
+    }
+
+    /**
+     * aaaを返します。
+     * 
+     * @return aaa
+     */
+    public java.lang.String getAaa() {
+        return aaa;
+    }
+
+    /**
+     * bbbを返します。
+     * 
+     * @return bbb
+     */
+    public java.lang.String getBbb() {
+        return bbb;
+    }
+
+    /**
+     * bbbを設定します。
+     * 
+     * @param bbb bbb
+     */
+    public void setBbb(java.lang.String bbb) {
+        java.lang.String oldBbb = this.bbb;
+        this.bbb = bbb;
+        propertyChangeSupport.firePropertyChange("bbb", oldBbb, bbb);
+    }
+
+    /**
+     * bbbの {@link java.beans.PropertyChangeListener} をリスナーリストに追加します。
+     * 
+     * @param listener 追加する {@link java.beans.PropertyChangeListener}
+     */
+    public void addBbbChangeListener(java.beans.PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener("bbb", listener);
+    }
+
+    /**
+     * bbbの {@link java.beans.PropertyChangeListener} をリスナーリストから削除します。
+     * 
+     * @param listener 削除する {@link java.beans.PropertyChangeListener}
+     */
+    public void removeBbbChangeListener(java.beans.PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener("bbb", listener);
+    }
+
+    /**
+     * cccを返します。
+     * 
+     * @return ccc
+     */
+    public java.lang.String[] getCcc() {
+        return ccc;
+    }
+
+    /**
+     * cccのn番目の要素を返します。
+     * 
+     * @param n 返される要素のインデックス
+     * @return n番目のccc
+     * @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合
+     */
+    public java.lang.String getCcc(int n) throws ArrayIndexOutOfBoundsException {
+        return ccc[n];
+    }
+
+    /**
+     * cccを設定します。
+     * 
+     * @param ccc ccc
+     */
+    public void setCcc(java.lang.String[] ccc) {
+        java.lang.String[] oldCcc = this.ccc;
+        this.ccc = ccc;
+        propertyChangeSupport.firePropertyChange("ccc", oldCcc, ccc);
+    }
+
+    /**
+     * cccのn番目の要素を設定します。
+     * 
+     * @param n 設定される要素のインデックス
+     * @param ccc ccc
+     * @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合
+     */
+    public void setCcc(int n, java.lang.String ccc) throws ArrayIndexOutOfBoundsException {
+        java.lang.String oldCcc = this.ccc[n];
+        this.ccc[n] = ccc;
+        propertyChangeSupport.fireIndexedPropertyChange("ccc", n, oldCcc, ccc);
+    }
+
+    /**
+     * cccの {@link java.beans.PropertyChangeListener} をリスナーリストに追加します。
+     * 
+     * @param listener 追加する {@link java.beans.PropertyChangeListener}
+     */
+    public void addCccChangeListener(java.beans.PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener("ccc", listener);
+    }
+
+    /**
+     * cccの {@link java.beans.PropertyChangeListener} をリスナーリストから削除します。
+     * 
+     * @param listener 削除する {@link java.beans.PropertyChangeListener}
+     */
+    public void removeCccChangeListener(java.beans.PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener("ccc", listener);
+    }
+
+}

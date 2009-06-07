@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+	<properties>
+		<title>状態クラスと Bean クラス</title>
+	</properties>
+	<body>
+		<section name="状態クラス">
+			<p>
+				状態クラスは， JavaBeans の状態を表すフィールドが定義されたクラスで， Bean クラスのスーパークラスとなります．
+			</p>
+			<p>
+				状態クラスは 次のようなクラスでなければなりません．
+			</p>
+			<ul>
+				<li>
+					<code>BeanState</code>
+					で注釈されていること．
+				</li>
+				<li>通常のクラスであること (インタフェースやアノテーション，列挙は状態クラスにできません)．</li>
+				<li>トップレベルのクラスであること (ネストしたクラスは状態クラスにできません)．</li>
+				<li>
+					<code>public</code>
+					なクラスであること．
+				</li>
+				<li>
+					<code>final</code>
+					クラスではないこと．
+				</li>
+			</ul>
+		</section>
+
+		<section name="Bean クラス">
+			<p>
+				Bean クラスは状態クラスのサブクラスで， 状態クラスと同じパッケージに成されます．
+				生成された Bean クラスは
+				<code>JavaBean</code>
+				アノテーションで注釈されます．
+			</p>
+
+			<subsection name="Bean クラスの名前">
+				<p>
+					生成される Bean クラスの名前は次のようになります．
+				</p>
+				<dl>
+					<dt>
+						状態クラスの名前が
+						<code>Abstract</code>
+						で始まっている場合
+					</dt>
+					<dd>
+						状態クラスの名前の先頭から
+						<code>Abstract</code>
+						を除去した名前になります．
+					</dd>
+					<dt>
+						状態クラスの名前が
+						<code>State</code>
+						で終わっている場合
+					</dt>
+					<dd>
+						状態クラスの名前の末尾から
+						<code>State</code>
+						を除去した名前になります．
+					</dd>
+					<dt>
+						状態クラスの名前が
+						<code>Bean</code>
+						で終わっている場合
+					</dt>
+					<dd>
+						状態クラスの名前の末尾に
+						<code>Impl</code>
+						を付加した名前になります．
+					</dd>
+					<dt>その他の場合</dt>
+					<dd>
+						状態クラスの名前の末尾に
+						<code>Bean</code>
+						を付加した名前になります．
+					</dd>
+				</dl>
+				<p>
+					以下に状態クラスと生成される Bean クラスの名前の例を示します．
+				</p>
+				<table border="1" title="例">
+					<tr>
+						<th>状態クラスの名前</th>
+						<th>生成される Bean クラスの名前</th>
+					</tr>
+					<tr>
+						<td>
+							<code>AbstractHogeBean</code>
+						</td>
+						<td>
+							<code>HogeBean</code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>HogeBeanState</code>
+						</td>
+						<td>
+							<code>HogeBean</code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>HogeBean</code>
+						</td>
+						<td>
+							<code>HogeBeanImpl</code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>Hoge</code>
+						</td>
+						<td>
+							<code>HogeBean</code>
+						</td>
+					</tr>
+				</table>
+			</subsection>
+
+			<subsection name="コンストラクタ">
+				<p>
+					Bean クラスは状態クラスの非
+					<code>private</code>
+					コンストラクタを引き継ぎます．
+					引き継ぐことのできるコンストラクタが一つもない場合はエラーとなります．
+				</p>
+			</subsection>
+		</section>
+	</body>
+</document>

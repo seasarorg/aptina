@@ -1,0 +1,76 @@
+    /**
+     * {@link java.beans.PropertyChangeListener} をリスナーリストに追加します。
+     * 
+     * @param listener 追加する {@link java.beans.PropertyChangeListener}
+     */
+    public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    /**
+     * 特定のプロパティーの {@link java.beans.PropertyChangeListener} をリスナーリストに追加します。
+     * 
+     * @param propertyName 待機しているプロパティーの名前
+     * @param listener 追加する {@link java.beans.PropertyChangeListener}
+     */
+    public void addPropertyChangeListener(String propertyName, java.beans.PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+    }
+
+    /**
+     * {@link java.beans.PropertyChangeListener} をリスナーリストから削除します。
+     * 
+     * @param listener 削除する {@link java.beans.PropertyChangeListener}
+     */
+    public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
+    }
+
+    /**
+     * 特定のプロパティーの {@link java.beans.PropertyChangeListener} をリスナーリストから削除します。
+     * 
+     * @param propertyName 待機していたプロパティーの名前
+     * @param listener 削除する {@link java.beans.PropertyChangeListener}
+     */
+    public void removePropertyChangeListener(String propertyName, java.beans.PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
+    }
+
+    /**
+     * {@link java.beans.VetoableChangeListener} をリスナーリストに追加します。
+     * 
+     * @param listener 追加する {@link java.beans.VetoableChangeListener}
+     */
+    public void addVetoableChangeListener(java.beans.VetoableChangeListener listener) {
+        vetoableChangeSupport.addVetoableChangeListener(listener);
+    }
+
+    /**
+     * 特定のプロパティーの {@link java.beans.VetoableChangeListener} をリスナーリストに追加します。
+     * 
+     * @param propertyName 待機しているプロパティーの名前
+     * @param listener 追加する {@link java.beans.VetoableChangeListener}
+     */
+    public void addVetoableChangeListener(String propertyName, java.beans.VetoableChangeListener listener) {
+        vetoableChangeSupport.addVetoableChangeListener(propertyName, listener);
+    }
+
+    /**
+     * {@link java.beans.VetoableChangeListener} をリスナーリストから削除します。
+     * 
+     * @param listener 削除する {@link java.beans.VetoableChangeListener}
+     */
+    public void removeVetoableChangeListener(java.beans.VetoableChangeListener listener) {
+        vetoableChangeSupport.removeVetoableChangeListener(listener);
+    }
+
+    /**
+     * 特定のプロパティーの {@link java.beans.VetoableChangeListener} をリスナーリストから削除します。
+     * 
+     * @param propertyName 待機していたプロパティーの名前
+     * @param listener 削除する {@link java.beans.VetoableChangeListener}
+     */
+    public void removeVetoableChangeListener(String propertyName, java.beans.VetoableChangeListener listener) {
+        vetoableChangeSupport.removeVetoableChangeListener(propertyName, listener);
+    }
+

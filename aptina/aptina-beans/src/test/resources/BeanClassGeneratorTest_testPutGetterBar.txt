@@ -1,0 +1,38 @@
+    /**
+     * aaaを返します。
+     * 
+     * @return aaa
+     */
+    public T getAaa() {
+        return aaa;
+    }
+
+    /**
+     * bbbを返します。
+     * 
+     * @return bbb
+     */
+    public T[] getBbb() {
+        return bbb;
+    }
+
+    /**
+     * bbbのn番目の要素を返します。
+     * 
+     * @param n 返される要素のインデックス
+     * @return n番目のbbb
+     * @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合
+     */
+    public T getBbb(int n) throws ArrayIndexOutOfBoundsException {
+        return bbb[n];
+    }
+
+    /**
+     * cccを返します。
+     * 
+     * @return ccc
+     */
+    public java.util.List<? extends T> getCcc() {
+        return ccc;
+    }
+

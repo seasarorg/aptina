@@ -1,0 +1,38 @@
+    /**
+     * aaaを設定します。
+     * 
+     * @param aaa aaa
+     */
+    public void setAaa(T aaa) {
+        this.aaa = aaa;
+    }
+
+    /**
+     * bbbを設定します。
+     * 
+     * @param bbb bbb
+     */
+    public void setBbb(T[] bbb) {
+        this.bbb = bbb;
+    }
+
+    /**
+     * bbbのn番目の要素を設定します。
+     * 
+     * @param n 設定される要素のインデックス
+     * @param bbb bbb
+     * @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合
+     */
+    public void setBbb(int n, T bbb) throws ArrayIndexOutOfBoundsException {
+        this.bbb[n] = bbb;
+    }
+
+    /**
+     * cccを設定します。
+     * 
+     * @param ccc ccc
+     */
+    public void setCcc(java.util.List<? extends T> ccc) {
+        this.ccc = ccc;
+    }
+

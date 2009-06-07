@@ -1,0 +1,9 @@
+package org.seasar.aptina.beans.example;
+
+@javax.annotation.Generated("Aptina Beans")
+@org.seasar.aptina.beans.JavaBean
+public class BoundBean extends org.seasar.aptina.beans.example.BoundBeanState {
+
+    java.beans.PropertyChangeSupport propertyChangeSupport =
+        new java.beans.PropertyChangeSupport(this);
+

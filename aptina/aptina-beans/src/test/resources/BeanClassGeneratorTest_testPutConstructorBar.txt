@@ -1,0 +1,12 @@
+    protected  BarBean(T aaa) {
+        super(aaa);
+    }
+
+     <S> BarBean(T[] bbb, S hoge) throws java.lang.NullPointerException {
+        super(bbb, hoge);
+    }
+
+    public  BarBean(T aaa, T[] bbb, java.util.List<? extends T> ccc) {
+        super(aaa, bbb, ccc);
+    }
+

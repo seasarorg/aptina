@@ -16,7 +16,10 @@
 package org.seasar.aptina.beans.internal;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
@@ -25,6 +28,9 @@ import java.util.Locale;
 import javax.lang.model.element.TypeElement;
 
 import org.seasar.aptina.beans.example.BarBeanState;
+import org.seasar.aptina.beans.example.BoundAndConstrainedBeanState;
+import org.seasar.aptina.beans.example.BoundBeanState;
+import org.seasar.aptina.beans.example.ConstrainedBeanState;
 import org.seasar.aptina.beans.example.FooBeanState;
 import org.seasar.aptina.unit.AptinaTestCase;
 
@@ -53,6 +59,292 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
     }
 
     /**
+     * @throws Exception
+     */
+    public void testPutClassHeaderFoo() throws Exception {
+        createGenerator(FooBeanState.class);
+        generator.putClassHeader(beanInfo);
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPutClassHeaderBar() throws Exception {
+        createGenerator(BarBeanState.class);
+        generator.putClassHeader(beanInfo);
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPutClassHeaderBound() throws Exception {
+        createGenerator(BoundBeanState.class);
+        generator.putClassHeader(beanInfo);
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPutClassHeaderConstrained() throws Exception {
+        createGenerator(ConstrainedBeanState.class);
+        generator.putClassHeader(beanInfo);
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPutClassHeaderBoundAndConstrained() throws Exception {
+        createGenerator(BoundAndConstrainedBeanState.class);
+        generator.putClassHeader(beanInfo);
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPutClassFooter() throws Exception {
+        createGenerator(FooBeanState.class);
+        generator.putClassFooter(beanInfo);
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPutConstructorFoo() throws Exception {
+        createGenerator(FooBeanState.class);
+        for (final ConstructorInfo constructorInfo : beanInfo.getConstructors()) {
+            generator.putConstructor(beanInfo, constructorInfo);
+        }
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPutConstructorBar() throws Exception {
+        createGenerator(BarBeanState.class);
+        for (final ConstructorInfo constructorInfo : beanInfo.getConstructors()) {
+            generator.putConstructor(beanInfo, constructorInfo);
+        }
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPutGetterFoo() throws Exception {
+        createGenerator(FooBeanState.class);
+        for (final String propertyName : beanInfo.getPropertyNames()) {
+            final PropertyInfo propertyInfo = beanInfo
+                    .getPropertyInfo(propertyName);
+            if (propertyInfo.isReadable()) {
+                generator.putGetter(beanInfo, propertyInfo);
+            }
+        }
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPutGetterBar() throws Exception {
+        createGenerator(BarBeanState.class);
+        for (final String propertyName : beanInfo.getPropertyNames()) {
+            final PropertyInfo propertyInfo = beanInfo
+                    .getPropertyInfo(propertyName);
+            if (propertyInfo.isReadable()) {
+                generator.putGetter(beanInfo, propertyInfo);
+            }
+        }
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPutSetterFoo() throws Exception {
+        createGenerator(FooBeanState.class);
+        for (final String propertyName : beanInfo.getPropertyNames()) {
+            final PropertyInfo propertyInfo = beanInfo
+                    .getPropertyInfo(propertyName);
+            if (propertyInfo.isWritable()) {
+                generator.putSetter(beanInfo, propertyInfo);
+            }
+        }
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPutSetterBar() throws Exception {
+        createGenerator(BarBeanState.class);
+        for (final String propertyName : beanInfo.getPropertyNames()) {
+            final PropertyInfo propertyInfo = beanInfo
+                    .getPropertyInfo(propertyName);
+            if (propertyInfo.isWritable()) {
+                generator.putSetter(beanInfo, propertyInfo);
+            }
+        }
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPutSetterBound() throws Exception {
+        createGenerator(BoundBeanState.class);
+        for (final String propertyName : beanInfo.getPropertyNames()) {
+            final PropertyInfo propertyInfo = beanInfo
+                    .getPropertyInfo(propertyName);
+            if (propertyInfo.isWritable()) {
+                generator.putSetter(beanInfo, propertyInfo);
+            }
+        }
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPutSetterConstrained() throws Exception {
+        createGenerator(ConstrainedBeanState.class);
+        for (final String propertyName : beanInfo.getPropertyNames()) {
+            final PropertyInfo propertyInfo = beanInfo
+                    .getPropertyInfo(propertyName);
+            if (propertyInfo.isWritable()) {
+                generator.putSetter(beanInfo, propertyInfo);
+            }
+        }
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPutSetterBoundAndConstrained() throws Exception {
+        createGenerator(BoundAndConstrainedBeanState.class);
+        for (final String propertyName : beanInfo.getPropertyNames()) {
+            final PropertyInfo propertyInfo = beanInfo
+                    .getPropertyInfo(propertyName);
+            if (propertyInfo.isWritable()) {
+                generator.putSetter(beanInfo, propertyInfo);
+            }
+        }
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPutAddListenerBound() throws Exception {
+        createGenerator(BoundBeanState.class);
+        generator.putAddEventListener(beanInfo);
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPutAddListenerConstrained() throws Exception {
+        createGenerator(ConstrainedBeanState.class);
+        generator.putAddEventListener(beanInfo);
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPutAddListenerBoundAndConstrained() throws Exception {
+        createGenerator(BoundAndConstrainedBeanState.class);
+        generator.putAddEventListener(beanInfo);
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPutAddSpecificListenerBound() throws Exception {
+        createGenerator(BoundBeanState.class);
+        for (final String propertyName : beanInfo.getPropertyNames()) {
+            final PropertyInfo propertyInfo = beanInfo
+                    .getPropertyInfo(propertyName);
+            if (propertyInfo.isWritable()) {
+                generator.putAddEventListener(beanInfo, propertyInfo);
+            }
+        }
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPutAddSpecificListenerConstrained() throws Exception {
+        createGenerator(ConstrainedBeanState.class);
+        for (final String propertyName : beanInfo.getPropertyNames()) {
+            final PropertyInfo propertyInfo = beanInfo
+                    .getPropertyInfo(propertyName);
+            if (propertyInfo.isWritable()) {
+                generator.putAddEventListener(beanInfo, propertyInfo);
+            }
+        }
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPutAddSpecificListenerBoundAndConstrained()
+            throws Exception {
+        createGenerator(BoundAndConstrainedBeanState.class);
+        for (final String propertyName : beanInfo.getPropertyNames()) {
+            final PropertyInfo propertyInfo = beanInfo
+                    .getPropertyInfo(propertyName);
+            if (propertyInfo.isWritable()) {
+                generator.putAddEventListener(beanInfo, propertyInfo);
+            }
+        }
+        generator.writer.close();
+        assertEqualsByLine(new StringReader(stringWriter.toString()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testToQualifiedName() throws Exception {
+        assertEquals(FooBeanState.class.getName(), BeanClassGenerator
+                .toQualifiedName("org.seasar.aptina.beans.example",
+                        "FooBeanState"));
+        assertEquals("FooBeanState", BeanClassGenerator.toQualifiedName(null,
+                "FooBeanState"));
+    }
+
+    /**
      * @param compilationUnit
      * @throws Exception
      */
@@ -70,326 +362,38 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
     }
 
     /**
+     * @param reader
      * @throws Exception
      */
-    public void testPutClassHeaderFoo() throws Exception {
-        createGenerator(FooBeanState.class);
-        generator.putClassHeader(beanInfo);
-        generator.writer.close();
-
-        final BufferedReader reader = new BufferedReader(new StringReader(
-                stringWriter.toString()));
-        assertEquals("package org.seasar.aptina.beans.example;", reader
-                .readLine());
-        assertEquals("", reader.readLine());
-        assertEquals("@javax.annotation.Generated(\"Aptina Beans\")", reader
-                .readLine());
-        assertEquals("@org.seasar.aptina.beans.JavaBean", reader.readLine());
-        assertEquals(
-                "public class FooBean extends org.seasar.aptina.beans.example.FooBeanState {",
-                reader.readLine());
-        assertEquals("", reader.readLine());
-        assertNull(reader.readLine());
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testPutClassHeaderBar() throws Exception {
-        createGenerator(BarBeanState.class);
-        generator.putClassHeader(beanInfo);
-        generator.writer.close();
-
-        final BufferedReader reader = new BufferedReader(new StringReader(
-                stringWriter.toString()));
-        assertEquals("package org.seasar.aptina.beans.example;", reader
-                .readLine());
-        assertEquals("", reader.readLine());
-        assertEquals("@javax.annotation.Generated(\"Aptina Beans\")", reader
-                .readLine());
-        assertEquals("@org.seasar.aptina.beans.JavaBean", reader.readLine());
-        assertEquals(
-                "public class BarBean<E, T extends java.util.List<E> & java.io.Serializable> extends org.seasar.aptina.beans.example.BarBeanState<E, T> {",
-                reader.readLine());
-        assertEquals("", reader.readLine());
-        assertNull(reader.readLine());
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testPutClassFooter() throws Exception {
-        createGenerator(FooBeanState.class);
-        generator.putClassFooter(beanInfo);
-        generator.writer.close();
-
-        final BufferedReader reader = new BufferedReader(new StringReader(
-                stringWriter.toString()));
-        assertEquals("}", reader.readLine());
-        assertNull(reader.readLine());
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testPutConstructorFoo() throws Exception {
-        createGenerator(FooBeanState.class);
-        for (final ConstructorInfo constructorInfo : beanInfo.getConstructors()) {
-            generator.putConstructor(beanInfo, constructorInfo);
-        }
-        generator.writer.close();
-
-        final BufferedReader reader = new BufferedReader(new StringReader(
-                stringWriter.toString()));
-        assertEquals("    public  FooBean() {", reader.readLine());
-        assertEquals("        super();", reader.readLine());
-        assertEquals("    }", reader.readLine());
-        assertEquals("", reader.readLine());
-        assertNull(reader.readLine());
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testPutConstructorBar() throws Exception {
-        createGenerator(BarBeanState.class);
-        for (final ConstructorInfo constructorInfo : beanInfo.getConstructors()) {
-            generator.putConstructor(beanInfo, constructorInfo);
-        }
-        generator.writer.close();
-
-        final BufferedReader reader = new BufferedReader(new StringReader(
-                stringWriter.toString()));
-        assertEquals("    protected  BarBean(T aaa) {", reader.readLine());
-        assertEquals("        super(aaa);", reader.readLine());
-        assertEquals("    }", reader.readLine());
-        assertEquals("", reader.readLine());
-        assertEquals(
-                "     <S> BarBean(T[] bbb, S hoge) throws java.lang.NullPointerException {",
-                reader.readLine());
-        assertEquals("        super(bbb, hoge);", reader.readLine());
-        assertEquals("    }", reader.readLine());
-        assertEquals("", reader.readLine());
-        assertEquals(
-                "    public  BarBean(T aaa, T[] bbb, java.util.List<? extends T> ccc) {",
-                reader.readLine());
-        assertEquals("        super(aaa, bbb, ccc);", reader.readLine());
-        assertEquals("    }", reader.readLine());
-        assertEquals("", reader.readLine());
-        assertNull(reader.readLine());
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testPutGetterFoo() throws Exception {
-        createGenerator(FooBeanState.class);
-        for (final String propertyName : beanInfo.getPropertyNames()) {
-            final PropertyInfo propertyInfo = beanInfo
-                    .getPropertyInfo(propertyName);
-            if (propertyInfo.isReadable()) {
-                generator.putGetter(propertyInfo);
+    void assertEqualsByLine(final Reader reader) throws Exception {
+        final String expectedResourceName = getClass().getSimpleName() + "_"
+                + getName() + ".txt";
+        final BufferedReader expectedReader = new BufferedReader(
+                new InputStreamReader(getClass().getClassLoader()
+                        .getResourceAsStream(expectedResourceName), Charset
+                        .forName("UTF-8")));
+        final BufferedReader actualReader = new BufferedReader(reader);
+        try {
+            String expected;
+            String actual;
+            while ((expected = expectedReader.readLine()) != null) {
+                actual = actualReader.readLine();
+                assertEquals(expected, actual);
             }
+            assertEquals(null, actualReader.readLine());
+        } finally {
+            close(expectedReader);
+            close(actualReader);
         }
-        generator.writer.close();
-
-        final BufferedReader reader = new BufferedReader(new StringReader(
-                stringWriter.toString()));
-        assertEquals("    /**", reader.readLine());
-        assertEquals("     * aを返します。", reader.readLine());
-        assertEquals("     * ", reader.readLine());
-        assertEquals("     * @return a", reader.readLine());
-        assertEquals("     */", reader.readLine());
-        assertEquals("    public int getA() {", reader.readLine());
-        assertEquals("        return a;", reader.readLine());
-        assertEquals("    }", reader.readLine());
-        assertEquals("", reader.readLine());
-        assertEquals("    /**", reader.readLine());
-        assertEquals("     * bを返します。", reader.readLine());
-        assertEquals("     * ", reader.readLine());
-        assertEquals("     * @return b", reader.readLine());
-        assertEquals("     */", reader.readLine());
-        assertEquals("    public java.lang.String getB() {", reader.readLine());
-        assertEquals("        return b;", reader.readLine());
-        assertEquals("    }", reader.readLine());
-        assertEquals("", reader.readLine());
-        assertNull(reader.readLine());
     }
 
     /**
-     * @throws Exception
+     * @param closeable
      */
-    public void testPutGetterBar() throws Exception {
-        createGenerator(BarBeanState.class);
-        for (final String propertyName : beanInfo.getPropertyNames()) {
-            final PropertyInfo propertyInfo = beanInfo
-                    .getPropertyInfo(propertyName);
-            if (propertyInfo.isReadable()) {
-                generator.putGetter(propertyInfo);
-            }
+    void close(final Closeable closeable) {
+        try {
+            closeable.close();
+        } catch (final Exception ignore) {
         }
-        generator.writer.close();
-
-        final BufferedReader reader = new BufferedReader(new StringReader(
-                stringWriter.toString()));
-        assertEquals("    /**", reader.readLine());
-        // テストケースでは Javadoc コメントは取得できないのでフィールド名になる
-        assertEquals("     * aaaを返します。", reader.readLine());
-        assertEquals("     * ", reader.readLine());
-        assertEquals("     * @return aaa", reader.readLine());
-        assertEquals("     */", reader.readLine());
-        assertEquals("    public T getAaa() {", reader.readLine());
-        assertEquals("        return aaa;", reader.readLine());
-        assertEquals("    }", reader.readLine());
-        assertEquals("", reader.readLine());
-
-        assertEquals("    /**", reader.readLine());
-        // テストケースでは Javadoc コメントは取得できないのでフィールド名になる
-        assertEquals("     * bbbを返します。", reader.readLine());
-        assertEquals("     * ", reader.readLine());
-        assertEquals("     * @return bbb", reader.readLine());
-        assertEquals("     */", reader.readLine());
-        assertEquals("    public T[] getBbb() {", reader.readLine());
-        assertEquals("        return bbb;", reader.readLine());
-        assertEquals("    }", reader.readLine());
-        assertEquals("", reader.readLine());
-        assertEquals("    /**", reader.readLine());
-        // テストケースでは Javadoc コメントは取得できないのでフィールド名になる
-        assertEquals("     * bbbのn番目の要素を返します。", reader.readLine());
-        assertEquals("     * ", reader.readLine());
-        assertEquals("     * @param n 返される要素のインデックス", reader.readLine());
-        assertEquals("     * @return n番目のbbb", reader.readLine());
-        assertEquals(
-                "     * @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合",
-                reader.readLine());
-        assertEquals("     */", reader.readLine());
-        assertEquals(
-                "    public T getBbb(int n) throws ArrayIndexOutOfBoundsException {",
-                reader.readLine());
-        assertEquals("        return bbb[n];", reader.readLine());
-        assertEquals("    }", reader.readLine());
-        assertEquals("", reader.readLine());
-
-        assertEquals("    /**", reader.readLine());
-        // テストケースでは Javadoc コメントは取得できないのでフィールド名になる
-        assertEquals("     * cccを返します。", reader.readLine());
-        assertEquals("     * ", reader.readLine());
-        assertEquals("     * @return ccc", reader.readLine());
-        assertEquals("     */", reader.readLine());
-        assertEquals("    public java.util.List<? extends T> getCcc() {",
-                reader.readLine());
-        assertEquals("        return ccc;", reader.readLine());
-        assertEquals("    }", reader.readLine());
-        assertEquals("", reader.readLine());
-        assertNull(reader.readLine());
     }
-
-    /**
-     * @throws Exception
-     */
-    public void testPutSetterFoo() throws Exception {
-        createGenerator(FooBeanState.class);
-        for (final String propertyName : beanInfo.getPropertyNames()) {
-            final PropertyInfo propertyInfo = beanInfo
-                    .getPropertyInfo(propertyName);
-            if (propertyInfo.isWritable()) {
-                generator.putSetter(propertyInfo);
-            }
-        }
-        generator.writer.close();
-
-        final BufferedReader reader = new BufferedReader(new StringReader(
-                stringWriter.toString()));
-        assertEquals("    /**", reader.readLine());
-        assertEquals("     * aを設定します。", reader.readLine());
-        assertEquals("     * ", reader.readLine());
-        assertEquals("     * @param a a", reader.readLine());
-        assertEquals("     */", reader.readLine());
-        assertEquals("    public void setA(int a) {", reader.readLine());
-        assertEquals("        this.a = a;", reader.readLine());
-        assertEquals("    }", reader.readLine());
-        assertEquals("", reader.readLine());
-        assertNull(reader.readLine());
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testPutSetterBar() throws Exception {
-        createGenerator(BarBeanState.class);
-        for (final String propertyName : beanInfo.getPropertyNames()) {
-            final PropertyInfo propertyInfo = beanInfo
-                    .getPropertyInfo(propertyName);
-            if (propertyInfo.isWritable()) {
-                generator.putSetter(propertyInfo);
-            }
-        }
-        generator.writer.close();
-
-        final BufferedReader reader = new BufferedReader(new StringReader(
-                stringWriter.toString()));
-        assertEquals("    /**", reader.readLine());
-        // テストケースでは Javadoc コメントは取得できないのでフィールド名になる
-        assertEquals("     * aaaを設定します。", reader.readLine());
-        assertEquals("     * ", reader.readLine());
-        assertEquals("     * @param aaa aaa", reader.readLine());
-        assertEquals("     */", reader.readLine());
-        assertEquals("    public void setAaa(T aaa) {", reader.readLine());
-        assertEquals("        this.aaa = aaa;", reader.readLine());
-        assertEquals("    }", reader.readLine());
-        assertEquals("", reader.readLine());
-
-        assertEquals("    /**", reader.readLine());
-        // テストケースでは Javadoc コメントは取得できないのでフィールド名になる
-        assertEquals("     * bbbを設定します。", reader.readLine());
-        assertEquals("     * ", reader.readLine());
-        assertEquals("     * @param bbb bbb", reader.readLine());
-        assertEquals("     */", reader.readLine());
-        assertEquals("    public void setBbb(T[] bbb) {", reader.readLine());
-        assertEquals("        this.bbb = bbb;", reader.readLine());
-        assertEquals("    }", reader.readLine());
-        assertEquals("", reader.readLine());
-        assertEquals("    /**", reader.readLine());
-        // テストケースでは Javadoc コメントは取得できないのでフィールド名になる
-        assertEquals("     * bbbのn番目の要素を設定します。", reader.readLine());
-        assertEquals("     * ", reader.readLine());
-        assertEquals("     * @param n 設定される要素のインデックス", reader.readLine());
-        assertEquals("     * @param bbb bbb", reader.readLine());
-        assertEquals(
-                "     * @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合",
-                reader.readLine());
-        assertEquals("     */", reader.readLine());
-        assertEquals(
-                "    public void setBbb(int n, T bbb) throws ArrayIndexOutOfBoundsException {",
-                reader.readLine());
-        assertEquals("        this.bbb[n] = bbb;", reader.readLine());
-        assertEquals("    }", reader.readLine());
-        assertEquals("", reader.readLine());
-
-        assertEquals("    /**", reader.readLine());
-        // テストケースでは Javadoc コメントは取得できないのでフィールド名になる
-        assertEquals("     * cccを設定します。", reader.readLine());
-        assertEquals("     * ", reader.readLine());
-        assertEquals("     * @param ccc ccc", reader.readLine());
-        assertEquals("     */", reader.readLine());
-        assertEquals(
-                "    public void setCcc(java.util.List<? extends T> ccc) {",
-                reader.readLine());
-        assertEquals("        this.ccc = ccc;", reader.readLine());
-        assertEquals("    }", reader.readLine());
-        assertEquals("", reader.readLine());
-        assertNull(reader.readLine());
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testToQualifiedName() throws Exception {
-        assertEquals(FooBeanState.class.getName(), BeanClassGenerator
-                .toQualifiedName("org.seasar.aptina.beans.example",
-                        "FooBeanState"));
-        assertEquals("FooBeanState", BeanClassGenerator.toQualifiedName(null,
-                "FooBeanState"));
-    }
-
 }

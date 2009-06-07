@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+	<properties>
+		<title>BeanProcessorの使い方</title>
+	</properties>
+	<body>
+		<section name="BeanProcessorの使い方">
+			<p>
+				<strong>
+					<code>BeanProcessor</code>
+				</strong>
+				は， Aptina Beans の提供する Annotation Processor です．
+			</p>
+			<p>
+				<code>BeanProcessor</code>
+				は，Eclipse など Pluggable Annotation Processing に対応した IDE や，
+				Maven などのコマンドラインツールなどで使用できます．
+			</p>
+		</section>
+
+		<section name="Eclipse での使い方">
+			<p>
+				プロジェクトのプロパティで以下の設定をしてください．
+			</p>
+			<ul>
+				<li>
+					[Java Compiler]-[Annotation processing] を選択します．
+					<ul>
+						<li>[Enable project specific settings] をチェックします．</li>
+						<li>[Enable annotation processing] をチェックします．</li>
+					</ul>
+				</li>
+				<li>
+					[Java Compiler]-[Annotation processing]-[Factory Path] を選択します．
+					<ul>
+						<li>[Enable project specific settings] をチェックします．</li>
+						<li>[Add JARs] ボタンを押して Aptina Beans の Jar ファイルを追加します．</li>
+					</ul>
+				</li>
+			</ul>
+		</section>
+
+		<section name="Maven での使い方">
+			<p>
+				maven-compiler-plugin のコンパイラ引数に
+				<code>-XprintProcessorInfo</code>
+				を追加し，
+				依存ライブラリに Aptina Beans を追加してください．
+			</p>
+			<source><![CDATA[
+<build>
+  <pluginManagement>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+          <encoding>UTF-8</encoding>
+          <compilerArgument>-XprintProcessorInfo</compilerArgument>
+        </configuration>
+      </plugin>
+    </plugins>
+  </pluginManagement>
+</build>
+]]></source>
+			<source><![CDATA[
+<dependency>
+  <groupId>org.seasar.aptina</groupId>
+  <artifactId>aptina-beans</artifactId>
+  <version>x.y.z</version>
+  <scope>compile</scope>
+</dependency>
+]]></source>
+		</section>
+
+		<section name="コマンドラインでの使い方">
+			<p>
+				javac のクラスパスに Aptina Beans の Jar ファイルを含めてください．
+			</p>
+			<source><![CDATA[
+javac -classpath aptina-beans-x.y.z.jar ...
+]]></source>
+		</section>
+	</body>
+</document>

@@ -1,0 +1,18 @@
+    /**
+     * aを返します。
+     * 
+     * @return a
+     */
+    public int getA() {
+        return a;
+    }
+
+    /**
+     * bを返します。
+     * 
+     * @return b
+     */
+    public java.lang.String getB() {
+        return b;
+    }
+

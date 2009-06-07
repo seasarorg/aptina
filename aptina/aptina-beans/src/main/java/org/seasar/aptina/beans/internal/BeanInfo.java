@@ -43,6 +43,12 @@ public class BeanInfo {
     /** 状態クラスの完全限定名 */
     protected String stateClassName;
 
+    /** bound プロパティをサポートする場合は {@literal true} */
+    protected boolean boundProperties;
+
+    /** constrained プロパティをサポートする場合は {@literal true} */
+    protected boolean constrainedProperties;
+
     /** プロパティ情報の {@link Map} */
     protected final Map<String, PropertyInfo> properties = new LinkedHashMap<String, PropertyInfo>();
 
@@ -148,6 +154,44 @@ public class BeanInfo {
      */
     public void setStateClassName(final String stateClassName) {
         this.stateClassName = stateClassName;
+    }
+
+    /**
+     * bound プロパティをサポートする場合は {@literal true} を返します．
+     * 
+     * @return bound プロパティをサポートする場合は {@literal true}
+     */
+    public boolean isBoundProperties() {
+        return boundProperties;
+    }
+
+    /**
+     * bound プロパティをサポートする場合は {@literal true} を設定します．
+     * 
+     * @param boundProperties
+     *            bound プロパティをサポートする場合は {@literal true}
+     */
+    public void setBoundProperties(final boolean boundProperties) {
+        this.boundProperties = boundProperties;
+    }
+
+    /**
+     * constrained プロパティをサポートする場合は {@literal true} を返します．
+     * 
+     * @return constrained プロパティをサポートする場合は {@literal true}
+     */
+    public boolean isConstrainedProperties() {
+        return constrainedProperties;
+    }
+
+    /**
+     * constrained プロパティをサポートする場合は {@literal true} を設定します．
+     * 
+     * @param constrainedProperties
+     *            constrained プロパティをサポートする場合は {@literal true}
+     */
+    public void setConstrainedProperties(final boolean constrainedProperties) {
+        this.constrainedProperties = constrainedProperties;
     }
 
     /**

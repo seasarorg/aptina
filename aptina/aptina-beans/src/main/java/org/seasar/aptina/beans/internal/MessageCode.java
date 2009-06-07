@@ -54,30 +54,87 @@ public enum MessageCode {
     JDOC0000(Kind.OTHER, " Return the %1$s.%n %n @return the %1$s.%n",
             " %1$sを返します。%n %n @return %1$s%n"),
     /** */
-    JDOC0001(Kind.OTHER, " Set the %1$s.%n %n @param %2$n the %1$s.%n",
-            " %1$sを設定します。%n %n @param %2$s %1$s%n"),
-    /** */
-    JDOC0002(
+    JDOC0001(
             Kind.OTHER,
             " Return the nth %1$s.%n %n"
                     + " @param n the index of the %1$s to get.%n"
                     + " @return the n<sup>th</sup> %1$s.%n"
-                    + " @throws ArrayIndexOutOfBoundsException an index is used that is outside the current array bounds",
+                    + " @throws ArrayIndexOutOfBoundsException an index is used that is outside the current array bounds%n",
             " %1$sのn番目の要素を返します。%n %n"
                     + " @param n 返される要素のインデックス%n"
                     + " @return n番目の%1$s%n"
-                    + " @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合"),
+                    + " @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合%n"),
+    /** */
+    JDOC0002(Kind.OTHER, " Set the %1$s.%n %n @param %2$n the %1$s.%n",
+            " %1$sを設定します。%n %n @param %2$s %1$s%n"),
     /** */
     JDOC0003(
             Kind.OTHER,
             " Set the nth %1$s.%n %n"
                     + " @param n n<sup>th</sup> of the %1$s to set.%n"
                     + " @param %2$n %1$s%n"
-                    + " @throws ArrayIndexOutOfBoundsException an index is used that is outside the current array bounds",
+                    + " @throws ArrayIndexOutOfBoundsException an index is used that is outside the current array bounds%n",
             " %1$sのn番目の要素を設定します。%n %n"
                     + " @param n 設定される要素のインデックス%n"
                     + " @param %2$s %1$s%n"
-                    + " @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合"),
+                    + " @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合%n"),
+    /** */
+    JDOC0004(
+            Kind.OTHER,
+            " Set the %1$s.%n %n @param %2$n the %1$s.%n"
+                    + " @throws java.beans.PropertyVetoException if the recipient wishes the property change to be rolled back.%n",
+            " %1$sを設定します。%n %n"
+                    + " @param %2$s %1$s%n"
+                    + " @throws java.beans.PropertyVetoException プロパティの変更が拒否された場合%n"),
+    /** */
+    JDOC0005(
+            Kind.OTHER,
+            " Set the nth %1$s.%n %n"
+                    + " @param n n<sup>th</sup> of the %1$s to set.%n"
+                    + " @param %2$n %1$s%n"
+                    + " @throws ArrayIndexOutOfBoundsException an index is used that is outside the current array bounds.%n"
+                    + " @throws java.beans.PropertyVetoException if the recipient wishes the property change to be rolled back.%n",
+            " %1$sのn番目の要素を設定します。%n %n"
+                    + " @param n 設定される要素のインデックス%n"
+                    + " @param %2$s %1$s%n"
+                    + " @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合%n"
+                    + " @throws java.beans.PropertyVetoException プロパティの変更が拒否された場合%n"),
+    /** */
+    JDOC0006(Kind.OTHER, " Add a {@link %1$s} to the listener list.%n %n"
+            + " @param listener The {@literal %1$s} to be added%n",
+            " {@link %1$s} をリスナーリストに追加します。%n %n"
+                    + " @param listener 追加する {@link %1$s}%n"),
+    /** */
+    JDOC0007(Kind.OTHER, " Add a {@link %1$s} for a specific property.%n %n"
+            + " @param propertyName The name of the property to listen on.%n"
+            + " @param listener The {@link %1$s} to be added%n",
+            " 特定のプロパティーの {@link %1$s} をリスナーリストに追加します。%n %n"
+                    + " @param propertyName 待機しているプロパティーの名前%n"
+                    + " @param listener 追加する {@link %1$s}%n"),
+    /** */
+    JDOC0008(Kind.OTHER, " Remove a {@link %1$s} from the listener list.%n %n"
+            + " @param listener The {@link %1$s} to be removed%n",
+            " {@link %1$s} をリスナーリストから削除します。%n %n"
+                    + " @param listener 削除する {@link %1$s}%n"),
+    /** */
+    JDOC0009(
+            Kind.OTHER,
+            " Remove a {@link %1$s} for a specific property.%n %n"
+                    + " @param propertyName The name of the property that was listened on.%n"
+                    + " @param listener The {@link %1$s} to be removed%n",
+            " 特定のプロパティーの {@link %1$s} をリスナーリストから削除します。%n %n"
+                    + " @param propertyName 待機していたプロパティーの名前%n"
+                    + " @param listener 削除する {@link %1$s}%n"),
+    /** */
+    JDOC0010(Kind.OTHER, " Add a {@link %1$s} for the %2$s.%n %n"
+            + " @param listener The {@link %1$s} to be added%n",
+            " %2$sの {@link %1$s} をリスナーリストに追加します。%n %n"
+                    + " @param listener 追加する {@link %1$s}%n"),
+    /** */
+    JDOC0011(Kind.OTHER, " Remove a {@link %1$s} for the %2$s.%n %n"
+            + " @param listener The {@link %1$s} to be removed%n",
+            " %2$sの {@link %1$s} をリスナーリストから削除します。%n %n"
+                    + " @param listener 削除する {@link %1$s}%n"),
     //
     ;
 

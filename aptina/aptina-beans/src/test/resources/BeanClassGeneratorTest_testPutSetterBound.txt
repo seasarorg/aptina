@@ -1,0 +1,35 @@
+    /**
+     * bbbを設定します。
+     * 
+     * @param bbb bbb
+     */
+    public void setBbb(java.lang.String bbb) {
+        java.lang.String oldBbb = this.bbb;
+        this.bbb = bbb;
+        propertyChangeSupport.firePropertyChange("bbb", oldBbb, bbb);
+    }
+
+    /**
+     * cccを設定します。
+     * 
+     * @param ccc ccc
+     */
+    public void setCcc(java.lang.String[] ccc) {
+        java.lang.String[] oldCcc = this.ccc;
+        this.ccc = ccc;
+        propertyChangeSupport.firePropertyChange("ccc", oldCcc, ccc);
+    }
+
+    /**
+     * cccのn番目の要素を設定します。
+     * 
+     * @param n 設定される要素のインデックス
+     * @param ccc ccc
+     * @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合
+     */
+    public void setCcc(int n, java.lang.String ccc) throws ArrayIndexOutOfBoundsException {
+        java.lang.String oldCcc = this.ccc[n];
+        this.ccc[n] = ccc;
+        propertyChangeSupport.fireIndexedPropertyChange("ccc", n, oldCcc, ccc);
+    }
+

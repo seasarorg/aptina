@@ -24,6 +24,9 @@ import javax.lang.model.element.TypeElement;
 
 import org.seasar.aptina.beans.example.BarBeanState;
 import org.seasar.aptina.beans.example.BazBeanState;
+import org.seasar.aptina.beans.example.BoundAndConstrainedBeanState;
+import org.seasar.aptina.beans.example.BoundBeanState;
+import org.seasar.aptina.beans.example.ConstrainedBeanState;
 import org.seasar.aptina.beans.example.FooBeanState;
 import org.seasar.aptina.unit.AptinaTestCase;
 
@@ -57,6 +60,8 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         assertEquals("org.seasar.aptina.beans.example", beanInfo
                 .getPackageName());
         assertEquals("FooBean", beanInfo.getBeanClassName());
+        assertFalse(beanInfo.isBoundProperties());
+        assertFalse(beanInfo.isConstrainedProperties());
     }
 
     /**
@@ -78,6 +83,75 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         assertEquals("BarBean", beanInfo.getBeanClassName());
         assertEquals("<E, T extends java.util.List<E> & java.io.Serializable>",
                 beanInfo.getTypeParameter());
+        assertFalse(beanInfo.isBoundProperties());
+        assertFalse(beanInfo.isConstrainedProperties());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testProcessTypeBound() throws Exception {
+        addCompilationUnit(BoundBeanState.class);
+        compile();
+
+        final TypeElement typeElement = getTypeElement(BoundBeanState.class);
+        final BeanInfoFactory beanInfoFactory = new BeanInfoFactory(
+                getProcessingEnvironment());
+        final BeanInfo beanInfo = beanInfoFactory.processType(typeElement);
+
+        assertEquals("org.seasar.aptina.beans.example.BoundBeanState", beanInfo
+                .getStateClassName());
+        assertEquals("org.seasar.aptina.beans.example", beanInfo
+                .getPackageName());
+        assertEquals("BoundBean", beanInfo.getBeanClassName());
+        assertEquals("", beanInfo.getTypeParameter());
+        assertTrue(beanInfo.isBoundProperties());
+        assertFalse(beanInfo.isConstrainedProperties());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testProcessTypeConstrained() throws Exception {
+        addCompilationUnit(ConstrainedBeanState.class);
+        compile();
+
+        final TypeElement typeElement = getTypeElement(ConstrainedBeanState.class);
+        final BeanInfoFactory beanInfoFactory = new BeanInfoFactory(
+                getProcessingEnvironment());
+        final BeanInfo beanInfo = beanInfoFactory.processType(typeElement);
+
+        assertEquals("org.seasar.aptina.beans.example.ConstrainedBeanState",
+                beanInfo.getStateClassName());
+        assertEquals("org.seasar.aptina.beans.example", beanInfo
+                .getPackageName());
+        assertEquals("ConstrainedBean", beanInfo.getBeanClassName());
+        assertEquals("", beanInfo.getTypeParameter());
+        assertFalse(beanInfo.isBoundProperties());
+        assertTrue(beanInfo.isConstrainedProperties());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testProcessTypeBoundAndConstrained() throws Exception {
+        addCompilationUnit(BoundAndConstrainedBeanState.class);
+        compile();
+
+        final TypeElement typeElement = getTypeElement(BoundAndConstrainedBeanState.class);
+        final BeanInfoFactory beanInfoFactory = new BeanInfoFactory(
+                getProcessingEnvironment());
+        final BeanInfo beanInfo = beanInfoFactory.processType(typeElement);
+
+        assertEquals(
+                "org.seasar.aptina.beans.example.BoundAndConstrainedBeanState",
+                beanInfo.getStateClassName());
+        assertEquals("org.seasar.aptina.beans.example", beanInfo
+                .getPackageName());
+        assertEquals("BoundAndConstrainedBean", beanInfo.getBeanClassName());
+        assertEquals("", beanInfo.getTypeParameter());
+        assertTrue(beanInfo.isBoundProperties());
+        assertTrue(beanInfo.isConstrainedProperties());
     }
 
     /**

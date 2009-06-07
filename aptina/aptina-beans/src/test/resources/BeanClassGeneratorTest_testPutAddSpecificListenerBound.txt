@@ -1,0 +1,36 @@
+    /**
+     * bbbの {@link java.beans.PropertyChangeListener} をリスナーリストに追加します。
+     * 
+     * @param listener 追加する {@link java.beans.PropertyChangeListener}
+     */
+    public void addBbbChangeListener(java.beans.PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener("bbb", listener);
+    }
+
+    /**
+     * bbbの {@link java.beans.PropertyChangeListener} をリスナーリストから削除します。
+     * 
+     * @param listener 削除する {@link java.beans.PropertyChangeListener}
+     */
+    public void removeBbbChangeListener(java.beans.PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener("bbb", listener);
+    }
+
+    /**
+     * cccの {@link java.beans.PropertyChangeListener} をリスナーリストに追加します。
+     * 
+     * @param listener 追加する {@link java.beans.PropertyChangeListener}
+     */
+    public void addCccChangeListener(java.beans.PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener("ccc", listener);
+    }
+
+    /**
+     * cccの {@link java.beans.PropertyChangeListener} をリスナーリストから削除します。
+     * 
+     * @param listener 削除する {@link java.beans.PropertyChangeListener}
+     */
+    public void removeCccChangeListener(java.beans.PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener("ccc", listener);
+    }
+

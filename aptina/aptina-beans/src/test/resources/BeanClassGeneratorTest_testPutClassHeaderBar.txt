@@ -1,0 +1,6 @@
+package org.seasar.aptina.beans.example;
+
+@javax.annotation.Generated("Aptina Beans")
+@org.seasar.aptina.beans.JavaBean
+public class BarBean<E, T extends java.util.List<E> & java.io.Serializable> extends org.seasar.aptina.beans.example.BarBeanState<E, T> {
+

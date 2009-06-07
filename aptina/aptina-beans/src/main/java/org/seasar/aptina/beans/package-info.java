@@ -83,9 +83,6 @@
  * {@link org.seasar.aptina.beans.AccessType#NONE} が指定されていないこと．</li>
  * </ul>
  * <p>
- * 状態クラスのプロパティが配列型の場合， Bean クラスにはインデックス付きの getter/setter メソッドが生成されます．
- * </p>
- * <p>
  * 状態クラスのフィールドに
  * {@link org.seasar.aptina.beans.Property}
  * アノテーションを付与し，
@@ -127,6 +124,78 @@
  * </td>
  * </tr>
  * </table>
+ * <h3>indexed プロパティ</h3>
+ * <p>
+ * 配列型のプロパティには， 標準の getter/setter メソッドに加えて次のメソッドが生成されます．
+ * </p>
+ * <ul>
+ * <li>
+ * <code>public &lt;PropertyType&gt; get&lt;PropertyName&gt;(int n)</code>
+ * </li>
+ * <li>
+ * <code>public void set&lt;PropertyName&gt;(int n, &lt;PoerptyType&gt; &lt;propertyName&gt;)</code>
+ * </li>
+ * </ul>
+ * <h3>bound プロパティ</h3>
+ * <p>
+ * {@link org.seasar.aptina.beans.BeanState#boundProperties()} に {@literal true} を指定すると
+ * bound プロパティ ({@link java.beans.PropertyChangeListener}) がサポートされ， 次のメソッドが生成されます．
+ * </p>
+ * <ul>
+ * <li>
+ * <code>public void addPropertyChangeListener(PropertyChangeListener listener)</code>
+ * </li>
+ * <li>
+ * <code>public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)</code>
+ * </li>
+ * <li>
+ * <code>public void removePropertyChangeListener(PropertyChangeListener listener)</code>
+ * </li>
+ * <li>
+ * <code>public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener)</code>
+ * </li>
+ * </ul>
+ * <p>
+ * 変更可能なプロパティごとに次のメソッドが生成されます．
+ * </p>
+ * <ul>
+ * <li>
+ * <code>public void add&lt;PropertyName&gt;Listener(PropertyChangeListener listener)</code>
+ * </li>
+ * <li>
+ * <code>public void remove&lt;PropertyName&gt;Listener(PropertyChangeListener listener)</code>
+ * </li>
+ * </ul>
+ * <h3>constrained プロパティ</h3>
+ * <p>
+ * {@link org.seasar.aptina.beans.BeanState#constrainedProperties()} に {@literal true} を指定すると
+ * constrained プロパティ ({@link java.beans.VetoableChangeListener}) がサポートされ， 次のメソッドが生成されます．
+ * </p>
+ * <ul>
+ * <li>
+ * <code>public void addVetoableChangeListener(VetoableChangeListener listener)</code>
+ * </li>
+ * <li>
+ * <code>public void addVetoableChangeListener(String propertyName, VetoableChangeListener listener)</code>
+ * </li>
+ * <li>
+ * <code>public void removeVetoableChangeListener(VetoableChangeListener listener)</code>
+ * </li>
+ * <li>
+ * <code>public void removeVetoableChangeListener(String propertyName, VetoableChangeListener listener)</code>
+ * </li>
+ * </ul>
+ * <p>
+ * 変更可能なプロパティごとに次のメソッドが生成されます．
+ * </p>
+ * <ul>
+ * <li>
+ * <code>public void add&lt;PropertyName&gt;Listener(VetoableChangeListener listener)</code>
+ * </li>
+ * <li>
+ * <code>public void remove&lt;PropertyName&gt;Listener(VetoableChangeListener listener)</code>
+ * </li>
+ * </ul>
  * <h3>コンストラクタ</h3>
  * <p>
  * Bean クラスは状態クラスの非 {@literal private} コンストラクタを引き継ぎます．

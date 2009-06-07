@@ -1,0 +1,9 @@
+package org.seasar.aptina.beans.example;
+
+@javax.annotation.Generated("Aptina Beans")
+@org.seasar.aptina.beans.JavaBean
+public class ConstrainedBean extends org.seasar.aptina.beans.example.ConstrainedBeanState {
+
+    java.beans.VetoableChangeSupport vetoableChangeSupport =
+        new java.beans.VetoableChangeSupport(this);
+

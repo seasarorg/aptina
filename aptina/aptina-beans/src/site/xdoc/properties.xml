@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+	<properties>
+		<title>プロパティ</title>
+	</properties>
+	<body>
+		<section name="プロパティ">
+			<p>
+				状態クラスの次の条件を満たすフィールドが Bean クラスのプロパティとなります．
+			</p>
+			<ul>
+				<li>
+					<code>static</code>
+					，
+					<code>private</code>
+					，
+					<code>public</code>
+					の修飾子が付けられていないこと．
+				</li>
+				<li>
+					<code>Property</code>
+					アノテーションで
+					<code>AccessType#NONE</code>
+					が指定されていないこと．
+				</li>
+			</ul>
+			<p>
+				状態クラスのプロパティが配列型の場合，
+				Bean クラスにはインデックス付きの getter/setter メソッドが生成されます．
+			</p>
+			<p>
+				状態クラスのフィールドに
+				<code>Property</code>
+				アノテーションを付与し，
+				<code>access</code>
+				要素で getter/setter をどのように生成するか指定することができます．
+				<code>access</code>
+				要素の型は
+				<code>AcessType</code>
+				です．
+			</p>
+			<table>
+				<tr>
+					<th>
+						<code>AccessType</code>
+						の値
+					</th>
+					<th>説明</th>
+				</tr>
+				<tr>
+					<td>
+						<code>NONE</code>
+					</td>
+					<td>プロパティとしてアクセスしません (getter/setter とも生成されません)．</td>
+				</tr>
+				<tr>
+					<td>
+						<code>READ_ONLY</code>
+					</td>
+					<td>参照のみ可能なプロパティです (getter のみ生成されます)．</td>
+				</tr>
+				<tr>
+					<td>
+						<code>WRITE_ONLY</code>
+					</td>
+					<td>
+						変更のみ可能なプロパティです (setter のみ生成されます)．
+						フィールドが
+						<code>final</code>
+						の場合はエラーになります．
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<code>READ_WRITE</code>
+						<br />
+						(デフォルト)
+					</td>
+					<td>
+						参照・変更とも可能なプロパティです (getter/setter とも生成されます)．
+						フィールドが
+						<code>final</code>
+						の場合， setter は生成されません．
+					</td>
+				</tr>
+			</table>
+		</section>
+
+		<section name="indexed プロパティ">
+			<p>
+				配列型のプロパティには， 標準の getter/setter メソッドに加えて次のメソッドが生成されます．
+			</p>
+			<ul>
+				<li>
+					<code>public &lt;PropertyType&gt; get&lt;PropertyName&gt;(int n)</code>
+				</li>
+				<li>
+					<code>public void set&lt;PropertyName&gt;(int n, &lt;PoerptyType&gt; &lt;propertyName&gt;)</code>
+				</li>
+			</ul>
+		</section>
+
+		<section name="bound プロパティ">
+			<p>
+				<code>BeanState</code>
+				アノテーションの
+				<code>boundProperties</code>
+				要素に
+				<code>true</code>
+				を指定すると bound プロパティ (
+				<code>PropertyChangeListener</code>
+				) がサポートされ， 次のメソッドが生成されます．
+			</p>
+			<ul>
+				<li>
+					<code>public void addPropertyChangeListener(PropertyChangeListener listener)</code>
+				</li>
+				<li>
+					<code>public void addPropertyChangeListener(String propertyName, PropertyChangeListener
+						listener)</code>
+				</li>
+				<li>
+					<code>public void removePropertyChangeListener(PropertyChangeListener listener)</code>
+				</li>
+				<li>
+					<code>public void removePropertyChangeListener(String propertyName,
+						PropertyChangeListener listener)</code>
+				</li>
+			</ul>
+			<p>
+				変更可能なプロパティごとに次のメソッドが生成されます．
+			</p>
+			<ul>
+				<li>
+					<code>public void add&lt;PropertyName&gt;Listener(PropertyChangeListener listener)</code>
+				</li>
+				<li>
+					<code>public void remove&lt;PropertyName&gt;Listener(PropertyChangeListener listener)</code>
+				</li>
+			</ul>
+		</section>
+
+		<section name="constrained プロパティ">
+			<p>
+				<code>BeanState</code>
+				アノテーションの
+				<code>constrainedProperties</code>
+				要素に
+				<code>true</code>
+				を指定すると constrained プロパティ (
+				<code>VetoableChangeListener</code>
+				) がサポートされ， 次のメソッドが生成されます．
+			</p>
+			<ul>
+				<li>
+					<code>public void addVetoableChangeListener(VetoableChangeListener listener)</code>
+				</li>
+				<li>
+					<code>public void addVetoableChangeListener(String propertyName, VetoableChangeListener
+						listener)</code>
+				</li>
+				<li>
+					<code>public void removeVetoableChangeListener(VetoableChangeListener listener)</code>
+				</li>
+				<li>
+					<code>public void removeVetoableChangeListener(String propertyName,
+						VetoableChangeListener listener)</code>
+				</li>
+			</ul>
+			<p>
+				変更可能なプロパティごとに次のメソッドが生成されます．
+			</p>
+			<ul>
+				<li>
+					<code>public void add&lt;PropertyName&gt;Listener(VetoableChangeListener listener)</code>
+				</li>
+				<li>
+					<code>public void remove&lt;PropertyName&gt;Listener(VetoableChangeListener listener)</code>
+				</li>
+			</ul>
+		</section>
+	</body>
+</document>

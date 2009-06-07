@@ -34,6 +34,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic.Kind;
 
+import org.seasar.aptina.beans.BeanState;
 import org.seasar.aptina.beans.Property;
 
 import static org.seasar.aptina.beans.internal.Strings.*;
@@ -163,6 +164,14 @@ public class BeanInfoFactory {
         beanInfo.setTypeParameter(toStringTypeParameterDecl(typeParameters));
         beanInfo.setStateClassName(stateClassName
                 + toStringTypeParameterNames(typeParameters));
+
+        final BeanState beanState = typeElement.getAnnotation(BeanState.class);
+        if (beanState.boundProperties()) {
+            beanInfo.setBoundProperties(true);
+        }
+        if (beanState.constrainedProperties()) {
+            beanInfo.setConstrainedProperties(true);
+        }
         return beanInfo;
     }
 

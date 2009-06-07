@@ -1,0 +1,41 @@
+    /**
+     * bbbを設定します。
+     * 
+     * @param bbb bbb
+     * @throws java.beans.PropertyVetoException プロパティの変更が拒否された場合
+     */
+    public void setBbb(java.lang.String bbb) throws java.beans.PropertyVetoException {
+        java.lang.String oldBbb = this.bbb;
+        vetoableChangeSupport.fireVetoableChange("bbb", oldBbb, bbb);
+        this.bbb = bbb;
+        propertyChangeSupport.firePropertyChange("bbb", oldBbb, bbb);
+    }
+
+    /**
+     * cccを設定します。
+     * 
+     * @param ccc ccc
+     * @throws java.beans.PropertyVetoException プロパティの変更が拒否された場合
+     */
+    public void setCcc(java.lang.String[] ccc) throws java.beans.PropertyVetoException {
+        java.lang.String[] oldCcc = this.ccc;
+        vetoableChangeSupport.fireVetoableChange("ccc", oldCcc, ccc);
+        this.ccc = ccc;
+        propertyChangeSupport.firePropertyChange("ccc", oldCcc, ccc);
+    }
+
+    /**
+     * cccのn番目の要素を設定します。
+     * 
+     * @param n 設定される要素のインデックス
+     * @param ccc ccc
+     * @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合
+     * @throws java.beans.PropertyVetoException プロパティの変更が拒否された場合
+     */
+    public void setCcc(int n, java.lang.String ccc) throws ArrayIndexOutOfBoundsException, java.beans.PropertyVetoException {
+        java.lang.String oldCcc = this.ccc[n];
+        vetoableChangeSupport.fireVetoableChange(new java.beans.IndexedPropertyChangeEvent(this, "ccc", oldCcc, ccc, n));
+        this.ccc[n] = ccc;
+        propertyChangeSupport.fireIndexedPropertyChange("ccc", n, oldCcc, ccc);
+    }
+

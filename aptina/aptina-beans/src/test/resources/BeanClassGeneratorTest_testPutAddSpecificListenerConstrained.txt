@@ -1,0 +1,36 @@
+    /**
+     * bbbの {@link java.beans.VetoableChangeListener} をリスナーリストに追加します。
+     * 
+     * @param listener 追加する {@link java.beans.VetoableChangeListener}
+     */
+    public void addBbbChangeListener(java.beans.VetoableChangeListener listener) {
+        vetoableChangeSupport.addVetoableChangeListener("bbb", listener);
+    }
+
+    /**
+     * bbbの {@link java.beans.VetoableChangeListener} をリスナーリストから削除します。
+     * 
+     * @param listener 削除する {@link java.beans.VetoableChangeListener}
+     */
+    public void removeBbbChangeListener(java.beans.VetoableChangeListener listener) {
+        vetoableChangeSupport.removeVetoableChangeListener("bbb", listener);
+    }
+
+    /**
+     * cccの {@link java.beans.VetoableChangeListener} をリスナーリストに追加します。
+     * 
+     * @param listener 追加する {@link java.beans.VetoableChangeListener}
+     */
+    public void addCccChangeListener(java.beans.VetoableChangeListener listener) {
+        vetoableChangeSupport.addVetoableChangeListener("ccc", listener);
+    }
+
+    /**
+     * cccの {@link java.beans.VetoableChangeListener} をリスナーリストから削除します。
+     * 
+     * @param listener 削除する {@link java.beans.VetoableChangeListener}
+     */
+    public void removeCccChangeListener(java.beans.VetoableChangeListener listener) {
+        vetoableChangeSupport.removeVetoableChangeListener("ccc", listener);
+    }
+

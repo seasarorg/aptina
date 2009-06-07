@@ -1,0 +1,9 @@
+    /**
+     * aを設定します。
+     * 
+     * @param a a
+     */
+    public void setA(int a) {
+        this.a = a;
+    }
+
