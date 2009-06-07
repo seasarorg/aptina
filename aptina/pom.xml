@@ -11,7 +11,7 @@
 	<modules>
 		<module>aptina-unit</module><!-- first -->
 		<module>aptina-beans</module>
-		<module>downloads</module><!-- last -->
+		<module>aptina-downloads</module><!-- last -->
 	</modules>
 
 	<!-- More Project Information -->
