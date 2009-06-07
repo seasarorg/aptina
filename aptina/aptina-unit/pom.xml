@@ -15,7 +15,43 @@
 	<name>Aptina Unit</name>
 	<description>Unit Testing Framework for Annotation Processing Tools</description>
 
+	<!-- Build Settings -->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<artifactSet>
+								<excludes>
+									<exclude>junit:junit</exclude>
+								</excludes>
+							</artifactSet>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
 	<!-- Dependency Settings -->
 	<dependencies>
+		<dependency>
+			<groupId>org.seasar.aptina</groupId>
+			<artifactId>aptina-commons</artifactId>
+			<version>${version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.2</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 </project>

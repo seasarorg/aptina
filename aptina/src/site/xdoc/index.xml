@@ -41,6 +41,17 @@
 							<a href="aptina-beans/apidocs/index.html">Javadoc</a>
 						</td>
 					</tr>
+					<tr>
+						<td>
+							<a href="aptina-commons/index.html">Aptina Commons</a>
+						</td>
+						<td>
+							Aptina プロジェクトで共通に使用するライブラリを提供します．
+						</td>
+						<td>
+							<a href="aptina-beans/apidocs/index.html">Javadoc</a>
+						</td>
+					</tr>
 				</tbody>
 			</table>
 		</section>

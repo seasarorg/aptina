@@ -5,15 +5,15 @@
 		<title>BeanProcessorの使い方</title>
 	</properties>
 	<body>
-		<section name="BeanProcessorの使い方">
+		<section name="BeansProcessorの使い方">
 			<p>
 				<strong>
-					<code>BeanProcessor</code>
+					<code>BeansProcessor</code>
 				</strong>
 				は， Aptina Beans の提供する Annotation Processor です．
 			</p>
 			<p>
-				<code>BeanProcessor</code>
+				<code>BeansProcessor</code>
 				は，Eclipse など Pluggable Annotation Processing に対応した IDE や，
 				Maven などのコマンドラインツールなどで使用できます．
 			</p>

@@ -24,6 +24,7 @@
 				<include name="aptina-beans-${ver}-sources.jar"/>
 			</zipfileset>
 			<zipfileset prefix="aptina/docs" dir="../target/site" />
+			<zipfileset prefix="aptina/docs/aptina-commons" dir="../aptina-commons/target/site"/>
 			<zipfileset prefix="aptina/docs/aptina-unit" dir="../aptina-unit/target/site"/>
 			<zipfileset prefix="aptina/docs/aptina-beans" dir="../aptina-beans/target/site"/>
 		</zip>

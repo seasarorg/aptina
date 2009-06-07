@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="src" path="aptina-commons/src/main/java"/>
+	<classpathentry kind="src" path="aptina-commons/src/main/resources"/>
+	<classpathentry kind="src" path="aptina-commons/src/test/java"/>
+	<classpathentry kind="src" path="aptina-commons/src/test/resources"/>
 	<classpathentry kind="src" path="aptina-unit/src/main/java"/>
 	<classpathentry kind="src" path="aptina-unit/src/main/resources"/>
 	<classpathentry kind="src" path="aptina-unit/src/test/java"/>

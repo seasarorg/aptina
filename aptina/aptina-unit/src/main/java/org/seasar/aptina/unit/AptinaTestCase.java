@@ -15,7 +15,6 @@
  */
 package org.seasar.aptina.unit;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -63,6 +62,8 @@ import javax.tools.JavaFileObject.Kind;
 
 import junit.framework.ComparisonFailure;
 import junit.framework.TestCase;
+
+import static org.seasar.aptina.commons.util.IOUtils.*;
 
 /**
  * {@link Processor} をテストするための抽象クラスです．
@@ -1464,22 +1465,6 @@ public abstract class AptinaTestCase extends TestCase {
         }
         return new String(bytes, charset == null ? Charset.defaultCharset()
                 : charset);
-    }
-
-    /**
-     * クローズ可能なオブジェクトをクローズします．
-     * <p>
-     * 例外が発生しても無視します．
-     * </p>
-     * 
-     * @param closeable
-     *            クローズ可能なオブジェクト
-     */
-    void closeSilently(final Closeable closeable) {
-        try {
-            closeable.close();
-        } catch (final IOException ignore) {
-        }
     }
 
     /**

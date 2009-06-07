@@ -15,12 +15,35 @@
 	<name>Aptina Beans</name>
 	<description>Annotation Processing Tool for JavaBeans</description>
 
+	<!-- Build Settings -->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
 	<!-- Dependency Settings -->
 	<dependencies>
 		<dependency>
 			<groupId>org.seasar.aptina</groupId>
+			<artifactId>aptina-commons</artifactId>
+			<version>${version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.seasar.aptina</groupId>
 			<artifactId>aptina-unit</artifactId>
-			<version>0.0.0-SNAPSHOT</version>
+			<version>${version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
