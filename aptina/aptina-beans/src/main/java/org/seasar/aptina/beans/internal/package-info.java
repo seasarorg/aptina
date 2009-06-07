@@ -14,7 +14,10 @@
  * governing permissions and limitations under the License.
  */
 /**
- * Aptina Beans の Annotation Processor を提供します．
+ * Annotation Processor を提供する Aptina Beans 内部用途のパッケージです．
+ * <p>
+ * このパッケージ内のクラスは互換性を考慮することなく変更される可能性があります．
+ * </p>
  */
 package org.seasar.aptina.beans.internal;
 

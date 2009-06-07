@@ -1,0 +1,31 @@
+<project name="aptina-dist" default="zip" basedir=".">
+	<tstamp>
+		<format property="releaseDate" pattern="yyyy-MM-dd" locale="ja,JP"/>
+	</tstamp>
+	<property name="zipDir" value="target/site/${releaseDate}"/>
+
+	<target name="zip">
+		<mkdir dir="${zipDir}"/>
+		<zip zipfile="${zipDir}/Aptina-${ver}.zip">
+			<zipfileset prefix="aptina" dir="..">
+				<exclude name="**/bin**"/>
+				<exclude name="**/target/**"/>
+			</zipfileset>
+			<zipfileset prefix="aptina/lib" dir="../aptina-unit/target">
+				<include name="aptina-unit-${ver}.jar"/>
+			</zipfileset>
+			<zipfileset prefix="aptina/lib" dir="../aptina-beans/target">
+				<include name="aptina-beans-${ver}.jar"/>
+			</zipfileset>
+			<zipfileset prefix="aptina/libsrc" dir="../aptina-unit/target">
+				<include name="aptina-unit-${ver}-sources.jar"/>
+			</zipfileset>
+			<zipfileset prefix="aptina/libsrc" dir="../aptina-beans/target">
+				<include name="aptina-beans-${ver}-sources.jar"/>
+			</zipfileset>
+			<zipfileset prefix="aptina/docs" dir="../target/site" />
+			<zipfileset prefix="aptina/docs/aptina-unit" dir="../aptina-unit/target/site"/>
+			<zipfileset prefix="aptina/docs/aptina-beans" dir="../aptina-beans/target/site"/>
+		</zip>
+	</target>
+</project>
