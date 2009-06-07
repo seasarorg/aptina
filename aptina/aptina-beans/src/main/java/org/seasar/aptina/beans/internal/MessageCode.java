@@ -59,16 +59,24 @@ public enum MessageCode {
     /** */
     JDOC0002(
             Kind.OTHER,
-            " Return the nth %1$s.%n %n @param n the index of the %1$s to get.%n @return the n<sup>th</sup> %1$s.%n"
+            " Return the nth %1$s.%n %n"
+                    + " @param n the index of the %1$s to get.%n"
+                    + " @return the n<sup>th</sup> %1$s.%n"
                     + " @throws ArrayIndexOutOfBoundsException an index is used that is outside the current array bounds",
-            " %1$sのn番目の要素を返します。%n %n @param n 返される要素のインデックス%n @return n番目の%1$s%n"
+            " %1$sのn番目の要素を返します。%n %n"
+                    + " @param n 返される要素のインデックス%n"
+                    + " @return n番目の%1$s%n"
                     + " @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合"),
     /** */
     JDOC0003(
             Kind.OTHER,
-            " Set the nth %1$s.%n %n @param n n<sup>th</sup> of the %1$s to set.%n @param %2$n %1$s%n"
+            " Set the nth %1$s.%n %n"
+                    + " @param n n<sup>th</sup> of the %1$s to set.%n"
+                    + " @param %2$n %1$s%n"
                     + " @throws ArrayIndexOutOfBoundsException an index is used that is outside the current array bounds",
-            " %1$sのn番目の要素を設定します。%n %n @param n 設定される要素のインデックス%n @param %2$s %1$s%n"
+            " %1$sのn番目の要素を設定します。%n %n"
+                    + " @param n 設定される要素のインデックス%n"
+                    + " @param %2$s %1$s%n"
                     + " @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合"),
     //
     ;
