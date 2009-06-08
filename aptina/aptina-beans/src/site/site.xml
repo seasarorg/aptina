@@ -16,7 +16,7 @@
 			<item name="概要" href="index.html" />
 			<item name="状態クラスと Bean クラス" href="class.html" />
 			<item name="プロパティ" href="properties.html" />
-			<item name="BeanProcessorの使い方" href="usage.html" />
+			<item name="BeansProcessor の使い方" href="usage.html" />
 			<item name="Javadoc" href="apidocs/index.html" />
 		</menu>
 		${reports}
