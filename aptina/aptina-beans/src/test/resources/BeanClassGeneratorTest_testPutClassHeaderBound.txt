@@ -1,6 +1,6 @@
 package org.seasar.aptina.beans.example;
 
-@javax.annotation.Generated("Aptina Beans")
+@javax.annotation.Generated({"Aptina Beans", "DEV"})
 @org.seasar.aptina.beans.JavaBean
 public class BoundBean extends org.seasar.aptina.beans.example.BoundBeanState {
 

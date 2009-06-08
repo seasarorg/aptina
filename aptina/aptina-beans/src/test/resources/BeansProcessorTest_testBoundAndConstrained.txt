@@ -4,14 +4,17 @@ package org.seasar.aptina.beans.example;
  * 
  * @author koichik
  */
-@javax.annotation.Generated("Aptina Beans")
+@javax.annotation.Generated({"Aptina Beans", "DEV"})
 @org.seasar.aptina.beans.JavaBean
-public class BoundBean extends org.seasar.aptina.beans.example.BoundBeanState {
+public class BoundAndConstrainedBean extends org.seasar.aptina.beans.example.BoundAndConstrainedBeanState {
 
     java.beans.PropertyChangeSupport propertyChangeSupport =
         new java.beans.PropertyChangeSupport(this);
 
-    public  BoundBean() {
+    java.beans.VetoableChangeSupport vetoableChangeSupport =
+        new java.beans.VetoableChangeSupport(this);
+
+    public  BoundAndConstrainedBean() {
         super();
     }
 
@@ -54,6 +57,44 @@ public class BoundBean extends org.seasar.aptina.beans.example.BoundBeanState {
     }
 
     /**
+     * {@link java.beans.VetoableChangeListener} をリスナーリストに追加します。
+     * 
+     * @param listener 追加する {@link java.beans.VetoableChangeListener}
+     */
+    public void addVetoableChangeListener(java.beans.VetoableChangeListener listener) {
+        vetoableChangeSupport.addVetoableChangeListener(listener);
+    }
+
+    /**
+     * 特定のプロパティーの {@link java.beans.VetoableChangeListener} をリスナーリストに追加します。
+     * 
+     * @param propertyName 待機しているプロパティーの名前
+     * @param listener 追加する {@link java.beans.VetoableChangeListener}
+     */
+    public void addVetoableChangeListener(String propertyName, java.beans.VetoableChangeListener listener) {
+        vetoableChangeSupport.addVetoableChangeListener(propertyName, listener);
+    }
+
+    /**
+     * {@link java.beans.VetoableChangeListener} をリスナーリストから削除します。
+     * 
+     * @param listener 削除する {@link java.beans.VetoableChangeListener}
+     */
+    public void removeVetoableChangeListener(java.beans.VetoableChangeListener listener) {
+        vetoableChangeSupport.removeVetoableChangeListener(listener);
+    }
+
+    /**
+     * 特定のプロパティーの {@link java.beans.VetoableChangeListener} をリスナーリストから削除します。
+     * 
+     * @param propertyName 待機していたプロパティーの名前
+     * @param listener 削除する {@link java.beans.VetoableChangeListener}
+     */
+    public void removeVetoableChangeListener(String propertyName, java.beans.VetoableChangeListener listener) {
+        vetoableChangeSupport.removeVetoableChangeListener(propertyName, listener);
+    }
+
+    /**
      * aaaを返します。
      * 
      * @return aaa
@@ -75,9 +116,11 @@ public class BoundBean extends org.seasar.aptina.beans.example.BoundBeanState {
      * bbbを設定します。
      * 
      * @param bbb bbb
+     * @throws java.beans.PropertyVetoException プロパティの変更が拒否された場合
      */
-    public void setBbb(java.lang.String bbb) {
+    public void setBbb(java.lang.String bbb) throws java.beans.PropertyVetoException {
         java.lang.String oldBbb = this.bbb;
+        vetoableChangeSupport.fireVetoableChange("bbb", oldBbb, bbb);
         this.bbb = bbb;
         propertyChangeSupport.firePropertyChange("bbb", oldBbb, bbb);
     }
@@ -98,6 +141,24 @@ public class BoundBean extends org.seasar.aptina.beans.example.BoundBeanState {
      */
     public void removeBbbChangeListener(java.beans.PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener("bbb", listener);
+    }
+
+    /**
+     * bbbの {@link java.beans.VetoableChangeListener} をリスナーリストに追加します。
+     * 
+     * @param listener 追加する {@link java.beans.VetoableChangeListener}
+     */
+    public void addBbbChangeListener(java.beans.VetoableChangeListener listener) {
+        vetoableChangeSupport.addVetoableChangeListener("bbb", listener);
+    }
+
+    /**
+     * bbbの {@link java.beans.VetoableChangeListener} をリスナーリストから削除します。
+     * 
+     * @param listener 削除する {@link java.beans.VetoableChangeListener}
+     */
+    public void removeBbbChangeListener(java.beans.VetoableChangeListener listener) {
+        vetoableChangeSupport.removeVetoableChangeListener("bbb", listener);
     }
 
     /**
@@ -124,9 +185,11 @@ public class BoundBean extends org.seasar.aptina.beans.example.BoundBeanState {
      * cccを設定します。
      * 
      * @param ccc ccc
+     * @throws java.beans.PropertyVetoException プロパティの変更が拒否された場合
      */
-    public void setCcc(java.lang.String[] ccc) {
+    public void setCcc(java.lang.String[] ccc) throws java.beans.PropertyVetoException {
         java.lang.String[] oldCcc = this.ccc;
+        vetoableChangeSupport.fireVetoableChange("ccc", oldCcc, ccc);
         this.ccc = ccc;
         propertyChangeSupport.firePropertyChange("ccc", oldCcc, ccc);
     }
@@ -137,9 +200,11 @@ public class BoundBean extends org.seasar.aptina.beans.example.BoundBeanState {
      * @param n 設定される要素のインデックス
      * @param ccc ccc
      * @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合
+     * @throws java.beans.PropertyVetoException プロパティの変更が拒否された場合
      */
-    public void setCcc(int n, java.lang.String ccc) throws ArrayIndexOutOfBoundsException {
+    public void setCcc(int n, java.lang.String ccc) throws ArrayIndexOutOfBoundsException, java.beans.PropertyVetoException {
         java.lang.String oldCcc = this.ccc[n];
+        vetoableChangeSupport.fireVetoableChange(new java.beans.IndexedPropertyChangeEvent(this, "ccc", oldCcc, ccc, n));
         this.ccc[n] = ccc;
         propertyChangeSupport.fireIndexedPropertyChange("ccc", n, oldCcc, ccc);
     }
@@ -160,6 +225,24 @@ public class BoundBean extends org.seasar.aptina.beans.example.BoundBeanState {
      */
     public void removeCccChangeListener(java.beans.PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener("ccc", listener);
+    }
+
+    /**
+     * cccの {@link java.beans.VetoableChangeListener} をリスナーリストに追加します。
+     * 
+     * @param listener 追加する {@link java.beans.VetoableChangeListener}
+     */
+    public void addCccChangeListener(java.beans.VetoableChangeListener listener) {
+        vetoableChangeSupport.addVetoableChangeListener("ccc", listener);
+    }
+
+    /**
+     * cccの {@link java.beans.VetoableChangeListener} をリスナーリストから削除します。
+     * 
+     * @param listener 削除する {@link java.beans.VetoableChangeListener}
+     */
+    public void removeCccChangeListener(java.beans.VetoableChangeListener listener) {
+        vetoableChangeSupport.removeVetoableChangeListener("ccc", listener);
     }
 
 }

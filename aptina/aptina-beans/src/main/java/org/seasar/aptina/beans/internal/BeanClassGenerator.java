@@ -29,7 +29,11 @@ import javax.tools.JavaFileObject;
 
 import org.seasar.aptina.commons.message.EnumMessageFormatter;
 
+import static org.seasar.aptina.beans.internal.AptinaBeans.*;
+
 import static org.seasar.aptina.commons.util.StringUtils.*;
+
+import static org.seasar.aptina.commons.util.VersionUtils.*;
 
 /**
  * 状態クラスを継承した Bean クラスのソースを生成するクラスです．
@@ -37,6 +41,10 @@ import static org.seasar.aptina.commons.util.StringUtils.*;
  * @author koichik
  */
 public class BeanClassGenerator {
+
+    /** Aptina Beans のバージョン情報 */
+    protected static final String PRODUCT_VERSION = getVersion(GROUP_ID,
+            ARTIFACT_ID, "DEV");
 
     /** {@link ProcessingEnvironment} */
     protected ProcessingEnvironment env;
@@ -109,7 +117,8 @@ public class BeanClassGenerator {
     protected void putClassHeader(final BeanInfo beanInfo) {
         put("package %1$s;%n%n", beanInfo.getPackageName());
         putJavadoc(beanInfo.getComment(), "");
-        put("@javax.annotation.Generated(\"Aptina Beans\")%n");
+        put("@javax.annotation.Generated({\"Aptina Beans\", \"%1$s\"})%n",
+                PRODUCT_VERSION);
         put("@org.seasar.aptina.beans.JavaBean%n");
         put("public class %1$s%2$s extends %3$s {%n", beanInfo
                 .getBeanClassName(), beanInfo.getTypeParameter(), beanInfo

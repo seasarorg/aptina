@@ -15,6 +15,7 @@
  */
 package org.seasar.aptina.beans.internal;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
@@ -48,10 +49,7 @@ public class BeansProcessorTest extends AptinaTestCase {
         addCompilationUnit(FooBeanState.class);
         compile();
         assertTrue(getCompiledResult());
-        System.out
-                .println(getGeneratedSource("org.seasar.aptina.beans.example.FooBean"));
-        assertEqualsGeneratedSourceWithResource("FooBean.txt",
-                "org.seasar.aptina.beans.example.FooBean");
+        assertGeneratedSource("org.seasar.aptina.beans.example.FooBean");
     }
 
     /**
@@ -63,10 +61,7 @@ public class BeansProcessorTest extends AptinaTestCase {
         addCompilationUnit(BarBeanState.class);
         compile();
         assertTrue(getCompiledResult());
-        System.out
-                .println(getGeneratedSource("org.seasar.aptina.beans.example.BarBean"));
-        assertEqualsGeneratedSourceWithResource("BarBean.txt",
-                "org.seasar.aptina.beans.example.BarBean");
+        assertGeneratedSource("org.seasar.aptina.beans.example.BarBean");
     }
 
     /**
@@ -78,10 +73,7 @@ public class BeansProcessorTest extends AptinaTestCase {
         addCompilationUnit(BoundBeanState.class);
         compile();
         assertTrue(getCompiledResult());
-        System.out
-                .println(getGeneratedSource("org.seasar.aptina.beans.example.BoundBean"));
-        assertEqualsGeneratedSourceWithResource("BoundBean.txt",
-                "org.seasar.aptina.beans.example.BoundBean");
+        assertGeneratedSource("org.seasar.aptina.beans.example.BoundBean");
     }
 
     /**
@@ -93,10 +85,7 @@ public class BeansProcessorTest extends AptinaTestCase {
         addCompilationUnit(ConstrainedBeanState.class);
         compile();
         assertTrue(getCompiledResult());
-        System.out
-                .println(getGeneratedSource("org.seasar.aptina.beans.example.ConstrainedBean"));
-        assertEqualsGeneratedSourceWithResource("ConstrainedBean.txt",
-                "org.seasar.aptina.beans.example.ConstrainedBean");
+        assertGeneratedSource("org.seasar.aptina.beans.example.ConstrainedBean");
     }
 
     /**
@@ -108,10 +97,16 @@ public class BeansProcessorTest extends AptinaTestCase {
         addCompilationUnit(BoundAndConstrainedBeanState.class);
         compile();
         assertTrue(getCompiledResult());
-        System.out
-                .println(getGeneratedSource("org.seasar.aptina.beans.example.BoundAndConstrainedBean"));
-        assertEqualsGeneratedSourceWithResource("BoundAndConstrainedBean.txt",
-                "org.seasar.aptina.beans.example.BoundAndConstrainedBean");
+        assertGeneratedSource("org.seasar.aptina.beans.example.BoundAndConstrainedBean");
+    }
+
+    void assertGeneratedSource(final String generatedClassName)
+            throws IOException {
+        final String expectedResourceName = getClass().getSimpleName() + "_"
+                + getName() + ".txt";
+        System.out.println(getGeneratedSource(generatedClassName));
+        assertEqualsGeneratedSourceWithResource(expectedResourceName,
+                generatedClassName);
     }
 
 }

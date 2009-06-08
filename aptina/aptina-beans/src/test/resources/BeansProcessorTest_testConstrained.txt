@@ -4,7 +4,7 @@ package org.seasar.aptina.beans.example;
  * 
  * @author koichik
  */
-@javax.annotation.Generated("Aptina Beans")
+@javax.annotation.Generated({"Aptina Beans", "DEV"})
 @org.seasar.aptina.beans.JavaBean
 public class ConstrainedBean extends org.seasar.aptina.beans.example.ConstrainedBeanState {
 
