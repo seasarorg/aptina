@@ -53,52 +53,55 @@ public enum MessageCode implements MessageCodeEnum {
     /** */
     CTOR0001(Kind.ERROR, "", "サブクラスから可視のコンストラクタがありません"),
     /** */
-    JDOC0000(Kind.OTHER, " Return the %1$s.%n %n @return the %1$s.%n",
-            " %1$sを返します。%n %n @return %1$s%n"),
+    JDOC0000(Kind.OTHER,
+            " Return the {@literal %1$s}.%n %n @return the {@literal %1$s}.%n",
+            " {@literal %1$s} を返します。%n %n @return {@literal %1$s}%n"),
     /** */
     JDOC0001(
             Kind.OTHER,
             " Return the nth %1$s.%n %n"
-                    + " @param n the index of the %1$s to get.%n"
-                    + " @return the n<sup>th</sup> %1$s.%n"
+                    + " @param n the index of the {@literal %1$s} to get.%n"
+                    + " @return the {@literal n}<sup>th</sup> {@literal %1$s}.%n"
                     + " @throws ArrayIndexOutOfBoundsException an index is used that is outside the current array bounds%n",
-            " %1$sのn番目の要素を返します。%n %n"
+            " {@literal %1$s} の {@literal n} 番目の要素を返します。%n %n"
                     + " @param n 返される要素のインデックス%n"
-                    + " @return n番目の%1$s%n"
+                    + " @return {@literal n} 番目の {@literal %1$s}%n"
                     + " @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合%n"),
     /** */
-    JDOC0002(Kind.OTHER, " Set the %1$s.%n %n @param %2$n the %1$s.%n",
-            " %1$sを設定します。%n %n @param %2$s %1$s%n"),
+    JDOC0002(
+            Kind.OTHER,
+            " Set the {@literal %1$s}.%n %n @param %2$n the {@literal %1$s}.%n",
+            " {@literal %1$s} を設定します。%n %n @param %2$s {@literal %1$s}%n"),
     /** */
     JDOC0003(
             Kind.OTHER,
-            " Set the nth %1$s.%n %n"
-                    + " @param n n<sup>th</sup> of the %1$s to set.%n"
-                    + " @param %2$n %1$s%n"
+            " Set the {@literal n}<sup>th</sup> {@literal %1$s}.%n %n"
+                    + " @param n {@literal n}<sup>th</sup> of the {@literal %1$s} to set.%n"
+                    + " @param %2$n {@literal %1$s}%n"
                     + " @throws ArrayIndexOutOfBoundsException an index is used that is outside the current array bounds%n",
-            " %1$sのn番目の要素を設定します。%n %n"
+            " {@literal %1$s} の {@literal n} 番目の要素を設定します。%n %n"
                     + " @param n 設定される要素のインデックス%n"
-                    + " @param %2$s %1$s%n"
+                    + " @param %2$s {@literal %1$s}%n"
                     + " @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合%n"),
     /** */
     JDOC0004(
             Kind.OTHER,
-            " Set the %1$s.%n %n @param %2$n the %1$s.%n"
+            " Set the {@literal %1$s}.%n %n @param %2$n the {@literal %1$s}.%n"
                     + " @throws java.beans.PropertyVetoException if the recipient wishes the property change to be rolled back.%n",
-            " %1$sを設定します。%n %n"
-                    + " @param %2$s %1$s%n"
+            " {@literal %1$s} を設定します。%n %n"
+                    + " @param %2$s {@literal %1$s}%n"
                     + " @throws java.beans.PropertyVetoException プロパティの変更が拒否された場合%n"),
     /** */
     JDOC0005(
             Kind.OTHER,
-            " Set the nth %1$s.%n %n"
-                    + " @param n n<sup>th</sup> of the %1$s to set.%n"
-                    + " @param %2$n %1$s%n"
+            " Set the {@literal n}<sup>th</sup> {@literal %1$s}.%n %n"
+                    + " @param n {@literal n}<sup>th</sup> of the {@literal %1$s} to set.%n"
+                    + " @param %2$n {@literal %1$s}%n"
                     + " @throws ArrayIndexOutOfBoundsException an index is used that is outside the current array bounds.%n"
                     + " @throws java.beans.PropertyVetoException if the recipient wishes the property change to be rolled back.%n",
-            " %1$sのn番目の要素を設定します。%n %n"
+            " {@literal %1$s} の {@literal n} 番目の要素を設定します。%n %n"
                     + " @param n 設定される要素のインデックス%n"
-                    + " @param %2$s %1$s%n"
+                    + " @param %2$s {@literal %1$s}%n"
                     + " @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合%n"
                     + " @throws java.beans.PropertyVetoException プロパティの変更が拒否された場合%n"),
     /** */
@@ -128,14 +131,14 @@ public enum MessageCode implements MessageCodeEnum {
                     + " @param propertyName 待機していたプロパティーの名前%n"
                     + " @param listener 削除する {@link %1$s}%n"),
     /** */
-    JDOC0010(Kind.OTHER, " Add a {@link %1$s} for the %2$s.%n %n"
+    JDOC0010(Kind.OTHER, " Add a {@link %1$s} for the {@literal %2$s}.%n %n"
             + " @param listener The {@link %1$s} to be added%n",
-            " %2$sの {@link %1$s} をリスナーリストに追加します。%n %n"
+            " {@literal %2$s} の {@link %1$s} をリスナーリストに追加します。%n %n"
                     + " @param listener 追加する {@link %1$s}%n"),
     /** */
-    JDOC0011(Kind.OTHER, " Remove a {@link %1$s} for the %2$s.%n %n"
+    JDOC0011(Kind.OTHER, " Remove a {@link %1$s} for the {@literal %2$s}.%n %n"
             + " @param listener The {@link %1$s} to be removed%n",
-            " %2$sの {@link %1$s} をリスナーリストから削除します。%n %n"
+            " {@literal %2$s} の {@link %1$s} をリスナーリストから削除します。%n %n"
                     + " @param listener 削除する {@link %1$s}%n"),
     /** */
     APT0000(Kind.ERROR, "", "注釈処理中に例外が発生しました．%1$s%n"),

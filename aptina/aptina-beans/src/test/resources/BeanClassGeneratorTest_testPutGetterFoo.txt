@@ -1,16 +1,16 @@
     /**
-     * aを返します。
+     * {@literal a} を返します。
      * 
-     * @return a
+     * @return {@literal a}
      */
     public int getA() {
         return a;
     }
 
     /**
-     * bを返します。
+     * {@literal b} を返します。
      * 
-     * @return b
+     * @return {@literal b}
      */
     public java.lang.String getB() {
         return b;

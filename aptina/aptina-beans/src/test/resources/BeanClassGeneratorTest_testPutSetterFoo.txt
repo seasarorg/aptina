@@ -1,7 +1,7 @@
     /**
-     * aを設定します。
+     * {@literal a} を設定します。
      * 
-     * @param a a
+     * @param a {@literal a}
      */
     public void setA(int a) {
         this.a = a;

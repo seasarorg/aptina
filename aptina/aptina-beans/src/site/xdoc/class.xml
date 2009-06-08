@@ -131,6 +131,13 @@
 					引き継ぐことのできるコンストラクタが一つもない場合はエラーとなります．
 				</p>
 			</subsection>
+
+			<subsection name="コメント">
+				<p>
+					Bean クラスのクラス Javadoc コメントおよびコンストラクタ Javadoc コメントは，
+					状態クラスの Javadoc コメントを引き継ぎます．
+				</p>
+			</subsection>
 		</section>
 	</body>
 </document>

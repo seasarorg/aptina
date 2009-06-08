@@ -1,7 +1,7 @@
     /**
-     * bbbを設定します。
+     * {@literal bbb} を設定します。
      * 
-     * @param bbb bbb
+     * @param bbb {@literal bbb}
      * @throws java.beans.PropertyVetoException プロパティの変更が拒否された場合
      */
     public void setBbb(java.lang.String bbb) throws java.beans.PropertyVetoException {
@@ -12,9 +12,9 @@
     }
 
     /**
-     * cccを設定します。
+     * {@literal ccc} を設定します。
      * 
-     * @param ccc ccc
+     * @param ccc {@literal ccc}
      * @throws java.beans.PropertyVetoException プロパティの変更が拒否された場合
      */
     public void setCcc(java.lang.String[] ccc) throws java.beans.PropertyVetoException {
@@ -25,10 +25,10 @@
     }
 
     /**
-     * cccのn番目の要素を設定します。
+     * {@literal ccc} の {@literal n} 番目の要素を設定します。
      * 
      * @param n 設定される要素のインデックス
-     * @param ccc ccc
+     * @param ccc {@literal ccc}
      * @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合
      * @throws java.beans.PropertyVetoException プロパティの変更が拒否された場合
      */

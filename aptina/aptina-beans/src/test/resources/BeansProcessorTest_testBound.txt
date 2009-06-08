@@ -54,27 +54,27 @@ public class BoundBean extends org.seasar.aptina.beans.example.BoundBeanState {
     }
 
     /**
-     * aaaを返します。
+     * {@literal aaa} を返します。
      * 
-     * @return aaa
+     * @return {@literal aaa}
      */
     public java.lang.String getAaa() {
         return aaa;
     }
 
     /**
-     * bbbを返します。
+     * {@literal bbb} を返します。
      * 
-     * @return bbb
+     * @return {@literal bbb}
      */
     public java.lang.String getBbb() {
         return bbb;
     }
 
     /**
-     * bbbを設定します。
+     * {@literal bbb} を設定します。
      * 
-     * @param bbb bbb
+     * @param bbb {@literal bbb}
      */
     public void setBbb(java.lang.String bbb) {
         java.lang.String oldBbb = this.bbb;
@@ -83,7 +83,7 @@ public class BoundBean extends org.seasar.aptina.beans.example.BoundBeanState {
     }
 
     /**
-     * bbbの {@link java.beans.PropertyChangeListener} をリスナーリストに追加します。
+     * {@literal bbb} の {@link java.beans.PropertyChangeListener} をリスナーリストに追加します。
      * 
      * @param listener 追加する {@link java.beans.PropertyChangeListener}
      */
@@ -92,7 +92,7 @@ public class BoundBean extends org.seasar.aptina.beans.example.BoundBeanState {
     }
 
     /**
-     * bbbの {@link java.beans.PropertyChangeListener} をリスナーリストから削除します。
+     * {@literal bbb} の {@link java.beans.PropertyChangeListener} をリスナーリストから削除します。
      * 
      * @param listener 削除する {@link java.beans.PropertyChangeListener}
      */
@@ -101,19 +101,19 @@ public class BoundBean extends org.seasar.aptina.beans.example.BoundBeanState {
     }
 
     /**
-     * cccを返します。
+     * {@literal ccc} を返します。
      * 
-     * @return ccc
+     * @return {@literal ccc}
      */
     public java.lang.String[] getCcc() {
         return ccc;
     }
 
     /**
-     * cccのn番目の要素を返します。
+     * {@literal ccc} の {@literal n} 番目の要素を返します。
      * 
      * @param n 返される要素のインデックス
-     * @return n番目のccc
+     * @return {@literal n} 番目の {@literal ccc}
      * @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合
      */
     public java.lang.String getCcc(int n) throws ArrayIndexOutOfBoundsException {
@@ -121,9 +121,9 @@ public class BoundBean extends org.seasar.aptina.beans.example.BoundBeanState {
     }
 
     /**
-     * cccを設定します。
+     * {@literal ccc} を設定します。
      * 
-     * @param ccc ccc
+     * @param ccc {@literal ccc}
      */
     public void setCcc(java.lang.String[] ccc) {
         java.lang.String[] oldCcc = this.ccc;
@@ -132,10 +132,10 @@ public class BoundBean extends org.seasar.aptina.beans.example.BoundBeanState {
     }
 
     /**
-     * cccのn番目の要素を設定します。
+     * {@literal ccc} の {@literal n} 番目の要素を設定します。
      * 
      * @param n 設定される要素のインデックス
-     * @param ccc ccc
+     * @param ccc {@literal ccc}
      * @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合
      */
     public void setCcc(int n, java.lang.String ccc) throws ArrayIndexOutOfBoundsException {
@@ -145,7 +145,7 @@ public class BoundBean extends org.seasar.aptina.beans.example.BoundBeanState {
     }
 
     /**
-     * cccの {@link java.beans.PropertyChangeListener} をリスナーリストに追加します。
+     * {@literal ccc} の {@link java.beans.PropertyChangeListener} をリスナーリストに追加します。
      * 
      * @param listener 追加する {@link java.beans.PropertyChangeListener}
      */
@@ -154,7 +154,7 @@ public class BoundBean extends org.seasar.aptina.beans.example.BoundBeanState {
     }
 
     /**
-     * cccの {@link java.beans.PropertyChangeListener} をリスナーリストから削除します。
+     * {@literal ccc} の {@link java.beans.PropertyChangeListener} をリスナーリストから削除します。
      * 
      * @param listener 削除する {@link java.beans.PropertyChangeListener}
      */

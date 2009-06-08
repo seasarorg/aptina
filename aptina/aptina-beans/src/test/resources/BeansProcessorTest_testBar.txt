@@ -52,37 +52,37 @@ public class BarBean<E, T extends java.util.List<E> & java.io.Serializable> exte
     }
 
     /**
-     * あああを返します。
+     * {@literal あああ} を返します。
      * 
-     * @return あああ
+     * @return {@literal あああ}
      */
     public T getAaa() {
         return aaa;
     }
 
     /**
-     * あああを設定します。
+     * {@literal あああ} を設定します。
      * 
-     * @param aaa あああ
+     * @param aaa {@literal あああ}
      */
     public void setAaa(T aaa) {
         this.aaa = aaa;
     }
 
     /**
-     * いいいを返します。
+     * {@literal いいい} を返します。
      * 
-     * @return いいい
+     * @return {@literal いいい}
      */
     public T[] getBbb() {
         return bbb;
     }
 
     /**
-     * いいいのn番目の要素を返します。
+     * {@literal いいい} の {@literal n} 番目の要素を返します。
      * 
      * @param n 返される要素のインデックス
-     * @return n番目のいいい
+     * @return {@literal n} 番目の {@literal いいい}
      * @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合
      */
     public T getBbb(int n) throws ArrayIndexOutOfBoundsException {
@@ -90,19 +90,19 @@ public class BarBean<E, T extends java.util.List<E> & java.io.Serializable> exte
     }
 
     /**
-     * いいいを設定します。
+     * {@literal いいい} を設定します。
      * 
-     * @param bbb いいい
+     * @param bbb {@literal いいい}
      */
     public void setBbb(T[] bbb) {
         this.bbb = bbb;
     }
 
     /**
-     * いいいのn番目の要素を設定します。
+     * {@literal いいい} の {@literal n} 番目の要素を設定します。
      * 
      * @param n 設定される要素のインデックス
-     * @param bbb いいい
+     * @param bbb {@literal いいい}
      * @throws ArrayIndexOutOfBoundsException インデックスが配列のサイズを超えていた場合
      */
     public void setBbb(int n, T bbb) throws ArrayIndexOutOfBoundsException {
@@ -110,18 +110,18 @@ public class BarBean<E, T extends java.util.List<E> & java.io.Serializable> exte
     }
 
     /**
-     * うううを返します。
+     * {@literal ううう} を返します。
      * 
-     * @return ううう
+     * @return {@literal ううう}
      */
     public java.util.List<? extends T> getCcc() {
         return ccc;
     }
 
     /**
-     * うううを設定します。
+     * {@literal ううう} を設定します。
      * 
-     * @param ccc ううう
+     * @param ccc {@literal ううう}
      */
     public void setCcc(java.util.List<? extends T> ccc) {
         this.ccc = ccc;

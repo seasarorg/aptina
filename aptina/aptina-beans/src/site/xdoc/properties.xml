@@ -180,5 +180,56 @@
 				</li>
 			</ul>
 		</section>
+		
+		<section name="Javadocコメント">
+			<p>
+				Bean クラスの getter/setter メソッドには Javadoc コメントが付けられます．
+				状態クラスのフィールドに Javadoc コメントが付けられている場合は，
+				その内容を元に Bean クラスのメソッドに付けられる Javadoc コメントが作成されます．
+				例えば次の状態クラスのフィールドから
+			</p>
+			<source><![CDATA[
+/** 従業員名 */
+String employeeName;
+]]></source>
+			<p>
+				次のようなコメントが生成されます．
+			</p>
+			<source><![CDATA[
+/**
+ * {@literal 従業員名} を返します．
+ * 
+ * @return {@literal 従業員名}
+ */
+public String getEmployeeName {
+    return employeeName;
+}
+]]></source>
+			<p>
+				このように， 状態クラスのフィールドに付ける Javadoc コメントは，
+				1 行でプロパティを表す名詞形にすることを推奨します．
+			</p>
+			<p>
+				状態クラスのフィールドに Javadoc コメントが付けられていない場合は，
+				フィールド名を元に Bean クラスのメソッドに付けられる Javadoc コメントが作成されます．
+				例えば次の状態クラスのフィールドから
+			</p>
+			<source><![CDATA[
+String employeeName;
+]]></source>
+			<p>
+				次のようなコメントが生成されます．
+			</p>
+			<source><![CDATA[
+/**
+ * {@literal employeeName} を返します．
+ * 
+ * @return {@literal employeeName}
+ */
+public String getEmployeeName {
+    return employeeName;
+}
+]]></source>
+		</section>
 	</body>
 </document>
