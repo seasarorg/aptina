@@ -16,7 +16,6 @@
 package org.seasar.aptina.unit;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.Locale;
@@ -171,20 +170,6 @@ public class AptinaTestCaseTest extends AptinaTestCase {
                 .toString());
         assertEquals("java.lang.String[][][]", getTypeMirror(
                 String[][][].class.getName()).toString());
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testReadFromFile() throws Exception {
-        File f = new File("aptina-unit/src/test/resources/a.txt");
-        if (!f.exists()) {
-            f = new File("src/test/resources/a.txt");
-        }
-        final BufferedReader reader = new BufferedReader(new StringReader(
-                readFromFile(f)));
-        assertEquals("abc", reader.readLine());
-        assertEquals("あいう", reader.readLine());
     }
 
     /**

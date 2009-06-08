@@ -19,7 +19,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
-import java.util.Arrays;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -36,6 +35,8 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.ElementScanner6;
+
+import static java.util.Arrays.*;
 
 /**
  * コンパイル対象の {@link Element} 階層をコンソールに出力する {@link Processor} です．
@@ -83,7 +84,7 @@ public class PrintingProcessor extends AbstractProcessor {
     /** インデント用の空白 (100 文字) */
     protected static final char[] SPACES = new char[100];
     static {
-        Arrays.fill(SPACES, ' ');
+        fill(SPACES, ' ');
     }
 
     /** 出力先 */

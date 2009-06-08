@@ -17,12 +17,14 @@ package org.seasar.aptina.beans.internal;
 
 import javax.tools.Diagnostic.Kind;
 
+import org.seasar.aptina.commons.message.MessageCodeEnum;
+
 /**
  * メッセージコードです．
  * 
  * @author koichik
  */
-public enum MessageCode {
+public enum MessageCode implements MessageCodeEnum {
 
     /** */
     CLS0000(Kind.ERROR, "", "@BeanState アノテーションをインタフェースに付けることはできません"),
@@ -135,6 +137,8 @@ public enum MessageCode {
             + " @param listener The {@link %1$s} to be removed%n",
             " %2$sの {@link %1$s} をリスナーリストから削除します。%n %n"
                     + " @param listener 削除する {@link %1$s}%n"),
+    /** */
+    APT0000(Kind.ERROR, "", "注釈処理中に例外が発生しました．%1$s%n"),
     //
     ;
 

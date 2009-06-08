@@ -23,10 +23,14 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 
 import org.seasar.aptina.beans.BeanState;
+import org.seasar.aptina.commons.message.EnumMessageFormatter;
+
+import static org.seasar.aptina.beans.internal.MessageCode.*;
 
 /**
  * {@link BeanState} で注釈されたクラス (状態クラス) のフィールドに対する getter/setter メソッドを持つサブクラス
@@ -38,6 +42,9 @@ import org.seasar.aptina.beans.BeanState;
 @SupportedAnnotationTypes("org.seasar.aptina.beans.BeanState")
 public class BeansProcessor extends AbstractProcessor {
 
+    /** メッセージフォーマッタ */
+    protected EnumMessageFormatter<MessageCode> messageFormatter;
+
     /**
      * {@link BeanState} で注釈されたクラス (状態クラス) のフィールドに対する getter/setter メソッドを持つサブクラス
      * (Bean クラス) を生成します．
@@ -45,6 +52,8 @@ public class BeansProcessor extends AbstractProcessor {
     @Override
     public boolean process(final Set<? extends TypeElement> annotations,
             final RoundEnvironment roundEnv) {
+        messageFormatter = new EnumMessageFormatter<MessageCode>(
+                MessageCode.class, processingEnv.getLocale());
         final BeanInfoFactory beanMetaFactory = new BeanInfoFactory(
                 processingEnv);
         final BeanClassGenerator beanClassGenerator = new BeanClassGenerator(
@@ -58,12 +67,28 @@ public class BeansProcessor extends AbstractProcessor {
                     try {
                         beanClassGenerator.generate(beanInfo, typeElement);
                     } catch (final IOException e) {
-                        throw new RuntimeException(e);
+                        printMessage(typeElement, APT0000, e);
                     }
                 }
             }
         }
         return false;
+    }
+
+    /**
+     * メッセージを出力します．
+     * 
+     * @param element
+     *            メッセージの対象となる要素
+     * @param messageCode
+     *            メッセージコード
+     * @param args
+     *            メッセージに埋め込む引数
+     */
+    protected void printMessage(final Element element,
+            final MessageCode messageCode, final Object... args) {
+        processingEnv.getMessager().printMessage(messageCode.getKind(),
+                messageFormatter.getMessage(messageCode, args), element);
     }
 
 }

@@ -345,14 +345,6 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
     /**
      * @throws Exception
      */
-    public void testToPackageName() throws Exception {
-        assertEquals("org.seasar.aptina.beans.example", BeanInfoFactory
-                .toPackageName(FooBeanState.class.getName()));
-    }
-
-    /**
-     * @throws Exception
-     */
     public void testToBeanClassName() throws Exception {
         assertEquals("HogeBean", BeanInfoFactory
                 .toBeanClassName("AbstractHogeBean"));
@@ -361,24 +353,6 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         assertEquals("HogeBeanImpl", BeanInfoFactory
                 .toBeanClassName("HogeBean"));
         assertEquals("HogeBean", BeanInfoFactory.toBeanClassName("Hoge"));
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testToStringTypeParameterypeParameterDecl() throws Exception {
-        addCompilationUnit(FooBeanState.class);
-        addCompilationUnit(BarBeanState.class);
-        compile();
-
-        TypeElement typeElement = getTypeElement(FooBeanState.class);
-        assertEquals("", BeanInfoFactory.toStringTypeParameterDecl(typeElement
-                .getTypeParameters()));
-
-        typeElement = getTypeElement(BarBeanState.class);
-        assertEquals("<E, T extends java.util.List<E> & java.io.Serializable>",
-                BeanInfoFactory.toStringTypeParameterDecl(typeElement
-                        .getTypeParameters()));
     }
 
 }

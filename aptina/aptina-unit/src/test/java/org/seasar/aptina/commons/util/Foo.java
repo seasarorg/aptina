@@ -13,20 +13,12 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.aptina.beans.internal;
+package org.seasar.aptina.commons.util;
 
 /**
- * {@link MessageCode} のメッセージフォーマットを対象とする，日本語ロケールのリソースバンドルです．
  * 
  * @author koichik
  */
-public class MessageResource_ja extends MessageResource {
-
-    /**
-     * インスタンスを構築します．
-     */
-    public MessageResource_ja() {
-        super(MessageCode.LOCALE_JA);
-    }
+public class Foo {
 
 }

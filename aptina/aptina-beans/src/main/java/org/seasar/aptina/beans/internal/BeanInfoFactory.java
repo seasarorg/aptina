@@ -15,7 +15,6 @@
  */
 package org.seasar.aptina.beans.internal;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -36,8 +35,11 @@ import javax.tools.Diagnostic.Kind;
 
 import org.seasar.aptina.beans.BeanState;
 import org.seasar.aptina.beans.Property;
+import org.seasar.aptina.commons.message.EnumMessageFormatter;
 
-import static org.seasar.aptina.beans.internal.Strings.*;
+import static org.seasar.aptina.commons.util.ClassUtils.*;
+import static org.seasar.aptina.commons.util.ElementUtils.*;
+import static org.seasar.aptina.commons.util.StringUtils.*;
 
 /**
  * 状態クラスから生成される Bean クラスの情報を作成するクラスです．
@@ -58,7 +60,7 @@ public class BeanInfoFactory {
     protected ProcessingEnvironment env;
 
     /** メッセージフォーマッタ */
-    protected MessageFormatter messageFormatter;
+    protected EnumMessageFormatter<MessageCode> messageFormatter;
 
     /** 状態クラスにエラーがある場合は {@literal true} */
     protected boolean hasError;
@@ -71,7 +73,8 @@ public class BeanInfoFactory {
      */
     public BeanInfoFactory(final ProcessingEnvironment env) {
         this.env = env;
-        messageFormatter = new MessageFormatter(env.getLocale());
+        messageFormatter = new EnumMessageFormatter<MessageCode>(
+                MessageCode.class, env.getLocale());
     }
 
     /**
@@ -155,15 +158,15 @@ public class BeanInfoFactory {
 
         beanInfo.setComment(env.getElementUtils().getDocComment(typeElement));
         final String stateClassName = typeElement.getQualifiedName().toString();
-        final String packageName = toPackageName(stateClassName);
+        final String packageName = getPackageName(stateClassName);
         beanInfo.setPackageName(packageName);
         beanInfo.setBeanClassName(toBeanClassName(typeElement.getSimpleName()
                 .toString()));
         final List<? extends TypeParameterElement> typeParameters = typeElement
                 .getTypeParameters();
-        beanInfo.setTypeParameter(toStringTypeParameterDecl(typeParameters));
+        beanInfo.setTypeParameter(toStringOfTypeParameterDecl(typeParameters));
         beanInfo.setStateClassName(stateClassName
-                + toStringTypeParameterNames(typeParameters));
+                + toStringOfTypeParameterNames(typeParameters));
 
         final BeanState beanState = typeElement.getAnnotation(BeanState.class);
         if (beanState.boundProperties()) {
@@ -276,7 +279,7 @@ public class BeanInfoFactory {
             constructorInfo.setModifier("");
         }
         constructorInfo
-                .setTypeParameters(toStringTypeParameterDecl(executableElement
+                .setTypeParameters(toStringOfTypeParameterDecl(executableElement
                         .getTypeParameters()));
         for (final VariableElement variableElement : parameters) {
             constructorInfo.addParameterType(variableElement.asType()
@@ -337,21 +340,6 @@ public class BeanInfoFactory {
     }
 
     /**
-     * クラスの完全限定名からパッケージ名を返します．
-     * 
-     * @param qualifiedName
-     *            完全限定名
-     * @return パッケージ名
-     */
-    protected static String toPackageName(final String qualifiedName) {
-        final int pos = qualifiedName.lastIndexOf('.');
-        if (pos == -1) {
-            return null;
-        }
-        return qualifiedName.substring(0, pos);
-    }
-
-    /**
      * 状態クラスの名前から対応する Bean クラスの名前を返します．
      * 
      * @param stateClassName
@@ -370,85 +358,6 @@ public class BeanInfoFactory {
             return stateClassName + "Impl";
         }
         return stateClassName + "Bean";
-    }
-
-    /**
-     * 型引数名の文字列表現を返します．
-     * 
-     * @param typeParameters
-     *            型引数の {@link List}
-     * @return 型引数名の文字列表現
-     */
-    protected static String toStringTypeParameterNames(
-            final List<? extends TypeParameterElement> typeParameters) {
-        if (typeParameters.isEmpty()) {
-            return "";
-        }
-        final StringBuilder buf = new StringBuilder(64);
-        buf.append("<").append(
-                join(toStringListOfTypeParameterNames(typeParameters), ", "))
-                .append(">");
-        return new String(buf);
-    }
-
-    /**
-     * 型引数宣言の文字列表現を返します．
-     * 
-     * @param typeParameters
-     *            型引数の {@link List}
-     * @return 型引数宣言の文字列表現
-     */
-    protected static String toStringTypeParameterDecl(
-            final List<? extends TypeParameterElement> typeParameters) {
-        if (typeParameters.isEmpty()) {
-            return "";
-        }
-        final StringBuilder buf = new StringBuilder(64);
-        String parameterPrefix = "<";
-        for (final TypeParameterElement typeParameter : typeParameters) {
-            final List<? extends TypeMirror> bounds = typeParameter.getBounds();
-            buf.append(parameterPrefix).append(typeParameter.getSimpleName());
-            if (bounds.size() > 1
-                    || bounds.get(0).toString() == "java.lang.Object") {
-                buf.append(" extends ").append(
-                        join(toStringListOfTypeParameters(bounds), " & "));
-            }
-            parameterPrefix = ", ";
-        }
-        buf.append('>');
-        return new String(buf);
-    }
-
-    /**
-     * 型引き数名の {@link List} を返します．
-     * 
-     * @param elements
-     *            型引数を表す {@link TypeElement} の {@link List}
-     * @return 型引き数名の {@link List}
-     */
-    protected static List<String> toStringListOfTypeParameterNames(
-            final List<? extends Element> elements) {
-        final List<String> result = new ArrayList<String>();
-        for (final Element element : elements) {
-            result.add(element.getSimpleName().toString());
-        }
-        return result;
-    }
-
-    /**
-     * 型名の {@link List} を返します．
-     * 
-     * @param typeMirrors
-     *            型の {@link List}
-     * @return 型名の {@link List}
-     */
-    protected static List<String> toStringListOfTypeParameters(
-            final List<? extends TypeMirror> typeMirrors) {
-        final List<String> result = new ArrayList<String>();
-        for (final TypeMirror typeMirror : typeMirrors) {
-            result.add(typeMirror.toString());
-        }
-        return result;
     }
 
     /**

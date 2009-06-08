@@ -16,6 +16,7 @@
 package org.seasar.aptina.beans.internal;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
@@ -363,30 +364,20 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
     }
 
     /**
-     * @param reader
+     * @param actualReader
      * @throws Exception
      */
-    void assertEqualsByLine(final Reader reader) throws Exception {
+    void assertEqualsByLine(final Reader actualReader) throws Exception {
         final String expectedResourceName = getClass().getSimpleName() + "_"
                 + getName() + ".txt";
-        final BufferedReader expectedReader = new BufferedReader(
-                new InputStreamReader(getClass().getClassLoader()
-                        .getResourceAsStream(expectedResourceName), Charset
-                        .forName("UTF-8")));
-        final BufferedReader actualReader = new BufferedReader(reader);
+        final InputStream expectedInputStream = getClass().getClassLoader()
+                .getResourceAsStream(expectedResourceName);
         try {
-            String expected;
-            String actual;
-            int line = 0;
-            while ((expected = expectedReader.readLine()) != null) {
-                ++line;
-                actual = actualReader.readLine();
-                assertEquals("line:" + line, expected, actual);
-            }
-            ++line;
-            assertEquals("line:" + line, null, actualReader.readLine());
+            assertEqualsByLine(new BufferedReader(new InputStreamReader(
+                    expectedInputStream, getCharset())), new BufferedReader(
+                    actualReader));
         } finally {
-            closeSilently(expectedReader);
+            closeSilently(expectedInputStream);
             closeSilently(actualReader);
         }
     }

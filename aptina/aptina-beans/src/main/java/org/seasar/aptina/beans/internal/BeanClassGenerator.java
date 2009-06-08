@@ -27,7 +27,9 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 import javax.tools.JavaFileObject;
 
-import static org.seasar.aptina.beans.internal.Strings.*;
+import org.seasar.aptina.commons.message.EnumMessageFormatter;
+
+import static org.seasar.aptina.commons.util.StringUtils.*;
 
 /**
  * 状態クラスを継承した Bean クラスのソースを生成するクラスです．
@@ -40,7 +42,7 @@ public class BeanClassGenerator {
     protected ProcessingEnvironment env;
 
     /** メッセージフォーマッタ */
-    protected MessageFormatter messageFormatter;
+    protected EnumMessageFormatter<MessageCode> messageFormatter;
 
     /** ソースの出力先 */
     protected PrintWriter writer;
@@ -53,7 +55,8 @@ public class BeanClassGenerator {
      */
     public BeanClassGenerator(final ProcessingEnvironment env) {
         this.env = env;
-        messageFormatter = new MessageFormatter(env.getLocale());
+        messageFormatter = new EnumMessageFormatter<MessageCode>(
+                MessageCode.class, env.getLocale());
     }
 
     /**
@@ -147,8 +150,8 @@ public class BeanClassGenerator {
         put("    %1$s %2$s %3$s(%4$s)", constructorInfo.getModifier(),
                 constructorInfo.getTypeParameters(), beanInfo
                         .getBeanClassName(), join(constructorInfo
-                        .getParameterTypes(), " ", constructorInfo
-                        .getParameterNames(), ", "));
+                        .getParameterTypes(), constructorInfo
+                        .getParameterNames(), " ", ", "));
         if (!constructorInfo.getThrownTypes().isEmpty()) {
             put(" throws %1$s", join(constructorInfo.getThrownTypes(), ", "));
         }

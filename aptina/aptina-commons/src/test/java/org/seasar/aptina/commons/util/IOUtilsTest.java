@@ -15,8 +15,10 @@
  */
 package org.seasar.aptina.commons.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.Charset;
 
 import junit.framework.TestCase;
 
@@ -39,6 +41,27 @@ public class IOUtilsTest extends TestCase {
             fail();
         } catch (final IOException expected) {
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testReadString() throws Exception {
+        assertEquals("あいうえおかきくけこさしすせそたちつてとなにぬねの", readString(getTestFile(),
+                Charset.forName("UTF-8")));
+    }
+
+    private File getTestFile() {
+        return new File(getTestResourcesDir(), getClass().getSimpleName() + "_"
+                + getName() + ".txt");
+    }
+
+    private File getTestResourcesDir() {
+        File dir = new File("aptina-commons/src/test/resources");
+        if (!dir.exists()) {
+            dir = new File("src/test/resources");
+        }
+        return dir;
     }
 
 }

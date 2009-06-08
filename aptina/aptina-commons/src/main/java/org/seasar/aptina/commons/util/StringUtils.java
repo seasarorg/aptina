@@ -13,73 +13,29 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.aptina.beans.internal;
+package org.seasar.aptina.commons.util;
 
 import java.util.Iterator;
 
 /**
- * 文字列操作用のユーティリティです．
+ * 文字列を扱うユーティリティです．
  * 
  * @author koichik
  */
-public class Strings {
+public class StringUtils {
 
-    /**
-     * シーケンスの要素をセパレータで区切って連結した文字列を返します．
-     * <p>
-     * <code>join(asList("a", "b", "c"), ", ")</code> は <code>"a, b, c"</code>
-     * を返します．
-     * </p>
-     * 
-     * @param elements
-     *            文字列のシーケンス
-     * @param separator
-     *            文字列を区切るセパレータ
-     * @return シーケンスの要素をセパレータで区切って連結した文字列
-     */
-    public static String join(final Iterable<? extends CharSequence> elements,
-            final String separator) {
-        final StringBuilder buf = new StringBuilder();
-        for (final CharSequence element : elements) {
-            buf.append(element).append(separator);
-        }
-        if (buf.length() > 0) {
-            buf.setLength(buf.length() - separator.length());
-        }
-        return new String(buf);
+    private StringUtils() {
     }
 
     /**
-     * 同じ長さの二つのシーケンスのそれぞれの対応する要素をセパレータ1で区切って連結し， それらをセパレータ2で区切って連結した文字列を返します．
-     * <p>
-     * <code>join(asList("a", "b", "c"), ":", asList("1", "2", "3"), ", ")</code>
-     * は <code>"a:1, b:2, c:3"</code> を返します．
-     * </p>
+     * 文字列が {@literal null} または空なら {@literal true} を返します．
      * 
-     * @param elements1
-     *            シーケンス1
-     * @param separator1
-     *            二つのシーケンスのそれぞれの対応する要素を区切るセパレータ
-     * @param elements2
-     *            シーケンス2
-     * @param separator2
-     *            二つのシーケンスのそれぞれの対応する要素を連結した文字列を区切るセパレータ
-     * @return 同じ長さの二つのシーケンスのそれぞれの対応する要素をセパレータ1で区切って連結し， それらをセパレータ2で区切って連結した文字列
+     * @param s
+     *            文字列
+     * @return 文字列が {@literal null} または空なら {@literal true}
      */
-    public static String join(final Iterable<? extends CharSequence> elements1,
-            final String separator1,
-            final Iterable<? extends CharSequence> elements2,
-            final String separator2) {
-        final StringBuilder buf = new StringBuilder();
-        final Iterator<? extends CharSequence> it = elements2.iterator();
-        for (final CharSequence element1 : elements1) {
-            buf.append(element1).append(separator1).append(it.next()).append(
-                    separator2);
-        }
-        if (buf.length() > 0) {
-            buf.setLength(buf.length() - separator2.length());
-        }
-        return new String(buf);
+    public static boolean isEmpty(final CharSequence s) {
+        return s == null || s.length() == 0;
     }
 
     /**
@@ -118,6 +74,71 @@ public class Strings {
             return s;
         }
         return Character.toLowerCase(s.charAt(0)) + s.substring(1);
+    }
+
+    /**
+     * シーケンスの要素をセパレータで区切って連結した文字列を返します．
+     * <p>
+     * <code>join(asList("a", "b", "c"), ", ")</code> は <code>"a, b, c"</code>
+     * を返します．
+     * </p>
+     * 
+     * @param elements
+     *            文字列のシーケンス
+     * @param separator
+     *            文字列を区切るセパレータ
+     * @return シーケンスの要素をセパレータで区切って連結した文字列
+     */
+    public static String join(final Iterable<? extends CharSequence> elements,
+            final String separator) {
+        final StringBuilder buf = new StringBuilder();
+        for (final CharSequence element : elements) {
+            buf.append(element).append(separator);
+        }
+        if (buf.length() > 0) {
+            buf.setLength(buf.length() - separator.length());
+        }
+        return new String(buf);
+    }
+
+    /**
+     * 同じ長さを持つ二つの文字列シーケンスのそれぞれの対応する要素をセパレータ 1 で区切って連結し， それらをセパレータ 2
+     * で区切って連結した文字列を返します．
+     * <p>
+     * <code>join(asList("a", "b", "c"), asList("1", "2", "3"), ":", ", ")</code>
+     * は <code>"a:1, b:2, c:3"</code> を返します．
+     * </p>
+     * 
+     * @param elements1
+     *            文字列のシーケンス1
+     * @param elements2
+     *            文字列のシーケンス2
+     * @param separator1
+     *            二つのシーケンスのそれぞれの対応する要素を区切るセパレータ
+     * @param separator2
+     *            二つのシーケンスのそれぞれの対応する要素を連結した文字列を区切るセパレータ
+     * @return 同じ長さの二つのシーケンスのそれぞれの対応する要素をセパレータ1で区切って連結し， それらをセパレータ2で区切って連結した文字列
+     */
+    public static String join(final Iterable<? extends CharSequence> elements1,
+            final Iterable<? extends CharSequence> elements2,
+            final String separator1, final String separator2) {
+        final StringBuilder buf = new StringBuilder();
+        final Iterator<? extends CharSequence> it = elements2.iterator();
+        for (final CharSequence element1 : elements1) {
+            if (!it.hasNext()) {
+                throw new IllegalArgumentException("elements1 > elements2");
+            }
+            final CharSequence element2 = it.next();
+            buf.append(element1).append(separator1).append(element2).append(
+                    separator2);
+        }
+        if (it.hasNext()) {
+            throw new IllegalArgumentException("elements1 < elements2");
+        }
+        if (buf.length() > 0) {
+            buf.setLength(buf.length() - separator2.length());
+        }
+        return new String(buf);
     }
 
 }

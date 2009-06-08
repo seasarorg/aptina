@@ -15,21 +15,19 @@
  */
 package org.seasar.aptina.unit;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.io.Writer;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -43,9 +41,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
@@ -62,6 +58,13 @@ import javax.tools.JavaFileObject.Kind;
 
 import junit.framework.ComparisonFailure;
 import junit.framework.TestCase;
+
+import org.seasar.aptina.commons.util.ElementUtils;
+import org.seasar.aptina.commons.util.TypeMirrorUtils;
+
+import static java.util.Arrays.*;
+
+import static org.seasar.aptina.commons.util.AssertionUtils.*;
 
 import static org.seasar.aptina.commons.util.IOUtils.*;
 
@@ -186,7 +189,7 @@ public abstract class AptinaTestCase extends TestCase {
 
     final List<Processor> processors = new ArrayList<Processor>();
     {
-        processors.add(new AptinaProcessor());
+        processors.add(new AptinaUnitProcessor());
     }
 
     final List<CompilationUnit> compilationUnits = new ArrayList<CompilationUnit>();
@@ -203,19 +206,6 @@ public abstract class AptinaTestCase extends TestCase {
 
     Boolean compiledResult;
 
-    final Map<String, TypeKind> primitiveTypes = new HashMap<String, TypeKind>();
-    {
-        primitiveTypes.put(void.class.getName(), TypeKind.VOID);
-        primitiveTypes.put(boolean.class.getName(), TypeKind.BOOLEAN);
-        primitiveTypes.put(char.class.getName(), TypeKind.CHAR);
-        primitiveTypes.put(byte.class.getName(), TypeKind.BYTE);
-        primitiveTypes.put(short.class.getName(), TypeKind.SHORT);
-        primitiveTypes.put(int.class.getName(), TypeKind.INT);
-        primitiveTypes.put(long.class.getName(), TypeKind.LONG);
-        primitiveTypes.put(float.class.getName(), TypeKind.FLOAT);
-        primitiveTypes.put(double.class.getName(), TypeKind.DOUBLE);
-    }
-
     /**
      * インスタンスを構築します．
      */
@@ -230,6 +220,15 @@ public abstract class AptinaTestCase extends TestCase {
      */
     protected AptinaTestCase(final String name) {
         super(name);
+    }
+
+    /**
+     * ロケールを返します．
+     * 
+     * @return ロケールまたは {@literal null}
+     */
+    protected Locale getLocale() {
+        return locale;
     }
 
     /**
@@ -257,8 +256,17 @@ public abstract class AptinaTestCase extends TestCase {
      * @see Locale#getDefault()
      */
     protected void setLocale(final String locale) {
-        checkNotEmpty("locale", locale);
+        assertNotEmpty("locale", locale);
         setLocale(new Locale(locale));
+    }
+
+    /**
+     * 文字セットを返します．
+     * 
+     * @return 文字セットまたは {@literal null}
+     */
+    protected Charset getCharset() {
+        return charset;
     }
 
     /**
@@ -286,7 +294,7 @@ public abstract class AptinaTestCase extends TestCase {
      * @see Charset#defaultCharset()
      */
     protected void setCharset(final String charset) {
-        checkNotEmpty("charset", charset);
+        assertNotEmpty("charset", charset);
         setCharset(Charset.forName(charset));
     }
 
@@ -310,8 +318,8 @@ public abstract class AptinaTestCase extends TestCase {
      *            コンパイル時に参照するソースパスの並び
      */
     protected void addSourcePath(final File... sourcePaths) {
-        checkNotEmpty("sourcePaths", sourcePaths);
-        this.sourcePaths.addAll(Arrays.asList(sourcePaths));
+        assertNotEmpty("sourcePaths", sourcePaths);
+        this.sourcePaths.addAll(asList(sourcePaths));
     }
 
     /**
@@ -321,7 +329,7 @@ public abstract class AptinaTestCase extends TestCase {
      *            コンパイル時に参照するソースパスの並び
      */
     protected void addSourcePath(final String... sourcePaths) {
-        checkNotEmpty("sourcePaths", sourcePaths);
+        assertNotEmpty("sourcePaths", sourcePaths);
         for (final String path : sourcePaths) {
             this.sourcePaths.add(new File(path));
         }
@@ -334,8 +342,8 @@ public abstract class AptinaTestCase extends TestCase {
      *            形式のコンパイラオプションの並び
      */
     protected void addOption(final String... options) {
-        checkNotEmpty("options", options);
-        this.options.addAll(Arrays.asList(options));
+        assertNotEmpty("options", options);
+        this.options.addAll(asList(options));
     }
 
     /**
@@ -345,8 +353,8 @@ public abstract class AptinaTestCase extends TestCase {
      *            注釈を処理する{@link Processor}の並び
      */
     protected void addProcessor(final Processor... processors) {
-        checkNotEmpty("processors", processors);
-        this.processors.addAll(Arrays.asList(processors));
+        assertNotEmpty("processors", processors);
+        this.processors.addAll(asList(processors));
     }
 
     /**
@@ -359,7 +367,7 @@ public abstract class AptinaTestCase extends TestCase {
      *            コンパイル対象クラス
      */
     protected void addCompilationUnit(final Class<?> clazz) {
-        checkNotNull("clazz", clazz);
+        assertNotNull("clazz", clazz);
         addCompilationUnit(clazz.getName());
     }
 
@@ -373,7 +381,7 @@ public abstract class AptinaTestCase extends TestCase {
      *            コンパイル対象クラスの完全限定名
      */
     protected void addCompilationUnit(final String className) {
-        checkNotEmpty("className", className);
+        assertNotEmpty("className", className);
         compilationUnits.add(new FileCompilationUnit(className));
     }
 
@@ -387,8 +395,8 @@ public abstract class AptinaTestCase extends TestCase {
      */
     protected void addCompilationUnit(final Class<?> clazz,
             final CharSequence source) {
-        checkNotNull("clazz", clazz);
-        checkNotEmpty("source", source);
+        assertNotNull("clazz", clazz);
+        assertNotEmpty("source", source);
         addCompilationUnit(clazz.getName(), source);
     }
 
@@ -402,8 +410,8 @@ public abstract class AptinaTestCase extends TestCase {
      */
     protected void addCompilationUnit(final String className,
             final CharSequence source) {
-        checkNotEmpty("className", className);
-        checkNotEmpty("source", source);
+        assertNotEmpty("className", className);
+        assertNotEmpty("source", source);
         compilationUnits.add(new InMemoryCompilationUnit(className, source
                 .toString()));
     }
@@ -444,7 +452,7 @@ public abstract class AptinaTestCase extends TestCase {
      * @see CompilationTask#call()
      */
     protected Boolean getCompiledResult() throws IllegalStateException {
-        checkCompiled();
+        assertCompiled();
         return compiledResult;
     }
 
@@ -457,7 +465,7 @@ public abstract class AptinaTestCase extends TestCase {
      */
     protected List<Diagnostic<? extends JavaFileObject>> getDiagnostics()
             throws IllegalStateException {
-        checkCompiled();
+        assertCompiled();
         return diagnostics.getDiagnostics();
     }
 
@@ -470,7 +478,7 @@ public abstract class AptinaTestCase extends TestCase {
      */
     protected ProcessingEnvironment getProcessingEnvironment()
             throws IllegalStateException {
-        checkCompiled();
+        assertCompiled();
         return processingEnvironment;
     }
 
@@ -483,7 +491,7 @@ public abstract class AptinaTestCase extends TestCase {
      * @see ProcessingEnvironment#getElementUtils()
      */
     protected Elements getElementUtils() throws IllegalStateException {
-        checkCompiled();
+        assertCompiled();
         return processingEnvironment.getElementUtils();
     }
 
@@ -496,7 +504,7 @@ public abstract class AptinaTestCase extends TestCase {
      * @see ProcessingEnvironment#getTypeUtils()
      */
     protected Types getTypeUtils() throws IllegalStateException {
-        checkCompiled();
+        assertCompiled();
         return processingEnvironment.getTypeUtils();
     }
 
@@ -516,9 +524,8 @@ public abstract class AptinaTestCase extends TestCase {
      */
     protected TypeElement getTypeElement(final Class<?> clazz)
             throws IllegalStateException {
-        checkNotNull("clazz", clazz);
-        checkCompiled();
-        return getElementUtils().getTypeElement(clazz.getName());
+        assertCompiled();
+        return ElementUtils.getTypeElement(getElementUtils(), clazz.getName());
     }
 
     /**
@@ -537,15 +544,8 @@ public abstract class AptinaTestCase extends TestCase {
      */
     protected TypeElement getTypeElement(final String className)
             throws IllegalStateException {
-        checkNotEmpty("className", className);
-        checkCompiled();
-        try {
-            // 仕様では存在しないクラスを引数に Elements#getTypeElement(String) を呼び出すと
-            // null が返されるはずだが， コンパイラの実行が終わった後だと NPE がスローされる
-            return getElementUtils().getTypeElement(className);
-        } catch (final NullPointerException e) {
-            return null;
-        }
+        assertCompiled();
+        return ElementUtils.getTypeElement(getElementUtils(), className);
     }
 
     /**
@@ -561,10 +561,8 @@ public abstract class AptinaTestCase extends TestCase {
      */
     protected VariableElement getFieldElement(final TypeElement typeElement,
             final Field field) throws IllegalStateException {
-        checkNotNull("typeElement", typeElement);
-        checkNotNull("field", field);
-        checkCompiled();
-        return getFieldElement(typeElement, field.getName());
+        assertCompiled();
+        return ElementUtils.getFieldElement(typeElement, field);
     }
 
     /**
@@ -580,16 +578,8 @@ public abstract class AptinaTestCase extends TestCase {
      */
     protected VariableElement getFieldElement(final TypeElement typeElement,
             final String fieldName) throws IllegalStateException {
-        checkNotNull("typeElement", typeElement);
-        checkNotEmpty("fieldName", fieldName);
-        checkCompiled();
-        for (final VariableElement variableElement : ElementFilter
-                .fieldsIn(typeElement.getEnclosedElements())) {
-            if (fieldName.equals(variableElement.getSimpleName().toString())) {
-                return variableElement;
-            }
-        }
-        return null;
+        assertCompiled();
+        return ElementUtils.getFieldElement(typeElement, fieldName);
     }
 
     /**
@@ -603,15 +593,8 @@ public abstract class AptinaTestCase extends TestCase {
      */
     protected ExecutableElement getConstructorElement(
             final TypeElement typeElement) throws IllegalStateException {
-        checkNotNull("typeElement", typeElement);
-        checkCompiled();
-        for (final ExecutableElement executableElement : ElementFilter
-                .constructorsIn(typeElement.getEnclosedElements())) {
-            if (executableElement.getParameters().size() == 0) {
-                return executableElement;
-            }
-        }
-        return null;
+        assertCompiled();
+        return ElementUtils.getConstructorElement(typeElement);
     }
 
     /**
@@ -632,17 +615,8 @@ public abstract class AptinaTestCase extends TestCase {
     protected ExecutableElement getConstructorElement(
             final TypeElement typeElement, final Class<?>... parameterTypes)
             throws IllegalStateException {
-        checkNotNull("typeElement", typeElement);
-        checkNotNull("parameterTypes", parameterTypes);
-        checkCompiled();
-        for (final ExecutableElement executableElement : ElementFilter
-                .constructorsIn(typeElement.getEnclosedElements())) {
-            if (isMatchParameterTypes(parameterTypes, executableElement
-                    .getParameters())) {
-                return executableElement;
-            }
-        }
-        return null;
+        assertCompiled();
+        return ElementUtils.getConstructorElement(typeElement, parameterTypes);
     }
 
     /**
@@ -666,17 +640,9 @@ public abstract class AptinaTestCase extends TestCase {
     protected ExecutableElement getConstructorElement(
             final TypeElement typeElement, final String... parameterTypeNames)
             throws IllegalStateException {
-        checkNotNull("typeElement", typeElement);
-        checkNotNull("parameterTypeNames", parameterTypeNames);
-        checkCompiled();
-        for (final ExecutableElement executableElement : ElementFilter
-                .constructorsIn(typeElement.getEnclosedElements())) {
-            if (isMatchParameterTypes(parameterTypeNames, executableElement
-                    .getParameters())) {
-                return executableElement;
-            }
-        }
-        return null;
+        assertCompiled();
+        return ElementUtils.getConstructorElement(typeElement,
+                parameterTypeNames);
     }
 
     /**
@@ -692,20 +658,8 @@ public abstract class AptinaTestCase extends TestCase {
      */
     protected ExecutableElement getMethodElement(final TypeElement typeElement,
             final String methodName) throws IllegalStateException {
-        checkNotNull("typeElement", typeElement);
-        checkNotEmpty("methodName", methodName);
-        checkCompiled();
-        for (final ExecutableElement executableElement : ElementFilter
-                .methodsIn(typeElement.getEnclosedElements())) {
-            if (!methodName
-                    .equals(executableElement.getSimpleName().toString())) {
-                continue;
-            }
-            if (executableElement.getParameters().size() == 0) {
-                return executableElement;
-            }
-        }
-        return null;
+        assertCompiled();
+        return ElementUtils.getMethodElement(typeElement, methodName);
     }
 
     /**
@@ -728,22 +682,9 @@ public abstract class AptinaTestCase extends TestCase {
     protected ExecutableElement getMethodElement(final TypeElement typeElement,
             final String methodName, final Class<?>... parameterTypes)
             throws IllegalStateException {
-        checkNotNull("typeElement", typeElement);
-        checkNotEmpty("methodName", methodName);
-        checkNotNull("parameterTypes", parameterTypes);
-        checkCompiled();
-        for (final ExecutableElement executableElement : ElementFilter
-                .methodsIn(typeElement.getEnclosedElements())) {
-            if (!methodName
-                    .equals(executableElement.getSimpleName().toString())) {
-                continue;
-            }
-            if (isMatchParameterTypes(parameterTypes, executableElement
-                    .getParameters())) {
-                return executableElement;
-            }
-        }
-        return null;
+        assertCompiled();
+        return ElementUtils.getMethodElement(typeElement, methodName,
+                parameterTypes);
     }
 
     /**
@@ -769,22 +710,9 @@ public abstract class AptinaTestCase extends TestCase {
     protected ExecutableElement getMethodElement(final TypeElement typeElement,
             final String methodName, final String... parameterTypeNames)
             throws IllegalStateException {
-        checkNotNull("typeElement", typeElement);
-        checkNotEmpty("methodName", methodName);
-        checkNotNull("parameterTypeNames", parameterTypeNames);
-        checkCompiled();
-        for (final ExecutableElement executableElement : ElementFilter
-                .methodsIn(typeElement.getEnclosedElements())) {
-            if (!methodName
-                    .equals(executableElement.getSimpleName().toString())) {
-                continue;
-            }
-            if (isMatchParameterTypes(parameterTypeNames, executableElement
-                    .getParameters())) {
-                return executableElement;
-            }
-        }
-        return null;
+        assertCompiled();
+        return ElementUtils.getMethodElement(typeElement, methodName,
+                parameterTypeNames);
     }
 
     /**
@@ -798,12 +726,9 @@ public abstract class AptinaTestCase extends TestCase {
      */
     protected TypeMirror getTypeMirror(final Class<?> clazz)
             throws IllegalStateException {
-        checkNotNull("clazz", clazz);
-        checkCompiled();
-        if (clazz.isArray()) {
-            return toArrayTypeMirror(getTypeMirror(clazz.getComponentType()));
-        }
-        return getTypeMirror(clazz.getName());
+        assertCompiled();
+        return TypeMirrorUtils.getTypeMirror(getTypeUtils(), getElementUtils(),
+                clazz);
     }
 
     /**
@@ -821,32 +746,9 @@ public abstract class AptinaTestCase extends TestCase {
      */
     protected TypeMirror getTypeMirror(final String className)
             throws IllegalStateException {
-        checkNotEmpty("className", className);
-        checkCompiled();
-        if (className.endsWith("[]")) {
-            final String componentTypeName = className.substring(0, className
-                    .length() - 2);
-            return toArrayTypeMirror(getTypeMirror(componentTypeName));
-        }
-        if (className.startsWith("[") && className.endsWith(";")) {
-            final int pos = className.indexOf("L");
-            final String componentTypeName = className.substring(pos + 1,
-                    className.length() - 1);
-            TypeMirror typeMirror = getTypeMirror(componentTypeName);
-            for (int i = 0; i < pos; ++i) {
-                typeMirror = toArrayTypeMirror(typeMirror);
-            }
-            return typeMirror;
-        }
-        if (primitiveTypes.containsKey(className)) {
-            final TypeKind typeKind = primitiveTypes.get(className);
-            return getTypeUtils().getPrimitiveType(typeKind);
-        }
-        final TypeElement typeElement = getTypeElement(className);
-        if (typeElement == null) {
-            return null;
-        }
-        return typeElement.asType();
+        assertCompiled();
+        return TypeMirrorUtils.getTypeMirror(getTypeUtils(), getElementUtils(),
+                className);
     }
 
     /**
@@ -865,8 +767,8 @@ public abstract class AptinaTestCase extends TestCase {
     protected String getGeneratedSource(final Class<?> clazz)
             throws IllegalStateException, IOException,
             SourceNotGeneratedException {
-        checkNotNull("clazz", clazz);
-        checkCompiled();
+        assertNotNull("clazz", clazz);
+        assertCompiled();
         return getGeneratedSource(clazz.getName());
     }
 
@@ -886,8 +788,8 @@ public abstract class AptinaTestCase extends TestCase {
     protected String getGeneratedSource(final String className)
             throws IllegalStateException, IOException,
             SourceNotGeneratedException {
-        checkNotEmpty("className", className);
-        checkCompiled();
+        assertNotEmpty("className", className);
+        assertCompiled();
         final JavaFileObject javaFileObject = testingJavaFileManager
                 .getJavaFileForInput(StandardLocation.SOURCE_OUTPUT, className,
                         Kind.SOURCE);
@@ -899,6 +801,57 @@ public abstract class AptinaTestCase extends TestCase {
             throw new SourceNotGeneratedException(className);
         }
         return content.toString();
+    }
+
+    /**
+     * 文字列を行単位で比較します．
+     * 
+     * @param expected
+     *            期待される文字列
+     * @param actual
+     *            実際の文字列
+     */
+    protected void assertEqualsByLine(final String expected, final String actual) {
+        if (expected == null || actual == null) {
+            assertEquals(expected, actual);
+            return;
+        }
+        final BufferedReader expectedReader = new BufferedReader(
+                new StringReader(expected.toString()));
+        final BufferedReader actualReader = new BufferedReader(
+                new StringReader(actual));
+        try {
+            assertEqualsByLine(expectedReader, actualReader);
+        } catch (final IOException ignore) {
+            // unreachable
+        } finally {
+            closeSilently(expectedReader);
+            closeSilently(actualReader);
+        }
+    }
+
+    /**
+     * 文字列を行単位で比較します．
+     * 
+     * @param expectedReader
+     *            期待される文字列の入力ストリーム
+     * @param actualReader
+     *            実際の文字列の入力ストリーム
+     * @throws IOException
+     *             入出力例外が発生した場合
+     */
+    protected void assertEqualsByLine(final BufferedReader expectedReader,
+            final BufferedReader actualReader) throws IOException {
+        String expectedLine;
+        String actualLine;
+        int lineNo = 0;
+        while ((expectedLine = expectedReader.readLine()) != null) {
+            ++lineNo;
+            actualLine = actualReader.readLine();
+            assertEquals("line:" + lineNo, expectedLine, actualLine);
+        }
+        ++lineNo;
+        assertEquals("line:" + lineNo, null, actualReader.readLine());
     }
 
     /**
@@ -920,9 +873,9 @@ public abstract class AptinaTestCase extends TestCase {
     protected void assertEqualsGeneratedSource(final CharSequence expected,
             final Class<?> clazz) throws IllegalStateException, IOException,
             SourceNotGeneratedException, ComparisonFailure {
-        checkNotEmpty("expected", expected);
-        checkNotNull("clazz", clazz);
-        checkCompiled();
+        assertNotEmpty("expected", expected);
+        assertNotNull("clazz", clazz);
+        assertCompiled();
         assertEqualsGeneratedSource(expected, clazz.getName());
     }
 
@@ -945,11 +898,12 @@ public abstract class AptinaTestCase extends TestCase {
     protected void assertEqualsGeneratedSource(final CharSequence expected,
             final String className) throws IllegalStateException, IOException,
             SourceNotGeneratedException, ComparisonFailure {
-        checkNotEmpty("expected", expected);
-        checkNotEmpty("className", className);
-        checkCompiled();
-        assertEquals(className, expected.toString(),
-                getGeneratedSource(className));
+        assertNotEmpty("className", className);
+        assertCompiled();
+        final String actual = getGeneratedSource(className);
+        assertNotNull("actual", actual);
+        assertEqualsByLine(expected == null ? null : expected.toString(),
+                actual);
     }
 
     /**
@@ -972,9 +926,9 @@ public abstract class AptinaTestCase extends TestCase {
             final File expectedSourceFile, final Class<?> clazz)
             throws IllegalStateException, IOException,
             SourceNotGeneratedException, ComparisonFailure {
-        checkNotNull("expectedSourceFile", expectedSourceFile);
-        checkNotNull("clazz", clazz);
-        checkCompiled();
+        assertNotNull("expectedSourceFile", expectedSourceFile);
+        assertNotNull("clazz", clazz);
+        assertCompiled();
         assertEqualsGeneratedSourceWithFile(expectedSourceFile, clazz.getName());
     }
 
@@ -998,10 +952,11 @@ public abstract class AptinaTestCase extends TestCase {
             final File expectedSourceFile, final String className)
             throws IllegalStateException, IOException,
             SourceNotGeneratedException, ComparisonFailure {
-        checkNotNull("expectedSourceFile", expectedSourceFile);
-        checkNotEmpty("className", className);
-        checkCompiled();
-        assertEqualsGeneratedSource(readFromFile(expectedSourceFile), className);
+        assertNotNull("expectedSourceFile", expectedSourceFile);
+        assertNotEmpty("className", className);
+        assertCompiled();
+        assertEqualsGeneratedSource(readString(expectedSourceFile, charset),
+                className);
     }
 
     /**
@@ -1024,9 +979,9 @@ public abstract class AptinaTestCase extends TestCase {
             final String expectedSourceFilePath, final Class<?> clazz)
             throws IllegalStateException, IOException,
             SourceNotGeneratedException, ComparisonFailure {
-        checkNotEmpty("expectedSourceFilePath", expectedSourceFilePath);
-        checkNotNull("clazz", clazz);
-        checkCompiled();
+        assertNotEmpty("expectedSourceFilePath", expectedSourceFilePath);
+        assertNotNull("clazz", clazz);
+        assertCompiled();
         assertEqualsGeneratedSourceWithFile(expectedSourceFilePath, clazz
                 .getName());
     }
@@ -1051,9 +1006,9 @@ public abstract class AptinaTestCase extends TestCase {
             final String expectedSourceFilePath, final String className)
             throws IllegalStateException, IOException,
             SourceNotGeneratedException, ComparisonFailure {
-        checkNotEmpty("expectedSourceFilePath", expectedSourceFilePath);
-        checkNotEmpty("className", className);
-        checkCompiled();
+        assertNotEmpty("expectedSourceFilePath", expectedSourceFilePath);
+        assertNotEmpty("className", className);
+        assertCompiled();
         assertEqualsGeneratedSourceWithFile(new File(expectedSourceFilePath),
                 className);
     }
@@ -1078,9 +1033,9 @@ public abstract class AptinaTestCase extends TestCase {
             final URL expectedResourceUrl, final Class<?> clazz)
             throws IllegalStateException, IOException,
             SourceNotGeneratedException, ComparisonFailure {
-        checkNotNull("expectedResourceUrl", expectedResourceUrl);
-        checkNotNull("clazz", clazz);
-        checkCompiled();
+        assertNotNull("expectedResourceUrl", expectedResourceUrl);
+        assertNotNull("clazz", clazz);
+        assertCompiled();
         assertEqualsGeneratedSourceWithResource(expectedResourceUrl, clazz
                 .getName());
     }
@@ -1105,9 +1060,9 @@ public abstract class AptinaTestCase extends TestCase {
             final URL expectedResourceUrl, final String className)
             throws IllegalStateException, IOException,
             SourceNotGeneratedException, ComparisonFailure {
-        checkNotNull("expectedResourceUrl", expectedResourceUrl);
-        checkNotEmpty("className", className);
-        checkCompiled();
+        assertNotNull("expectedResourceUrl", expectedResourceUrl);
+        assertNotEmpty("className", className);
+        assertCompiled();
         assertEqualsGeneratedSource(readFromResource(expectedResourceUrl),
                 className);
     }
@@ -1132,9 +1087,9 @@ public abstract class AptinaTestCase extends TestCase {
             final String expectedResource, final Class<?> clazz)
             throws IllegalStateException, IOException,
             SourceNotGeneratedException, ComparisonFailure {
-        checkNotEmpty("expectedResource", expectedResource);
-        checkNotNull("clazz", clazz);
-        checkCompiled();
+        assertNotEmpty("expectedResource", expectedResource);
+        assertNotNull("clazz", clazz);
+        assertCompiled();
         assertEqualsGeneratedSourceWithResource(clazz.getName(),
                 expectedResource);
     }
@@ -1159,9 +1114,9 @@ public abstract class AptinaTestCase extends TestCase {
             final String expectedResource, final String className)
             throws IllegalStateException, IOException,
             SourceNotGeneratedException, ComparisonFailure {
-        checkNotEmpty("expectedResource", expectedResource);
-        checkNotEmpty("className", className);
-        checkCompiled();
+        assertNotEmpty("expectedResource", expectedResource);
+        assertNotEmpty("className", className);
+        assertCompiled();
         final URL url = Thread.currentThread().getContextClassLoader()
                 .getResource(expectedResource);
         if (url == null) {
@@ -1184,7 +1139,7 @@ public abstract class AptinaTestCase extends TestCase {
         options.clear();
         sourcePaths.clear();
         processors.clear();
-        processors.add(new AptinaProcessor());
+        processors.add(new AptinaUnitProcessor());
         compilationUnits.clear();
         javaCompiler = null;
         diagnostics = null;
@@ -1192,187 +1147,6 @@ public abstract class AptinaTestCase extends TestCase {
         testingJavaFileManager = null;
         processingEnvironment = null;
         compiledResult = null;
-    }
-
-    /**
-     * 引数の型を要素とする配列の {@link TypeMirror} を返します．
-     * 
-     * @param componentTypeMirror
-     *            配列の要素となる型
-     * @return 引数の型を要素とする配列の {@link TypeMirror}
-     * @see Types#getArrayType(TypeMirror)
-     */
-    TypeMirror toArrayTypeMirror(final TypeMirror componentTypeMirror) {
-        if (componentTypeMirror == null) {
-            return null;
-        }
-        return getTypeUtils().getArrayType(componentTypeMirror);
-    }
-
-    /**
-     * クラスの配列を {@link TypeMirror} の配列に変換して返します．
-     * 
-     * @param types
-     *            クラスの配列
-     * @return {@link TypeMirror} の配列
-     * @throws IllegalArgumentException
-     *             配列の要素のクラスに対応する {@link TypeMirror} が存在しない場合
-     */
-    List<TypeMirror> toTypeMirrors(final Class<?>... types)
-            throws IllegalArgumentException {
-        final List<TypeMirror> typeMirrors = new ArrayList<TypeMirror>();
-        for (final Class<?> type : types) {
-            final TypeMirror typeMirror = getTypeMirror(type);
-            if (typeMirror == null) {
-                throw new IllegalArgumentException("unknown type : " + type);
-            }
-            typeMirrors.add(typeMirror);
-        }
-        return typeMirrors;
-    }
-
-    /**
-     * クラス名の配列を {@link TypeMirror} の配列に変換して返します．
-     * 
-     * @param types
-     *            クラス名の配列
-     * @return {@link TypeMirror} の配列
-     * @throws IllegalArgumentException
-     *             配列の要素のクラスに対応する {@link TypeMirror} が存在しない場合
-     */
-    List<TypeMirror> toTypeMirrors(final String... typeNames) {
-        final List<TypeMirror> typeMirrors = new ArrayList<TypeMirror>();
-        for (final String typeName : typeNames) {
-            final TypeMirror typeMirror = getTypeMirror(typeName);
-            if (typeMirror == null) {
-                throw new IllegalArgumentException("unknown type : " + typeName);
-            }
-            typeMirrors.add(typeMirror);
-        }
-        return typeMirrors;
-    }
-
-    /**
-     * {@link TypeMirror}のリストと{@link VariableElement}のリストの， それぞれの要素の型がマッチすれば
-     * {@link true} を返します．
-     * 
-     * @param typeMirros
-     * @param variableElements
-     * @return 二つのリストのそれぞれの要素の型がマッチすれば {@link true}
-     */
-    boolean isMatchParameterTypes(final Class<?>[] parameterTypes,
-            final List<? extends VariableElement> variableElements) {
-        final List<? extends TypeMirror> typeMirrors = toTypeMirrors(parameterTypes);
-        if (typeMirrors.size() != variableElements.size()) {
-            return false;
-        }
-        for (int i = 0; i < typeMirrors.size(); ++i) {
-            if (!getTypeUtils().isSameType(typeMirrors.get(i),
-                    variableElements.get(i).asType())) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * {@link TypeMirror}のリストと{@link VariableElement}のリストの， それぞれの要素の型がマッチすれば
-     * {@link true} を返します．
-     * 
-     * @param typeMirros
-     * @param variableElements
-     * @return 二つのリストのそれぞれの要素の型がマッチすれば {@link true}
-     */
-    boolean isMatchParameterTypes(final String[] typeNames,
-            final List<? extends VariableElement> variableElements) {
-        if (typeNames.length != variableElements.size()) {
-            return false;
-        }
-        for (int i = 0; i < typeNames.length; ++i) {
-            if (!typeNames[i].equals(variableElements.get(i).asType()
-                    .toString())) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * パラメータが {@literal null} であれば例外をスローします．
-     * 
-     * @param name
-     *            パラメータの名前
-     * @param param
-     *            パラメータ
-     * @throws NullPointerException
-     *             パラメータが {@literal null} の場合
-     */
-    void checkNotNull(final String name, final Object param)
-            throws NullPointerException {
-        if (param == null) {
-            throw new NullPointerException(name);
-        }
-    }
-
-    /**
-     * 配列が空であれば例外をスローします．
-     * 
-     * @param name
-     *            配列の名前
-     * @param string
-     *            文字列
-     * @throws NullPointerException
-     *             文字列が {@literal null} の場合
-     * @throws IllegalArgumentException
-     *             配列が {@literal null} の場合
-     */
-    void checkNotEmpty(final String name, final CharSequence string)
-            throws IllegalArgumentException {
-        if (string == null) {
-            throw new NullPointerException(name);
-        }
-        if (string.length() == 0) {
-            throw new IllegalArgumentException(name + " must not be empty");
-        }
-    }
-
-    /**
-     * 配列が {@literal null} または空であれば例外をスローします．
-     * 
-     * @param name
-     *            配列の名前
-     * @param array
-     *            配列
-     * @throws NullPointerException
-     *             配列が {@literal null} の場合
-     * @throws IllegalArgumentException
-     *             配列が空の場合
-     */
-    void checkNotEmpty(final String name, final Object[] array)
-            throws IllegalArgumentException {
-        if (array == null) {
-            throw new NullPointerException(name);
-        }
-        if (array.length == 0) {
-            throw new IllegalArgumentException(name + " must not be empty");
-        }
-        for (final Object element : array) {
-            if (element == null) {
-                throw new NullPointerException("element of " + name);
-            }
-        }
-    }
-
-    /**
-     * {@link #compile()} が呼び出されていなければ例外をスローします．
-     * 
-     * @throws IllegalStateException
-     *             {@link #compile()} が呼び出されていない場合
-     */
-    void checkCompiled() throws IllegalStateException {
-        if (compiledResult == null) {
-            throw new IllegalStateException("not compiled");
-        }
     }
 
     /**
@@ -1392,27 +1166,14 @@ public abstract class AptinaTestCase extends TestCase {
     }
 
     /**
-     * ファイルから読み込んだ内容を文字列で返します．
-     * <p>
-     * ファイルの内容は， {@link #charset} で指定された文字セットでエンコード (未設定時はプラットフォームデフォルトの文字セット)
-     * されていなければなりません．
-     * </p>
+     * {@link #compile()} が呼び出されていなければ例外をスローします．
      * 
-     * @param file
-     *            ファイル
-     * @return ファイルから読み込んだ内容の文字列
-     * @throws IOException
-     *             入出力例外が発生した場合
+     * @throws IllegalStateException
+     *             {@link #compile()} が呼び出されていない場合
      */
-    String readFromFile(final File file) throws IOException {
-        if (!file.exists()) {
-            throw new FileNotFoundException(file.getPath());
-        }
-        final FileInputStream is = new FileInputStream(file);
-        try {
-            return readFromStream(is, (int) file.length());
-        } finally {
-            closeSilently(is);
+    void assertCompiled() throws IllegalStateException {
+        if (compiledResult == null) {
+            throw new IllegalStateException("not compiled");
         }
     }
 
@@ -1432,39 +1193,10 @@ public abstract class AptinaTestCase extends TestCase {
     String readFromResource(final URL url) throws IOException {
         final InputStream is = url.openStream();
         try {
-            if (is == null) {
-                throw new FileNotFoundException(url.toExternalForm());
-            }
-            return readFromStream(is, is.available());
+            return readString(is, charset);
         } finally {
             closeSilently(is);
         }
-    }
-
-    /**
-     * ストリームから読み込んだ内容を文字列で返します．
-     * <p>
-     * ファイルの内容は {@link #charset} で指定された文字セットでエンコード (未設定時はプラットフォームデフォルトの文字セット)
-     * されていなければなりません．
-     * </p>
-     * 
-     * @param is
-     *            入力ストリーム
-     * @param size
-     *            ストリームから読み込めるバイト数
-     * @return ストリームから読み込んだ内容の文字列
-     * @throws IOException
-     *             入出力例外が発生した場合
-     */
-    String readFromStream(final InputStream is, final int size)
-            throws IOException {
-        final byte[] bytes = new byte[size];
-        int readSize = 0;
-        while (readSize < size) {
-            readSize += is.read(bytes, readSize, size - readSize);
-        }
-        return new String(bytes, charset == null ? Charset.defaultCharset()
-                : charset);
     }
 
     /**
@@ -1507,7 +1239,7 @@ public abstract class AptinaTestCase extends TestCase {
      */
     @SupportedSourceVersion(SourceVersion.RELEASE_6)
     @SupportedAnnotationTypes("*")
-    class AptinaProcessor extends AbstractProcessor {
+    class AptinaUnitProcessor extends AbstractProcessor {
 
         @Override
         public synchronized void init(
