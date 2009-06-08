@@ -15,10 +15,14 @@
  */
 package org.seasar.aptina.commons.util;
 
+import javax.annotation.Generated;
+
+
 /**
  * 
  * @author koichik
  */
+@Generated("")
 public class Foo {
 
 }

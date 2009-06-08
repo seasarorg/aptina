@@ -15,15 +15,18 @@
  */
 package org.seasar.aptina.commons.util;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
@@ -304,6 +307,42 @@ public class ElementUtils {
             if (isSameTypes(parameterTypeNames, executableElement
                     .getParameters())) {
                 return executableElement;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * {@link Element} に付けられた指定の {@link AnnotationMirror} を返します．
+     * 
+     * @param element
+     *            注釈の付けられた {@link Element}
+     * @param annotationClass
+     *            アノテーションのクラス
+     * @return {@link Element} に付けられた指定の {@link AnnotationMirror}
+     */
+    public static AnnotationMirror getAnnotationMirror(final Element element,
+            final Class<? extends Annotation> annotationClass) {
+        return getAnnotationMirror(element, annotationClass.getName());
+    }
+
+    /**
+     * {@link Element} に付けられた指定の {@link AnnotationMirror} を返します．
+     * 
+     * @param element
+     *            注釈の付けられた {@link Element}
+     * @param annotationClassName
+     *            アノテーションのクラス名
+     * @return {@link Element} に付けられた指定の {@link AnnotationMirror}
+     */
+    public static AnnotationMirror getAnnotationMirror(final Element element,
+            final String annotationClassName) {
+        for (final AnnotationMirror annotationMirror : element
+                .getAnnotationMirrors()) {
+            final DeclaredType annotationType = annotationMirror
+                    .getAnnotationType();
+            if (annotationType.toString().equals(annotationClassName)) {
+                return annotationMirror;
             }
         }
         return null;

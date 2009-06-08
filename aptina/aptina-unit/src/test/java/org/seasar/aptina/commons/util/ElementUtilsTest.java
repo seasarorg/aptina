@@ -18,6 +18,8 @@ package org.seasar.aptina.commons.util;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
+import javax.annotation.Generated;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.TypeElement;
 
 import org.seasar.aptina.unit.AptinaTestCase;
@@ -36,6 +38,21 @@ public class ElementUtilsTest extends AptinaTestCase {
         setLocale(Locale.JAPANESE);
         setCharset(Charset.forName("UTF-8"));
         addSourcePath("aptina-unit/src/test/java", "src/test/java");
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetAnnotationMirror() throws Exception {
+        addCompilationUnit(Foo.class);
+        compile();
+
+        final TypeElement typeElement = getTypeElement(Foo.class);
+        final AnnotationMirror annotationMirror = getAnnotationMirror(
+                typeElement, Generated.class);
+        assertNotNull(annotationMirror);
+        assertEquals(Generated.class.getName(), annotationMirror
+                .getAnnotationType().toString());
     }
 
     /**
