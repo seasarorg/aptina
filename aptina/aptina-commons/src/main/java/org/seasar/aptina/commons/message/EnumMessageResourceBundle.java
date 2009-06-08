@@ -36,7 +36,7 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
         extends ResourceBundle {
 
     /** メッセージコードを定義した列挙の型 */
-    protected final Class<T> messageCodeEnumClass;
+    protected final Class<T> enumClass;
 
     /** ロケール */
     protected final int locale;
@@ -46,16 +46,14 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
      * 
      * @param <T>
      *            メッセージコードを定義した列挙の型
-     * @param messageFormatEnumClass
+     * @param enumClass
      *            メッセージコードを定義した列挙の型
      * @return リソースバンドル
      */
     public static <T extends Enum<T> & EnumMessageCode> ResourceBundle getBundle(
-            final Class<T> messageFormatEnumClass) {
-        return ResourceBundle
-                .getBundle(messageFormatEnumClass.getName(),
-                        new EnumMessageResourceBundleControl<T>(
-                                messageFormatEnumClass));
+            final Class<T> enumClass) {
+        return ResourceBundle.getBundle(enumClass.getName(),
+                new EnumMessageResourceBundleControl<T>(enumClass));
     }
 
     /**
@@ -63,47 +61,49 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
      * 
      * @param <T>
      *            メッセージコードを定義した列挙の型
-     * @param messageFormatEnumClass
+     * @param enumClass
      *            メッセージコードを定義した列挙の型
      * @param locale
      *            ロケール
      * @return リソースバンドル
      */
     public static <T extends Enum<T> & EnumMessageCode> ResourceBundle getBundle(
-            final Class<T> messageFormatEnumClass, final Locale locale) {
-        return ResourceBundle.getBundle(messageFormatEnumClass.getName(),
-                locale, new EnumMessageResourceBundleControl<T>(
-                        messageFormatEnumClass));
+            final Class<T> enumClass, final Locale locale) {
+        return ResourceBundle.getBundle(enumClass.getName(), locale,
+                new EnumMessageResourceBundleControl<T>(enumClass));
     }
 
     /**
      * インスタンスを構築します．
      * 
-     * @param messageCodeEnumClass
+     * @param enumClass
      *            メッセージコードを定義した列挙の型
      * @param locale
      *            ロケール
      */
-    public EnumMessageResourceBundle(final Class<T> messageCodeEnumClass,
-            final int locale) {
-        this.messageCodeEnumClass = messageCodeEnumClass;
+    public EnumMessageResourceBundle(final Class<T> enumClass, final int locale) {
+        this.enumClass = enumClass;
         this.locale = locale;
     }
 
     @Override
     public Enumeration<String> getKeys() {
-        final Enum<T>[] codes = messageCodeEnumClass.getEnumConstants();
+        final EnumMessageCode[] codes = enumClass.getEnumConstants();
         final List<String> keys = new ArrayList<String>(codes.length);
-        for (final Enum<T> code : codes) {
-            keys.add(EnumMessageCode.class.cast(code).getMessageFormat(locale));
+        for (final EnumMessageCode code : codes) {
+            keys.add(code.getMessageFormat(locale));
         }
         return Collections.enumeration(keys);
     }
 
     @Override
     protected Object handleGetObject(final String key) {
-        final Enum<T> code = Enum.valueOf(messageCodeEnumClass, key);
-        return EnumMessageCode.class.cast(code).getMessageFormat(locale);
+        try {
+            final EnumMessageCode code = Enum.valueOf(enumClass, key);
+            return code.getMessageFormat(locale);
+        } catch (final IllegalArgumentException e) {
+            return null;
+        }
     }
 
     /**
@@ -117,17 +117,21 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
             extends Control {
 
         /** メッセージコードを定義した列挙の型 */
-        protected final Class<T> messageCodeEnumClass;
+        protected final Class<T> enumClass;
 
         /**
          * インスタンスを構築します．
          * 
-         * @param messageCodeEnumClass
+         * @param enumClass
          *            メッセージコードを定義した列挙の型
          */
-        public EnumMessageResourceBundleControl(
-                final Class<T> messageCodeEnumClass) {
-            this.messageCodeEnumClass = messageCodeEnumClass;
+        public EnumMessageResourceBundleControl(final Class<T> enumClass) {
+            this.enumClass = enumClass;
+        }
+
+        @Override
+        public List<String> getFormats(final String baseName) {
+            return FORMAT_CLASS;
         }
 
         @Override
@@ -136,12 +140,9 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
                 final ClassLoader loader, final boolean reload)
                 throws IllegalAccessException, InstantiationException,
                 IOException {
-            if ("java.class".equals(format)) {
-                for (int i = 0; i < SUPORTED_LOCALE.length; ++i) {
-                    if (SUPORTED_LOCALE[i].equals(locale)) {
-                        return new EnumMessageResourceBundle<T>(
-                                messageCodeEnumClass, i);
-                    }
+            for (int i = 0; i < SUPORTED_LOCALE.length; ++i) {
+                if (SUPORTED_LOCALE[i].equals(locale)) {
+                    return new EnumMessageResourceBundle<T>(enumClass, i);
                 }
             }
             return null;

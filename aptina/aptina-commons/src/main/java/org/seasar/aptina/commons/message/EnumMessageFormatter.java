@@ -36,25 +36,23 @@ public class EnumMessageFormatter<T extends Enum<T> & EnumMessageCode> {
     /**
      * デフォルトロケールでインスタンスを構築します．
      * 
-     * @param messageFormatEnumClass
+     * @param enumClass
      *            メッセージコードを定義した列挙の型
      */
-    public EnumMessageFormatter(final Class<T> messageFormatEnumClass) {
-        bundle = EnumMessageResourceBundle.getBundle(messageFormatEnumClass);
+    public EnumMessageFormatter(final Class<T> enumClass) {
+        bundle = EnumMessageResourceBundle.getBundle(enumClass);
     }
 
     /**
      * ロケールを指定してインスタンスを構築します．
      * 
-     * @param messageFormatEnumClass
+     * @param enumClass
      *            メッセージコードを定義した列挙の型
      * @param locale
      *            ロケール
      */
-    public EnumMessageFormatter(final Class<T> messageFormatEnumClass,
-            final Locale locale) {
-        bundle = EnumMessageResourceBundle.getBundle(messageFormatEnumClass,
-                locale);
+    public EnumMessageFormatter(final Class<T> enumClass, final Locale locale) {
+        bundle = EnumMessageResourceBundle.getBundle(enumClass, locale);
     }
 
     /**

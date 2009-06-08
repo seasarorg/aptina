@@ -31,7 +31,7 @@ public class EnumMessageResourceBundleTest extends TestCase {
      */
     public void testGetBundle() throws Exception {
         final ResourceBundle bundle = EnumMessageResourceBundle.getBundle(
-                TestMessageCode.class, Locale.JAPANESE);
+                TestMessageCode.class, Locale.ENGLISH);
         assertNotNull(bundle);
         assertEquals(EnumMessageResourceBundle.class, bundle.getClass());
         assertEquals(1, EnumMessageResourceBundle.class.cast(bundle).locale);
