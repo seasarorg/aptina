@@ -28,6 +28,9 @@
 						<target>1.6</target>
 						<encoding>UTF-8</encoding>
 						<compilerArgument>-XprintProcessorInfo</compilerArgument>
+						<excludes>
+							<exclude>**/errors/*.java</exclude>
+						</excludes>
 					</configuration>
 				</plugin>
 			</plugins>
