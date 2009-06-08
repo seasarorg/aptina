@@ -21,17 +21,17 @@ import java.util.ResourceBundle;
 /**
  * メッセージコードを定義した列挙が持つフォーマット文字列を使用してメッセージを組み立てるクラスです．
  * <p>
- * メッセージコードを定義した列挙は {@link MessageCodeEnum} を実装していなければなりません．
+ * メッセージコードを定義した列挙は {@link EnumMessageCode} を実装していなければなりません．
  * </p>
  * 
  * @author koichik
  * @param <T>
- *            の型
+ *            メッセージコードを定義した列挙の型
  */
-public class EnumMessageFormatter<T extends Enum<T> & MessageCodeEnum> {
+public class EnumMessageFormatter<T extends Enum<T> & EnumMessageCode> {
 
     /** リソースバンドル */
-    protected ResourceBundle bundle;
+    protected final ResourceBundle bundle;
 
     /**
      * デフォルトロケールでインスタンスを構築します．
@@ -40,10 +40,7 @@ public class EnumMessageFormatter<T extends Enum<T> & MessageCodeEnum> {
      *            メッセージコードを定義した列挙の型
      */
     public EnumMessageFormatter(final Class<T> messageFormatEnumClass) {
-        bundle = ResourceBundle
-                .getBundle(messageFormatEnumClass.getName(),
-                        new EnumMessageResourceBundleControl<T>(
-                                messageFormatEnumClass));
+        bundle = EnumMessageResourceBundle.getBundle(messageFormatEnumClass);
     }
 
     /**
@@ -56,9 +53,8 @@ public class EnumMessageFormatter<T extends Enum<T> & MessageCodeEnum> {
      */
     public EnumMessageFormatter(final Class<T> messageFormatEnumClass,
             final Locale locale) {
-        bundle = ResourceBundle.getBundle(messageFormatEnumClass.getName(),
-                locale, new EnumMessageResourceBundleControl<T>(
-                        messageFormatEnumClass));
+        bundle = EnumMessageResourceBundle.getBundle(messageFormatEnumClass,
+                locale);
     }
 
     /**

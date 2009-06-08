@@ -17,14 +17,14 @@ package org.seasar.aptina.beans.internal;
 
 import javax.tools.Diagnostic.Kind;
 
-import org.seasar.aptina.commons.message.MessageCodeEnum;
+import org.seasar.aptina.commons.message.EnumMessageCode;
 
 /**
  * メッセージコードです．
  * 
  * @author koichik
  */
-public enum MessageCode implements MessageCodeEnum {
+public enum MessageCode implements EnumMessageCode {
 
     /** */
     CLS0000(Kind.ERROR, "", "@BeanState アノテーションをインタフェースに付けることはできません"),
@@ -144,12 +144,6 @@ public enum MessageCode implements MessageCodeEnum {
     APT0000(Kind.ERROR, "", "注釈処理中に例外が発生しました．%1$s%n"),
     //
     ;
-
-    /** デフォルトロケール */
-    protected static final int LOCALE_DEFAULT = 0;
-
-    /** 日本語ロケール */
-    protected static final int LOCALE_JA = 1;
 
     /** 診断の種類 */
     private final Kind kind;

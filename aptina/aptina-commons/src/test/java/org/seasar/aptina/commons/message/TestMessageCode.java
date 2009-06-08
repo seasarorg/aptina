@@ -6,7 +6,7 @@ import javax.tools.Diagnostic.Kind;
  * 
  * @author koichik
  */
-public enum TestMessageCode implements MessageCodeEnum {
+public enum TestMessageCode implements EnumMessageCode {
     /** */
     FOO(Kind.WARNING, "aaa", "あああ"),
     /** */

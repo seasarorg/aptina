@@ -29,7 +29,7 @@ import javax.tools.Diagnostic.Kind;
  * 
  * @author koichik
  */
-public interface MessageCodeEnum {
+public interface EnumMessageCode {
 
     /** サポートするロケールの配列 */
     Locale[] SUPORTED_LOCALE = new Locale[] { Locale.ROOT, Locale.JAPANESE };
