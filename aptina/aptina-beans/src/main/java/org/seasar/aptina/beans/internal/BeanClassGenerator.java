@@ -30,9 +30,7 @@ import javax.tools.JavaFileObject;
 import org.seasar.aptina.commons.message.EnumMessageFormatter;
 
 import static org.seasar.aptina.beans.internal.AptinaBeans.*;
-
 import static org.seasar.aptina.commons.util.StringUtils.*;
-
 import static org.seasar.aptina.commons.util.VersionUtils.*;
 
 /**

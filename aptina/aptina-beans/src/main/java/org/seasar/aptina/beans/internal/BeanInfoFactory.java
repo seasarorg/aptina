@@ -39,9 +39,7 @@ import org.seasar.aptina.beans.Property;
 import org.seasar.aptina.commons.message.EnumMessageFormatter;
 
 import static org.seasar.aptina.commons.util.ClassUtils.*;
-
 import static org.seasar.aptina.commons.util.ElementUtils.*;
-
 import static org.seasar.aptina.commons.util.StringUtils.*;
 
 /**

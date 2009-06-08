@@ -65,7 +65,6 @@ import org.seasar.aptina.commons.util.TypeMirrorUtils;
 import static java.util.Arrays.*;
 
 import static org.seasar.aptina.commons.util.AssertionUtils.*;
-
 import static org.seasar.aptina.commons.util.IOUtils.*;
 
 /**

@@ -33,32 +33,32 @@ public class StringUtilsTest extends TestCase {
      * @throws Exception
      */
     public void testCapitalize() throws Exception {
-        assertEquals(null, StringUtils.capitalize(null));
-        assertEquals("", StringUtils.capitalize(""));
-        assertEquals("A", StringUtils.capitalize("a"));
-        assertEquals("Aa", StringUtils.capitalize("aa"));
-        assertEquals("Foo", StringUtils.capitalize("foo"));
+        assertEquals(null, capitalize(null));
+        assertEquals("", capitalize(""));
+        assertEquals("A", capitalize("a"));
+        assertEquals("Aa", capitalize("aa"));
+        assertEquals("Foo", capitalize("foo"));
     }
 
     /**
      * @throws Exception
      */
     public void testDecapitalize() throws Exception {
-        assertEquals(null, StringUtils.decapitalize(null));
-        assertEquals("", StringUtils.decapitalize(""));
-        assertEquals("a", StringUtils.decapitalize("a"));
-        assertEquals("a", StringUtils.decapitalize("A"));
-        assertEquals("AA", StringUtils.decapitalize("AA"));
-        assertEquals("foo", StringUtils.decapitalize("Foo"));
-        assertEquals("FOO", StringUtils.decapitalize("FOO"));
+        assertEquals(null, decapitalize(null));
+        assertEquals("", decapitalize(""));
+        assertEquals("a", decapitalize("a"));
+        assertEquals("a", decapitalize("A"));
+        assertEquals("AA", decapitalize("AA"));
+        assertEquals("foo", decapitalize("Foo"));
+        assertEquals("FOO", decapitalize("FOO"));
     }
 
     /**
      * @throws Exception
      */
     public void testJoin() throws Exception {
-        assertEquals("", StringUtils.join(new ArrayList<String>(), ", "));
-        assertEquals("aaa, bbb, ccc", StringUtils.join(asList("aaa", "bbb",
+        assertEquals("", join(new ArrayList<String>(), ", "));
+        assertEquals("aaa, bbb, ccc", join(asList("aaa", "bbb",
                 "ccc"), ", "));
     }
 
@@ -66,9 +66,9 @@ public class StringUtilsTest extends TestCase {
      * @throws Exception
      */
     public void testJoin2() throws Exception {
-        assertEquals("", StringUtils.join(new ArrayList<String>(),
+        assertEquals("", join(new ArrayList<String>(),
                 new ArrayList<String>(), ":", ", "));
-        assertEquals("aaa:111, bbb:222, ccc:333", StringUtils.join(asList(
+        assertEquals("aaa:111, bbb:222, ccc:333", join(asList(
                 "aaa", "bbb", "ccc"), asList("111", "222", "333"), ":", ", "));
         try {
             join(asList("a", "b"), asList("1"), ":", ", ");

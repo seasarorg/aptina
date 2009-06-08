@@ -29,7 +29,6 @@ import javax.lang.model.util.Types;
 import static java.util.Collections.*;
 
 import static org.seasar.aptina.commons.util.AssertionUtils.*;
-
 import static org.seasar.aptina.commons.util.ElementUtils.*;
 
 /**

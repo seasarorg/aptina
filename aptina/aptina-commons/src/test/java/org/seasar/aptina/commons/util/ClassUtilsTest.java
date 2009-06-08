@@ -16,6 +16,7 @@
 package org.seasar.aptina.commons.util;
 
 import junit.framework.TestCase;
+
 import static org.seasar.aptina.commons.util.ClassUtils.*;
 
 /**

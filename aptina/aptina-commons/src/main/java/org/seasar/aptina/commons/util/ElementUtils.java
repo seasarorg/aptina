@@ -32,11 +32,8 @@ import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 
 import static org.seasar.aptina.commons.util.AssertionUtils.*;
-
 import static org.seasar.aptina.commons.util.ClassUtils.*;
-
 import static org.seasar.aptina.commons.util.StringUtils.*;
-
 import static org.seasar.aptina.commons.util.TypeMirrorUtils.*;
 
 /**
