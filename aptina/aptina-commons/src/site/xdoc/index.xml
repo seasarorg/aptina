@@ -12,6 +12,11 @@
 				Aptina Commons の提供するクラスは Aptina プロジェクトの他のサブプロジェクトの Jar
 				に含められます．
 			</p>
+			<p>
+				詳細は
+				<a href="apidocs/index.html">Javadoc</a>
+				を参照してください．
+			</p>
 		</section>
 	</body>
 </document>

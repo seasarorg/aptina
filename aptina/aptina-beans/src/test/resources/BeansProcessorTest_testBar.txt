@@ -33,7 +33,7 @@ public class BarBean<E, T extends java.util.List<E> & java.io.Serializable> exte
      * @throws NullPointerException
      *             何かが{@literal null}だった場合
      */
-     <S> BarBean(T[] bbb, S hoge) throws java.lang.NullPointerException {
+    <S> BarBean(T[] bbb, S hoge) throws java.lang.NullPointerException {
         super(bbb, hoge);
     }
 

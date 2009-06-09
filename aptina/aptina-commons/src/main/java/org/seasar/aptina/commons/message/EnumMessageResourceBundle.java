@@ -26,28 +26,31 @@ import java.util.ResourceBundle;
 import static org.seasar.aptina.commons.message.EnumMessageCode.*;
 
 /**
- * メッセージコードを定義した列挙を使用するリソースバンドルです．
+ * メッセージを定義した列挙を使用するリソースバンドルです．
+ * <p>
+ * フォーマット文字列を定義した列挙は {@link EnumMessageCode} を実装していなければなりません．
+ * </p>
  * 
  * @author koichik
  * @param <T>
- *            メッセージコードを定義した列挙の型
+ *            メッセージを定義した列挙の型
  */
 public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
         extends ResourceBundle {
 
-    /** メッセージコードを定義した列挙の型 */
+    /** メッセージを定義した列挙の型 */
     protected final Class<T> enumClass;
 
     /** ロケール */
     protected final int locale;
 
     /**
-     * メッセージコードを定義した列挙を使用するリソースバンドルを返します．
+     * メッセージドを定義した列挙を使用するリソースバンドルを返します．
      * 
      * @param <T>
-     *            メッセージコードを定義した列挙の型
+     *            メッセージを定義した列挙の型
      * @param enumClass
-     *            メッセージコードを定義した列挙の型
+     *            メッセージを定義した列挙の型
      * @return リソースバンドル
      */
     public static <T extends Enum<T> & EnumMessageCode> ResourceBundle getBundle(
@@ -57,12 +60,12 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
     }
 
     /**
-     * メッセージコードを定義した列挙を使用するリソースバンドルを返します．
+     * メッセージを定義した列挙を使用するリソースバンドルを返します．
      * 
      * @param <T>
-     *            メッセージコードを定義した列挙の型
+     *            メッセージを定義した列挙の型
      * @param enumClass
-     *            メッセージコードを定義した列挙の型
+     *            メッセージを定義した列挙の型
      * @param locale
      *            ロケール
      * @return リソースバンドル
@@ -77,7 +80,7 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
      * インスタンスを構築します．
      * 
      * @param enumClass
-     *            メッセージコードを定義した列挙の型
+     *            メッセージを定義した列挙の型
      * @param locale
      *            ロケール
      */
@@ -111,9 +114,9 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
      * 
      * @author koichik
      * @param <T>
-     *            メッセージコードを定義した列挙の型
+     *            メッセージを定義した列挙の型
      */
-    public static class EnumMessageResourceBundleControl<T extends Enum<T> & EnumMessageCode>
+    static class EnumMessageResourceBundleControl<T extends Enum<T> & EnumMessageCode>
             extends Control {
 
         /** メッセージコードを定義した列挙の型 */
@@ -123,7 +126,7 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
          * インスタンスを構築します．
          * 
          * @param enumClass
-         *            メッセージコードを定義した列挙の型
+         *            メッセージを定義した列挙の型
          */
         public EnumMessageResourceBundleControl(final Class<T> enumClass) {
             this.enumClass = enumClass;

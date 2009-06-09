@@ -15,18 +15,19 @@
  */
 package org.seasar.aptina.commons.message;
 
+import java.util.Formatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * メッセージコードを定義した列挙が持つフォーマット文字列を使用してメッセージを組み立てるクラスです．
+ * 列挙に定義された {@link Formatter} のパターンを使用してメッセージを組み立てるクラスです．
  * <p>
- * メッセージコードを定義した列挙は {@link EnumMessageCode} を実装していなければなりません．
+ * パターンを定義した列挙は {@link EnumMessageCode} を実装していなければなりません．
  * </p>
  * 
  * @author koichik
  * @param <T>
- *            メッセージコードを定義した列挙の型
+ *            パターンを定義した列挙の型
  */
 public class EnumMessageFormatter<T extends Enum<T> & EnumMessageCode> {
 
@@ -37,7 +38,7 @@ public class EnumMessageFormatter<T extends Enum<T> & EnumMessageCode> {
      * デフォルトロケールでインスタンスを構築します．
      * 
      * @param enumClass
-     *            メッセージコードを定義した列挙の型
+     *            パターンを定義した列挙の型
      */
     public EnumMessageFormatter(final Class<T> enumClass) {
         bundle = EnumMessageResourceBundle.getBundle(enumClass);
@@ -47,7 +48,7 @@ public class EnumMessageFormatter<T extends Enum<T> & EnumMessageCode> {
      * ロケールを指定してインスタンスを構築します．
      * 
      * @param enumClass
-     *            メッセージコードを定義した列挙の型
+     *            パターンを定義した列挙の型
      * @param locale
      *            ロケール
      */
@@ -56,17 +57,27 @@ public class EnumMessageFormatter<T extends Enum<T> & EnumMessageCode> {
     }
 
     /**
-     * メッセージを作成して返します．
+     * 列挙に定義されたパターンを返します．
      * 
      * @param messageCode
-     *            メッセージコード
+     *            列挙
+     * @return 列挙に定義されたパターン
+     */
+    public String getPattern(final T messageCode) {
+        return bundle.getString(messageCode.name());
+    }
+
+    /**
+     * 列挙に定義されたパターンを使用してメッセージを作成して返します．
+     * 
+     * @param messageCode
+     *            列挙
      * @param args
      *            引数
-     * @return メッセージ
+     * @return 列挙に定義されたパターンを使用して作成したメッセージ
      */
     public String getMessage(final T messageCode, final Object... args) {
-        final String pattern = bundle.getString(messageCode.name());
-        return String.format(pattern, args);
+        return String.format(getPattern(messageCode), args);
     }
 
 }

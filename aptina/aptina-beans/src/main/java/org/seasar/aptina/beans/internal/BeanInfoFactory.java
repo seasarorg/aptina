@@ -204,12 +204,15 @@ public class BeanInfoFactory {
             if (modifiers.contains(Modifier.PRIVATE)) {
                 printMessage(variableElement, propertyAnnotationMirror,
                         MessageCode.FLD0000);
+                return null;
             } else if (modifiers.contains(Modifier.PUBLIC)) {
                 printMessage(variableElement, propertyAnnotationMirror,
                         MessageCode.FLD0001);
+                return null;
             } else if (modifiers.contains(Modifier.STATIC)) {
                 printMessage(variableElement, propertyAnnotationMirror,
                         MessageCode.FLD0002);
+                return null;
             }
             switch (property.access()) {
             case NONE:
@@ -270,25 +273,15 @@ public class BeanInfoFactory {
         final List<? extends VariableElement> parameters = executableElement
                 .getParameters();
         final Set<Modifier> modifiers = executableElement.getModifiers();
-        if (modifiers.contains(Modifier.PRIVATE)) {
-            if (parameters.isEmpty()) {
-                printMessage(executableElement, MessageCode.CTOR0000);
-            }
-            return null;
-        } else if (modifiers.contains(Modifier.PROTECTED)
-                || !modifiers.contains(Modifier.PUBLIC)) {
+        if (parameters.isEmpty() && !modifiers.contains(Modifier.PUBLIC)) {
             printMessage(executableElement, MessageCode.CTOR0000);
+        }
+        if (modifiers.contains(Modifier.PRIVATE)) {
+            return null;
         }
         constructorInfo.setComment(env.getElementUtils().getDocComment(
                 executableElement));
-        if (executableElement.getModifiers().contains(Modifier.PUBLIC)) {
-            constructorInfo.setModifier("public");
-        } else if (executableElement.getModifiers()
-                .contains(Modifier.PROTECTED)) {
-            constructorInfo.setModifier("protected");
-        } else {
-            constructorInfo.setModifier("");
-        }
+        constructorInfo.addModifiers(modifiers);
         constructorInfo
                 .setTypeParameters(toStringOfTypeParameterDecl(executableElement
                         .getTypeParameters()));

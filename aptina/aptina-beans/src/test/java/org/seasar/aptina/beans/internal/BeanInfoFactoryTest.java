@@ -30,6 +30,8 @@ import org.seasar.aptina.beans.example.ConstrainedBeanState;
 import org.seasar.aptina.beans.example.FooBeanState;
 import org.seasar.aptina.unit.AptinaTestCase;
 
+import static org.seasar.aptina.commons.util.ModifierUtils.*;
+
 /**
  * 
  * @author koichik
@@ -248,7 +250,8 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         final ConstructorInfo constructorInfo = beanInfoFactory
                 .processConstructor(constructor);
         assertNotNull(constructorInfo);
-        assertEquals("public", constructorInfo.getModifier());
+        assertEquals("public ", toStringOfModifiers(constructorInfo
+                .getModifiers()));
         assertEquals("", constructorInfo.getTypeParameters());
         assertTrue(constructorInfo.getParameterNames().isEmpty());
         assertTrue(constructorInfo.getThrownTypes().isEmpty());
@@ -272,7 +275,8 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
 
         constructor = getConstructorElement(typeElement, "T");
         constructorInfo = beanInfoFactory.processConstructor(constructor);
-        assertEquals("protected", constructorInfo.getModifier());
+        assertEquals("protected ", toStringOfModifiers(constructorInfo
+                .getModifiers()));
         assertEquals("", constructorInfo.getTypeParameters());
         List<String> parameterNames = constructorInfo.getParameterNames();
         assertEquals(1, parameterNames.size());
@@ -281,7 +285,7 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
 
         constructor = getConstructorElement(typeElement, "T[]", "S");
         constructorInfo = beanInfoFactory.processConstructor(constructor);
-        assertEquals("", constructorInfo.getModifier());
+        assertEquals("", toStringOfModifiers(constructorInfo.getModifiers()));
         assertEquals("<S>", constructorInfo.getTypeParameters());
         parameterNames = constructorInfo.getParameterNames();
         assertEquals(2, parameterNames.size());
@@ -293,7 +297,8 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         constructor = getConstructorElement(typeElement, "T", "T[]",
                 "java.util.List<? extends T>");
         constructorInfo = beanInfoFactory.processConstructor(constructor);
-        assertEquals("public", constructorInfo.getModifier());
+        assertEquals("public ", toStringOfModifiers(constructorInfo
+                .getModifiers()));
         parameterNames = constructorInfo.getParameterNames();
         assertEquals(3, parameterNames.size());
         assertEquals("aaa", parameterNames.get(0));

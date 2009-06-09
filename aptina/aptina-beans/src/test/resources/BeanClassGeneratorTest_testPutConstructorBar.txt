@@ -2,7 +2,7 @@
         super(aaa);
     }
 
-     <S> BarBean(T[] bbb, S hoge) throws java.lang.NullPointerException {
+    <S> BarBean(T[] bbb, S hoge) throws java.lang.NullPointerException {
         super(bbb, hoge);
     }
 

@@ -22,7 +22,7 @@ import javax.tools.Diagnostic.Kind;
 /**
  * メッセージコードを定義した列挙のインタフェースです．
  * <p>
- * メッセージコードは {@link Kind} とロケールごとのメッセージフォーマットを持ちます． メッセージフォーマットのロケールは
+ * メッセージコードは {@link Kind} とロケールごとのメッセージを持ちます． メッセージのロケールは
  * {@link #SUPORTED_LOCALE} と同じ並びで順序づけられます． この順序は {@link #getMessageFormat(int)}
  * の引数として使われます．
  * </p>
@@ -31,7 +31,19 @@ import javax.tools.Diagnostic.Kind;
  */
 public interface EnumMessageCode {
 
-    /** サポートするロケールの配列 */
+    /**
+     * サポートするロケールの配列．
+     * <p>
+     * 配列の並びは次の通りです．
+     * </p>
+     * <ol>
+     * <li>{@link Locale#ROOT}</li>
+     * <li>{@link Locale#JAPANESE}</li>
+     * </ol>
+     * <p>
+     * この並びに対応したロケールのインデックスが {@link #getMessageFormat(int)} の引数として渡されます．
+     * </p>
+     */
     Locale[] SUPORTED_LOCALE = new Locale[] { Locale.ROOT, Locale.JAPANESE };
 
     /**
@@ -42,11 +54,11 @@ public interface EnumMessageCode {
     Kind getKind();
 
     /**
-     * 指定されたロケールのメッセージフォーマットを返します．
+     * 指定されたロケールのメッセージを返します．
      * 
      * @param locale
      *            ロケールのインデックス
-     * @return 指定されたロケールのメッセージフォーマット
+     * @return 指定されたロケールのメッセージ
      */
     String getMessageFormat(final int locale);
 

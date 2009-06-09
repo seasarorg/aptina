@@ -1,7 +1,12 @@
 package org.seasar.aptina.beans.internal;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import javax.lang.model.element.Modifier;
 
 /*
  * Copyright 2004-2009 the Seasar Foundation and the Others.
@@ -30,7 +35,7 @@ public class ConstructorInfo {
     protected String comment;
 
     /** 修飾子 */
-    protected String modifier;
+    protected final Set<Modifier> modifiers = new HashSet<Modifier>();
 
     /** 型引数 */
     protected String typeParameters;
@@ -70,22 +75,22 @@ public class ConstructorInfo {
     }
 
     /**
-     * 修飾子を返します．
+     * {@link Modifier 修飾子} の {@link Set} を返します．
      * 
-     * @return 修飾子
+     * @return {@link Modifier 修飾子} の {@link Set}
      */
-    public String getModifier() {
-        return modifier;
+    public Set<Modifier> getModifiers() {
+        return modifiers;
     }
 
     /**
-     * 修飾子を設定します．
+     * {@link Modifier 修飾子} の {@link Set} を設定します．
      * 
-     * @param modifier
-     *            修飾子
+     * @param modifiers
+     *            {@link Modifier 修飾子} の {@link Set}
      */
-    public void setModifier(final String modifier) {
-        this.modifier = modifier;
+    public void addModifiers(final Collection<? extends Modifier> modifiers) {
+        this.modifiers.addAll(modifiers);
     }
 
     /**
