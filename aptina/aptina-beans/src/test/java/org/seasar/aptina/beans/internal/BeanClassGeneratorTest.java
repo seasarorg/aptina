@@ -34,6 +34,7 @@ import org.seasar.aptina.beans.example.ConstrainedBeanState;
 import org.seasar.aptina.beans.example.FooBeanState;
 import org.seasar.aptina.unit.AptinaTestCase;
 
+import static org.seasar.aptina.commons.util.ClassUtils.*;
 import static org.seasar.aptina.commons.util.IOUtils.*;
 
 /**
@@ -152,9 +153,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
         for (final String propertyName : beanInfo.getPropertyNames()) {
             final PropertyInfo propertyInfo = beanInfo
                     .getPropertyInfo(propertyName);
-            if (propertyInfo.isReadable()) {
-                generator.putGetter(beanInfo, propertyInfo);
-            }
+            generator.putGetter(beanInfo, propertyInfo);
         }
         generator.writer.close();
         assertEqualsByLine(new StringReader(stringWriter.toString()));
@@ -168,9 +167,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
         for (final String propertyName : beanInfo.getPropertyNames()) {
             final PropertyInfo propertyInfo = beanInfo
                     .getPropertyInfo(propertyName);
-            if (propertyInfo.isReadable()) {
-                generator.putGetter(beanInfo, propertyInfo);
-            }
+            generator.putGetter(beanInfo, propertyInfo);
         }
         generator.writer.close();
         assertEqualsByLine(new StringReader(stringWriter.toString()));
@@ -184,9 +181,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
         for (final String propertyName : beanInfo.getPropertyNames()) {
             final PropertyInfo propertyInfo = beanInfo
                     .getPropertyInfo(propertyName);
-            if (propertyInfo.isWritable()) {
-                generator.putSetter(beanInfo, propertyInfo);
-            }
+            generator.putSetter(beanInfo, propertyInfo);
         }
         generator.writer.close();
         assertEqualsByLine(new StringReader(stringWriter.toString()));
@@ -200,9 +195,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
         for (final String propertyName : beanInfo.getPropertyNames()) {
             final PropertyInfo propertyInfo = beanInfo
                     .getPropertyInfo(propertyName);
-            if (propertyInfo.isWritable()) {
-                generator.putSetter(beanInfo, propertyInfo);
-            }
+            generator.putSetter(beanInfo, propertyInfo);
         }
         generator.writer.close();
         assertEqualsByLine(new StringReader(stringWriter.toString()));
@@ -216,9 +209,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
         for (final String propertyName : beanInfo.getPropertyNames()) {
             final PropertyInfo propertyInfo = beanInfo
                     .getPropertyInfo(propertyName);
-            if (propertyInfo.isWritable()) {
-                generator.putSetter(beanInfo, propertyInfo);
-            }
+            generator.putSetter(beanInfo, propertyInfo);
         }
         generator.writer.close();
         assertEqualsByLine(new StringReader(stringWriter.toString()));
@@ -232,9 +223,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
         for (final String propertyName : beanInfo.getPropertyNames()) {
             final PropertyInfo propertyInfo = beanInfo
                     .getPropertyInfo(propertyName);
-            if (propertyInfo.isWritable()) {
-                generator.putSetter(beanInfo, propertyInfo);
-            }
+            generator.putSetter(beanInfo, propertyInfo);
         }
         generator.writer.close();
         assertEqualsByLine(new StringReader(stringWriter.toString()));
@@ -248,9 +237,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
         for (final String propertyName : beanInfo.getPropertyNames()) {
             final PropertyInfo propertyInfo = beanInfo
                     .getPropertyInfo(propertyName);
-            if (propertyInfo.isWritable()) {
-                generator.putSetter(beanInfo, propertyInfo);
-            }
+            generator.putSetter(beanInfo, propertyInfo);
         }
         generator.writer.close();
         assertEqualsByLine(new StringReader(stringWriter.toString()));
@@ -259,9 +246,9 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
     /**
      * @throws Exception
      */
-    public void testPutAddListenerBound() throws Exception {
+    public void testPutListenerBound() throws Exception {
         createGenerator(BoundBeanState.class);
-        generator.putAddEventListener(beanInfo);
+        generator.putEventListener(beanInfo);
         generator.writer.close();
         assertEqualsByLine(new StringReader(stringWriter.toString()));
     }
@@ -269,9 +256,9 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
     /**
      * @throws Exception
      */
-    public void testPutAddListenerConstrained() throws Exception {
+    public void testPutListenerConstrained() throws Exception {
         createGenerator(ConstrainedBeanState.class);
-        generator.putAddEventListener(beanInfo);
+        generator.putEventListener(beanInfo);
         generator.writer.close();
         assertEqualsByLine(new StringReader(stringWriter.toString()));
     }
@@ -279,9 +266,9 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
     /**
      * @throws Exception
      */
-    public void testPutAddListenerBoundAndConstrained() throws Exception {
+    public void testPutListenerBoundAndConstrained() throws Exception {
         createGenerator(BoundAndConstrainedBeanState.class);
-        generator.putAddEventListener(beanInfo);
+        generator.putEventListener(beanInfo);
         generator.writer.close();
         assertEqualsByLine(new StringReader(stringWriter.toString()));
     }
@@ -289,14 +276,12 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
     /**
      * @throws Exception
      */
-    public void testPutAddSpecificListenerBound() throws Exception {
+    public void testPutSpecificListenerBound() throws Exception {
         createGenerator(BoundBeanState.class);
         for (final String propertyName : beanInfo.getPropertyNames()) {
             final PropertyInfo propertyInfo = beanInfo
                     .getPropertyInfo(propertyName);
-            if (propertyInfo.isWritable()) {
-                generator.putAddEventListener(beanInfo, propertyInfo);
-            }
+            generator.putSpecificEventListener(beanInfo, propertyInfo);
         }
         generator.writer.close();
         assertEqualsByLine(new StringReader(stringWriter.toString()));
@@ -305,14 +290,12 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
     /**
      * @throws Exception
      */
-    public void testPutAddSpecificListenerConstrained() throws Exception {
+    public void testPutSpecificListenerConstrained() throws Exception {
         createGenerator(ConstrainedBeanState.class);
         for (final String propertyName : beanInfo.getPropertyNames()) {
             final PropertyInfo propertyInfo = beanInfo
                     .getPropertyInfo(propertyName);
-            if (propertyInfo.isWritable()) {
-                generator.putAddEventListener(beanInfo, propertyInfo);
-            }
+            generator.putSpecificEventListener(beanInfo, propertyInfo);
         }
         generator.writer.close();
         assertEqualsByLine(new StringReader(stringWriter.toString()));
@@ -321,15 +304,12 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
     /**
      * @throws Exception
      */
-    public void testPutAddSpecificListenerBoundAndConstrained()
-            throws Exception {
+    public void testPutSpecificListenerBoundAndConstrained() throws Exception {
         createGenerator(BoundAndConstrainedBeanState.class);
         for (final String propertyName : beanInfo.getPropertyNames()) {
             final PropertyInfo propertyInfo = beanInfo
                     .getPropertyInfo(propertyName);
-            if (propertyInfo.isWritable()) {
-                generator.putAddEventListener(beanInfo, propertyInfo);
-            }
+            generator.putSpecificEventListener(beanInfo, propertyInfo);
         }
         generator.writer.close();
         assertEqualsByLine(new StringReader(stringWriter.toString()));
@@ -339,11 +319,9 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
      * @throws Exception
      */
     public void testToQualifiedName() throws Exception {
-        assertEquals(FooBeanState.class.getName(), BeanClassGenerator
-                .toQualifiedName("org.seasar.aptina.beans.example",
-                        "FooBeanState"));
-        assertEquals("FooBeanState", BeanClassGenerator.toQualifiedName(null,
-                "FooBeanState"));
+        assertEquals(FooBeanState.class.getName(), getQualifiedName(
+                "org.seasar.aptina.beans.example", "FooBeanState"));
+        assertEquals("FooBeanState", getQualifiedName(null, "FooBeanState"));
     }
 
     /**

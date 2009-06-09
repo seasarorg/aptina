@@ -75,7 +75,17 @@
  *     new EnumMessageFormatter&lt;TestMessageCode&gt;(YyyMessageCode.class);
  * String message = formatter.getMessage(E0000, e);
  * </pre>
+ * <p>
+ * または， 
+ * {@link org.seasar.aptina.commons.message.EnumMessageFormatter}
+ * の出力先を指定してインスタンス化して使うこともできます．
+ * </p>
+ * <pre>
+ * StringBuilder builder = new StringBuilder();
+ * EnumMessageFormatter&lt;YyyMessageCode&gt; formatter = 
+ *     new EnumMessageFormatter&lt;TestMessageCode&gt;(YyyMessageCode.class, builder);
+ * formatter.format(E0000, e); // builder にフォーマットされた文字列が追加される
+ * </pre>
  */
 package org.seasar.aptina.commons.message;
-
 

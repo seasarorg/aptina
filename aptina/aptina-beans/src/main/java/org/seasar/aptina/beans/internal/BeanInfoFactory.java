@@ -38,6 +38,7 @@ import org.seasar.aptina.beans.BeanState;
 import org.seasar.aptina.beans.Property;
 import org.seasar.aptina.commons.message.EnumMessageFormatter;
 
+import static org.seasar.aptina.beans.internal.DiagnosticMessageCode.*;
 import static org.seasar.aptina.commons.util.ClassUtils.*;
 import static org.seasar.aptina.commons.util.ElementUtils.*;
 import static org.seasar.aptina.commons.util.StringUtils.*;
@@ -61,7 +62,7 @@ public class BeanInfoFactory {
     protected ProcessingEnvironment env;
 
     /** メッセージフォーマッタ */
-    protected EnumMessageFormatter<MessageCode> messageFormatter;
+    protected EnumMessageFormatter<DiagnosticMessageCode> messageFormatter;
 
     /** 処理対象のクラスに付けられた {@link BeanState} アノテーションを表現する {@link AnnotationMirror} */
     protected AnnotationMirror beanStateAnnotation;
@@ -77,8 +78,8 @@ public class BeanInfoFactory {
      */
     public BeanInfoFactory(final ProcessingEnvironment env) {
         this.env = env;
-        messageFormatter = new EnumMessageFormatter<MessageCode>(
-                MessageCode.class, env.getLocale());
+        messageFormatter = new EnumMessageFormatter<DiagnosticMessageCode>(
+                DiagnosticMessageCode.class, env.getLocale());
     }
 
     /**
@@ -111,7 +112,7 @@ public class BeanInfoFactory {
             }
         }
         if (beanInfo.getConstructors().isEmpty()) {
-            printMessage(typeElement, MessageCode.CTOR0001);
+            printMessage(typeElement, CTOR0001);
         }
 
         for (final ExecutableElement methodElement : ElementFilter
@@ -134,30 +135,30 @@ public class BeanInfoFactory {
 
         switch (typeElement.getKind()) {
         case INTERFACE:
-            printMessage(typeElement, beanStateAnnotation, MessageCode.CLS0000);
+            printMessage(typeElement, beanStateAnnotation, CLS0000);
             return null;
         case ENUM:
-            printMessage(typeElement, beanStateAnnotation, MessageCode.CLS0001);
+            printMessage(typeElement, beanStateAnnotation, CLS0001);
             return null;
         case ANNOTATION_TYPE:
-            printMessage(typeElement, beanStateAnnotation, MessageCode.CLS0002);
+            printMessage(typeElement, beanStateAnnotation, CLS0002);
             return null;
         }
         switch (typeElement.getNestingKind()) {
         case LOCAL:
-            printMessage(typeElement, beanStateAnnotation, MessageCode.CLS0003);
+            printMessage(typeElement, beanStateAnnotation, CLS0003);
             return null;
         case MEMBER:
         case ANONYMOUS:
-            printMessage(typeElement, beanStateAnnotation, MessageCode.CLS0004);
+            printMessage(typeElement, beanStateAnnotation, CLS0004);
             return null;
         }
         if (typeElement.getModifiers().contains(Modifier.FINAL)) {
-            printMessage(typeElement, beanStateAnnotation, MessageCode.CLS0005);
+            printMessage(typeElement, beanStateAnnotation, CLS0005);
             return null;
         }
         if (!typeElement.getModifiers().contains(Modifier.PUBLIC)) {
-            printMessage(typeElement, beanStateAnnotation, MessageCode.CLS0006);
+            printMessage(typeElement, beanStateAnnotation, CLS0006);
             return null;
         }
 
@@ -202,16 +203,13 @@ public class BeanInfoFactory {
             final AnnotationMirror propertyAnnotationMirror = getAnnotationMirror(
                     variableElement, Property.class);
             if (modifiers.contains(Modifier.PRIVATE)) {
-                printMessage(variableElement, propertyAnnotationMirror,
-                        MessageCode.FLD0000);
+                printMessage(variableElement, propertyAnnotationMirror, FLD0000);
                 return null;
             } else if (modifiers.contains(Modifier.PUBLIC)) {
-                printMessage(variableElement, propertyAnnotationMirror,
-                        MessageCode.FLD0001);
+                printMessage(variableElement, propertyAnnotationMirror, FLD0001);
                 return null;
             } else if (modifiers.contains(Modifier.STATIC)) {
-                printMessage(variableElement, propertyAnnotationMirror,
-                        MessageCode.FLD0002);
+                printMessage(variableElement, propertyAnnotationMirror, FLD0002);
                 return null;
             }
             switch (property.access()) {
@@ -220,7 +218,7 @@ public class BeanInfoFactory {
             case WRITE_ONLY:
                 if (modifiers.contains(Modifier.FINAL)) {
                     printMessage(variableElement, propertyAnnotationMirror,
-                            MessageCode.FLD0003);
+                            FLD0003);
                     return null;
                 }
                 break;
@@ -274,7 +272,7 @@ public class BeanInfoFactory {
                 .getParameters();
         final Set<Modifier> modifiers = executableElement.getModifiers();
         if (parameters.isEmpty() && !modifiers.contains(Modifier.PUBLIC)) {
-            printMessage(executableElement, MessageCode.CTOR0000);
+            printMessage(executableElement, CTOR0000);
         }
         if (modifiers.contains(Modifier.PRIVATE)) {
             return null;
@@ -375,7 +373,7 @@ public class BeanInfoFactory {
      *            メッセージに埋め込む引数
      */
     protected void printMessage(final Element element,
-            final MessageCode messageCode, final Object... args) {
+            final DiagnosticMessageCode messageCode, final Object... args) {
         if (messageCode.getKind() == Kind.ERROR) {
             hasError = true;
         }
@@ -396,8 +394,8 @@ public class BeanInfoFactory {
      *            メッセージに埋め込む引数
      */
     protected void printMessage(final Element element,
-            final AnnotationMirror annotation, final MessageCode messageCode,
-            final Object... args) {
+            final AnnotationMirror annotation,
+            final DiagnosticMessageCode messageCode, final Object... args) {
         if (messageCode.getKind() == Kind.ERROR) {
             hasError = true;
         }

@@ -30,6 +30,9 @@ public class VersionUtils {
 
     private static final String POM_PROPERTIES_NAME = "META-INF/maven/%1$s/%2$s/pom.properties";
 
+    private VersionUtils() {
+    }
+
     /**
      * Maven が作成した Jar に含まれている {@literal pom.properties} からプロダクトのバージョンを返します．
      * <p>

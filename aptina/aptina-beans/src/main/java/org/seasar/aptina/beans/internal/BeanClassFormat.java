@@ -20,38 +20,12 @@ import javax.tools.Diagnostic.Kind;
 import org.seasar.aptina.commons.message.EnumMessageCode;
 
 /**
- * メッセージコードです．
+ * Bean クラスを生成するためのフォーマット定義です．
  * 
  * @author koichik
  */
-public enum MessageCode implements EnumMessageCode {
+public enum BeanClassFormat implements EnumMessageCode {
 
-    /** */
-    CLS0000(Kind.ERROR, "", "@BeanState アノテーションをインタフェースに付けることはできません"),
-    /** */
-    CLS0001(Kind.ERROR, "", "@BeanState アノテーションを列挙に付けることはできません"),
-    /** */
-    CLS0002(Kind.ERROR, "", "@BeanState アノテーションをアノテーションに付けることはできません"),
-    /** */
-    CLS0003(Kind.ERROR, "", "@BeanState アノテーションをローカルクラスに付けることはできません"),
-    /** */
-    CLS0004(Kind.ERROR, "", "@BeanState アノテーションをネストしたクラスに付けることはできません"),
-    /** */
-    CLS0005(Kind.ERROR, "", "@BeanState アノテーションを final クラスに付けることはできません"),
-    /** */
-    CLS0006(Kind.ERROR, "", "@BeanState アノテーションを非 public クラスに付けることはできません"),
-    /** */
-    FLD0000(Kind.ERROR, "", "@Property アノテーションを private フィールドに付けることはできません"),
-    /** */
-    FLD0001(Kind.ERROR, "", "@Property アノテーションを public フィールドに付けることはできません"),
-    /** */
-    FLD0002(Kind.ERROR, "", "@Property アノテーションを static フィールドに付けることはできません"),
-    /** */
-    FLD0003(Kind.ERROR, "", "final フィールドを WRITE_ONLY にすることはできません"),
-    /** */
-    CTOR0000(Kind.WARNING, "", "JavaBeans には public のデフォルトコンストラクタが必要です"),
-    /** */
-    CTOR0001(Kind.ERROR, "", "サブクラスから可視のコンストラクタがありません"),
     /** */
     JDOC0000(Kind.OTHER,
             " Return the {@literal %1$s}.%n %n @return the {@literal %1$s}.%n",
@@ -140,8 +114,6 @@ public enum MessageCode implements EnumMessageCode {
             + " @param listener The {@link %1$s} to be removed%n",
             " {@literal %2$s} の {@link %1$s} をリスナーリストから削除します。%n %n"
                     + " @param listener 削除する {@link %1$s}%n"),
-    /** */
-    APT0000(Kind.ERROR, "", "注釈処理中に例外が発生しました．%1$s%n"),
     //
     ;
 
@@ -160,7 +132,7 @@ public enum MessageCode implements EnumMessageCode {
      * @param messageFormats
      *            メッセージフォーマットの配列
      */
-    private MessageCode(final Kind kind, final String... messageFormats) {
+    private BeanClassFormat(final Kind kind, final String... messageFormats) {
         this.kind = kind;
         this.messageFormats = messageFormats;
     }

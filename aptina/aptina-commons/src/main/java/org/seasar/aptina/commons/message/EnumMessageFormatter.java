@@ -15,6 +15,7 @@
  */
 package org.seasar.aptina.commons.message;
 
+import java.io.IOException;
 import java.util.Formatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -23,6 +24,10 @@ import java.util.ResourceBundle;
  * 列挙に定義された {@link Formatter} のパターンを使用してメッセージを組み立てるクラスです．
  * <p>
  * パターンを定義した列挙は {@link EnumMessageCode} を実装していなければなりません．
+ * </p>
+ * <p>
+ * コンストラクタ引数で {@link Appendable} を渡した場合は {@link #format(Enum, Object...)}
+ * を呼び出すことで組み立てられたメッセージが出力先に追加されます．
  * </p>
  * 
  * @author koichik
@@ -34,6 +39,9 @@ public class EnumMessageFormatter<T extends Enum<T> & EnumMessageCode> {
     /** リソースバンドル */
     protected final ResourceBundle bundle;
 
+    /** フォーマッタ */
+    protected final Formatter formatter;
+
     /**
      * デフォルトロケールでインスタンスを構築します．
      * 
@@ -41,7 +49,20 @@ public class EnumMessageFormatter<T extends Enum<T> & EnumMessageCode> {
      *            パターンを定義した列挙の型
      */
     public EnumMessageFormatter(final Class<T> enumClass) {
+        this(enumClass, new NullWriter());
+    }
+
+    /**
+     * デフォルトロケールでインスタンスを構築します．
+     * 
+     * @param enumClass
+     *            パターンを定義した列挙の型
+     * @param out
+     *            出力先
+     */
+    public EnumMessageFormatter(final Class<T> enumClass, final Appendable out) {
         bundle = EnumMessageResourceBundle.getBundle(enumClass);
+        formatter = new Formatter(out);
     }
 
     /**
@@ -53,7 +74,23 @@ public class EnumMessageFormatter<T extends Enum<T> & EnumMessageCode> {
      *            ロケール
      */
     public EnumMessageFormatter(final Class<T> enumClass, final Locale locale) {
+        this(enumClass, locale, new NullWriter());
+    }
+
+    /**
+     * ロケールを指定してインスタンスを構築します．
+     * 
+     * @param enumClass
+     *            パターンを定義した列挙の型
+     * @param locale
+     *            ロケール
+     * @param out
+     *            出力先
+     */
+    public EnumMessageFormatter(final Class<T> enumClass, final Locale locale,
+            final Appendable out) {
         bundle = EnumMessageResourceBundle.getBundle(enumClass, locale);
+        formatter = new Formatter(out, locale);
     }
 
     /**
@@ -78,6 +115,56 @@ public class EnumMessageFormatter<T extends Enum<T> & EnumMessageCode> {
      */
     public String getMessage(final T messageCode, final Object... args) {
         return String.format(getPattern(messageCode), args);
+    }
+
+    /**
+     * 列挙に定義されたパターンを使用して作成したメッセージを出力先に追加します．
+     * 
+     * @param messageCode
+     *            列挙
+     * @param args
+     *            引数
+     * @return このインスタンス自身
+     */
+    public EnumMessageFormatter<T> format(final T messageCode,
+            final Object... args) {
+        formatter.format(getPattern(messageCode), args);
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return formatter.toString();
+    }
+
+    /**
+     * 何もしない {@link Appendable} です．
+     * 
+     * @author koichik
+     */
+    static class NullWriter implements Appendable {
+
+        @Override
+        public Appendable append(final char c) throws IOException {
+            return this;
+        }
+
+        @Override
+        public Appendable append(final CharSequence csq, final int start,
+                final int end) throws IOException {
+            return this;
+        }
+
+        @Override
+        public Appendable append(final CharSequence csq) throws IOException {
+            return this;
+        }
+
+        @Override
+        public String toString() {
+            return "";
+        }
+
     }
 
 }

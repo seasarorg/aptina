@@ -23,13 +23,43 @@
 				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>ant</id>
+						<id>zip</id>
 						<phase>site</phase>
 						<configuration>
 							<tasks>
-								<ant antfile="build.xml">
-									<property name="ver" value="${version}" />
-								</ant>
+								<tstamp>
+									<format property="releaseDate" pattern="yyyy-MM-dd" locale="ja,JP" />
+								</tstamp>
+								<property name="zipDir" value="target/site/${releaseDate}" />
+								<mkdir dir="${zipDir}" />
+								<zip zipfile="${zipDir}/Aptina-${version}.zip">
+									<zipfileset prefix="aptina" dir="..">
+										<exclude name="**/bin**" />
+										<exclude name="**/target/**" />
+									</zipfileset>
+									<zipfileset prefix="aptina/lib" dir="../aptina-commons/target">
+										<include name="aptina-commons-${version}.jar" />
+									</zipfileset>
+									<zipfileset prefix="aptina/lib" dir="../aptina-unit/target">
+										<include name="aptina-unit-${version}.jar" />
+									</zipfileset>
+									<zipfileset prefix="aptina/lib" dir="../aptina-beans/target">
+										<include name="aptina-beans-${version}.jar" />
+									</zipfileset>
+									<zipfileset prefix="aptina/libsrc" dir="../aptina-commons/target">
+										<include name="aptina-commons-${version}-sources.jar" />
+									</zipfileset>
+									<zipfileset prefix="aptina/libsrc" dir="../aptina-unit/target">
+										<include name="aptina-unit-${version}-sources.jar" />
+									</zipfileset>
+									<zipfileset prefix="aptina/libsrc" dir="../aptina-beans/target">
+										<include name="aptina-beans-${version}-sources.jar" />
+									</zipfileset>
+									<zipfileset prefix="aptina/docs" dir="../target/site" />
+									<zipfileset prefix="aptina/docs/aptina-commons" dir="../aptina-commons/target/site" />
+									<zipfileset prefix="aptina/docs/aptina-unit" dir="../aptina-unit/target/site" />
+									<zipfileset prefix="aptina/docs/aptina-beans" dir="../aptina-beans/target/site" />
+								</zip>
 							</tasks>
 						</configuration>
 						<goals>

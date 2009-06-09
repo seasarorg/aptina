@@ -30,6 +30,8 @@ import javax.tools.JavaFileObject;
 import org.seasar.aptina.commons.message.EnumMessageFormatter;
 
 import static org.seasar.aptina.beans.internal.AptinaBeans.*;
+import static org.seasar.aptina.beans.internal.BeanClassFormat.*;
+import static org.seasar.aptina.commons.util.ClassUtils.*;
 import static org.seasar.aptina.commons.util.ModifierUtils.*;
 import static org.seasar.aptina.commons.util.StringUtils.*;
 import static org.seasar.aptina.commons.util.VersionUtils.*;
@@ -48,11 +50,11 @@ public class BeanClassGenerator {
     /** {@link ProcessingEnvironment} */
     protected ProcessingEnvironment env;
 
-    /** メッセージフォーマッタ */
-    protected EnumMessageFormatter<MessageCode> messageFormatter;
-
     /** ソースの出力先 */
     protected PrintWriter writer;
+
+    /** メッセージフォーマッタ */
+    protected EnumMessageFormatter<BeanClassFormat> messageFormatter;
 
     /**
      * インスタンスを構築します．
@@ -62,8 +64,8 @@ public class BeanClassGenerator {
      */
     public BeanClassGenerator(final ProcessingEnvironment env) {
         this.env = env;
-        messageFormatter = new EnumMessageFormatter<MessageCode>(
-                MessageCode.class, env.getLocale());
+        messageFormatter = new EnumMessageFormatter<BeanClassFormat>(
+                BeanClassFormat.class, env.getLocale());
     }
 
     /**
@@ -80,26 +82,24 @@ public class BeanClassGenerator {
             throws IOException {
         final Filer filer = env.getFiler();
         final JavaFileObject sourceFile = filer.createSourceFile(
-                toQualifiedName(beanInfo.getPackageName(), beanInfo
+                getQualifiedName(beanInfo.getPackageName(), beanInfo
                         .getBeanClassName()), typeElement);
         writer = new PrintWriter(sourceFile.openWriter());
+        messageFormatter = new EnumMessageFormatter<BeanClassFormat>(
+                BeanClassFormat.class, env.getLocale(), writer);
         try {
             putClassHeader(beanInfo);
             for (final ConstructorInfo constructorInfo : beanInfo
                     .getConstructors()) {
                 putConstructor(beanInfo, constructorInfo);
             }
-            putAddEventListener(beanInfo);
+            putEventListener(beanInfo);
             for (final String propertyName : beanInfo.getPropertyNames()) {
                 final PropertyInfo propertyInfo = beanInfo
                         .getPropertyInfo(propertyName);
-                if (propertyInfo.isReadable()) {
-                    putGetter(beanInfo, propertyInfo);
-                }
-                if (propertyInfo.isWritable()) {
-                    putSetter(beanInfo, propertyInfo);
-                    putAddEventListener(beanInfo, propertyInfo);
-                }
+                putGetter(beanInfo, propertyInfo);
+                putSetter(beanInfo, propertyInfo);
+                putSpecificEventListener(beanInfo, propertyInfo);
             }
             putClassFooter(beanInfo);
         } finally {
@@ -182,9 +182,11 @@ public class BeanClassGenerator {
      */
     protected void putGetter(final BeanInfo beanInfo,
             final PropertyInfo propertyInfo) {
-        putNormalGetter(beanInfo, propertyInfo);
-        if (propertyInfo.isArray()) {
-            putIndexedGetter(beanInfo, propertyInfo);
+        if (propertyInfo.isReadable()) {
+            putNormalGetter(beanInfo, propertyInfo);
+            if (propertyInfo.isArray()) {
+                putIndexedGetter(beanInfo, propertyInfo);
+            }
         }
     }
 
@@ -203,8 +205,7 @@ public class BeanClassGenerator {
         final String name = propertyInfo.getName();
         final String capitalizedName = capitalize(name);
 
-        putJavadoc(messageFormatter.getMessage(MessageCode.JDOC0000, comment),
-                "    ");
+        putJavadoc(messageFormatter.getMessage(JDOC0000, comment), "    ");
         put("    public %1$s %2$s%3$s() {%n", type,
                 type.equals("boolean") ? "is" : "get", capitalizedName);
         put("        return %1$s;%n", name);
@@ -227,8 +228,7 @@ public class BeanClassGenerator {
         final String capitalizedName = capitalize(name);
 
         final String componentType = propertyInfo.getComponentType();
-        putJavadoc(messageFormatter.getMessage(MessageCode.JDOC0001, comment),
-                "    ");
+        putJavadoc(messageFormatter.getMessage(JDOC0001, comment), "    ");
         put(
                 "    public %1$s %2$s%3$s(int n) throws ArrayIndexOutOfBoundsException {%n",
                 componentType, type.equals("boolean") ? "is" : "get",
@@ -247,9 +247,11 @@ public class BeanClassGenerator {
      */
     protected void putSetter(final BeanInfo beanInfo,
             final PropertyInfo propertyInfo) {
-        putNormalSetter(beanInfo, propertyInfo);
-        if (propertyInfo.isArray()) {
-            putIndexedSetter(beanInfo, propertyInfo);
+        if (propertyInfo.isWritable()) {
+            putNormalSetter(beanInfo, propertyInfo);
+            if (propertyInfo.isArray()) {
+                putIndexedSetter(beanInfo, propertyInfo);
+            }
         }
     }
 
@@ -272,9 +274,8 @@ public class BeanClassGenerator {
         final String exceptions = constrained ? " throws java.beans.PropertyVetoException"
                 : "";
 
-        putJavadoc(messageFormatter.getMessage(
-                constrained ? MessageCode.JDOC0004 : MessageCode.JDOC0002,
-                comment, name), "    ");
+        putJavadoc(messageFormatter.getMessage(constrained ? JDOC0004
+                : JDOC0002, comment, name), "    ");
         put("    public void set%1$s(%2$s %3$s)%4$s {%n", capitalizedName,
                 type, name, exceptions);
         if (bound || constrained) {
@@ -314,9 +315,8 @@ public class BeanClassGenerator {
         final String exceptions = (constrained ? ", java.beans.PropertyVetoException"
                 : "");
 
-        putJavadoc(messageFormatter.getMessage(
-                constrained ? MessageCode.JDOC0005 : MessageCode.JDOC0003,
-                comment, name), "    ");
+        putJavadoc(messageFormatter.getMessage(constrained ? JDOC0005
+                : JDOC0003, comment, name), "    ");
         put("    public void set%1$s(int n, %2$s %3$s) "
                 + "throws ArrayIndexOutOfBoundsException%4$s {%n",
                 capitalizedName, componentType, name, exceptions);
@@ -344,16 +344,16 @@ public class BeanClassGenerator {
      * @param beanInfo
      *            生成する JavaBeans の情報
      */
-    protected void putAddEventListener(final BeanInfo beanInfo) {
+    protected void putEventListener(final BeanInfo beanInfo) {
         if (beanInfo.isBoundProperties()) {
-            putJavadoc(messageFormatter.getMessage(MessageCode.JDOC0006,
+            putJavadoc(messageFormatter.getMessage(JDOC0006,
                     PropertyChangeListener.class.getName()), "    ");
             put("    public void addPropertyChangeListener("
                     + "java.beans.PropertyChangeListener listener) {%n");
             put("        propertyChangeSupport.addPropertyChangeListener(listener);%n");
             put("    }%n%n");
 
-            putJavadoc(messageFormatter.getMessage(MessageCode.JDOC0007,
+            putJavadoc(messageFormatter.getMessage(JDOC0007,
                     PropertyChangeListener.class.getName()), "    ");
             put("    public void addPropertyChangeListener("
                     + "String propertyName, java.beans.PropertyChangeListener listener) {%n");
@@ -361,14 +361,14 @@ public class BeanClassGenerator {
                     + "propertyName, listener);%n");
             put("    }%n%n");
 
-            putJavadoc(messageFormatter.getMessage(MessageCode.JDOC0008,
+            putJavadoc(messageFormatter.getMessage(JDOC0008,
                     PropertyChangeListener.class.getName()), "    ");
             put("    public void removePropertyChangeListener("
                     + "java.beans.PropertyChangeListener listener) {%n");
             put("        propertyChangeSupport.removePropertyChangeListener(listener);%n");
             put("    }%n%n");
 
-            putJavadoc(messageFormatter.getMessage(MessageCode.JDOC0009,
+            putJavadoc(messageFormatter.getMessage(JDOC0009,
                     PropertyChangeListener.class.getName()), "    ");
             put("    public void removePropertyChangeListener("
                     + "String propertyName, java.beans.PropertyChangeListener listener) {%n");
@@ -378,14 +378,14 @@ public class BeanClassGenerator {
         }
 
         if (beanInfo.isConstrainedProperties()) {
-            putJavadoc(messageFormatter.getMessage(MessageCode.JDOC0006,
+            putJavadoc(messageFormatter.getMessage(JDOC0006,
                     VetoableChangeListener.class.getName()), "    ");
             put("    public void addVetoableChangeListener("
                     + "java.beans.VetoableChangeListener listener) {%n");
             put("        vetoableChangeSupport.addVetoableChangeListener(listener);%n");
             put("    }%n%n");
 
-            putJavadoc(messageFormatter.getMessage(MessageCode.JDOC0007,
+            putJavadoc(messageFormatter.getMessage(JDOC0007,
                     VetoableChangeListener.class.getName()), "    ");
             put("    public void addVetoableChangeListener("
                     + "String propertyName, java.beans.VetoableChangeListener listener) {%n");
@@ -393,14 +393,14 @@ public class BeanClassGenerator {
                     + "propertyName, listener);%n");
             put("    }%n%n");
 
-            putJavadoc(messageFormatter.getMessage(MessageCode.JDOC0008,
+            putJavadoc(messageFormatter.getMessage(JDOC0008,
                     VetoableChangeListener.class.getName()), "    ");
             put("    public void removeVetoableChangeListener("
                     + "java.beans.VetoableChangeListener listener) {%n");
             put("        vetoableChangeSupport.removeVetoableChangeListener(listener);%n");
             put("    }%n%n");
 
-            putJavadoc(messageFormatter.getMessage(MessageCode.JDOC0009,
+            putJavadoc(messageFormatter.getMessage(JDOC0009,
                     VetoableChangeListener.class.getName()), "    ");
             put("    public void removeVetoableChangeListener("
                     + "String propertyName, java.beans.VetoableChangeListener listener) {%n");
@@ -418,14 +418,17 @@ public class BeanClassGenerator {
      * @param propertyInfo
      *            生成するプロパティの情報
      */
-    protected void putAddEventListener(final BeanInfo beanInfo,
+    protected void putSpecificEventListener(final BeanInfo beanInfo,
             final PropertyInfo propertyInfo) {
+        if (!propertyInfo.isWritable()) {
+            return;
+        }
         final String comment = propertyInfo.getComment();
         final String name = propertyInfo.getName();
         final String capitalizeName = capitalize(name);
 
         if (beanInfo.isBoundProperties()) {
-            putJavadoc(messageFormatter.getMessage(MessageCode.JDOC0010,
+            putJavadoc(messageFormatter.getMessage(JDOC0010,
                     PropertyChangeListener.class.getName(), comment), "    ");
             put("    public void add%1$sChangeListener("
                     + "java.beans.PropertyChangeListener listener) {%n",
@@ -434,7 +437,7 @@ public class BeanClassGenerator {
                     + "\"%1$s\", listener);%n", name);
             put("    }%n%n");
 
-            putJavadoc(messageFormatter.getMessage(MessageCode.JDOC0011,
+            putJavadoc(messageFormatter.getMessage(JDOC0011,
                     PropertyChangeListener.class.getName(), comment), "    ");
             put("    public void remove%1$sChangeListener("
                     + "java.beans.PropertyChangeListener listener) {%n",
@@ -445,7 +448,7 @@ public class BeanClassGenerator {
         }
 
         if (beanInfo.isConstrainedProperties()) {
-            putJavadoc(messageFormatter.getMessage(MessageCode.JDOC0010,
+            putJavadoc(messageFormatter.getMessage(JDOC0010,
                     VetoableChangeListener.class.getName(), comment), "    ");
             put("    public void add%1$sChangeListener("
                     + "java.beans.VetoableChangeListener listener) {%n",
@@ -454,7 +457,7 @@ public class BeanClassGenerator {
                     + "\"%1$s\", listener);%n", name);
             put("    }%n%n");
 
-            putJavadoc(messageFormatter.getMessage(MessageCode.JDOC0011,
+            putJavadoc(messageFormatter.getMessage(JDOC0011,
                     VetoableChangeListener.class.getName(), comment), "    ");
             put("    public void remove%1$sChangeListener("
                     + "java.beans.VetoableChangeListener listener) {%n",
@@ -494,7 +497,7 @@ public class BeanClassGenerator {
     }
 
     /**
-     * フォーマットされた文字列を出力します．
+     * フォーマットした文字列を出力します．
      * 
      * @param format
      *            フォーマット文字列
@@ -506,20 +509,15 @@ public class BeanClassGenerator {
     }
 
     /**
-     * クラスの完全限定名を返します．
+     * フォーマットした文字列を出力します．
      * 
-     * @param packageName
-     *            パッケージ名
-     * @param simpleName
-     *            単純名
-     * @return 完全限定名
+     * @param format
+     *            フォーマットを示す列挙
+     * @param args
+     *            フォーマットから参照される引数の並び
      */
-    protected static String toQualifiedName(final String packageName,
-            final String simpleName) {
-        if (packageName == null) {
-            return simpleName;
-        }
-        return packageName + '.' + simpleName;
+    protected void put(final BeanClassFormat format, final Object... args) {
+        messageFormatter.format(format, args);
     }
 
 }

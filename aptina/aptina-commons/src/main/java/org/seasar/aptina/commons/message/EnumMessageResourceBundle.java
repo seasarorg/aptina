@@ -16,12 +16,14 @@
 package org.seasar.aptina.commons.message;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
+
+import static java.util.Collections.*;
 
 import static org.seasar.aptina.commons.message.EnumMessageCode.*;
 
@@ -45,7 +47,7 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
     protected final int locale;
 
     /**
-     * メッセージドを定義した列挙を使用するリソースバンドルを返します．
+     * メッセージを定義した列挙を使用するリソースバンドルを返します．
      * 
      * @param <T>
      *            メッセージを定義した列挙の型
@@ -77,6 +79,46 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
     }
 
     /**
+     * メッセージを定義した列挙を使用するリソースバンドルを返します．
+     * <p>
+     * フォールバックロケールは使用しません．
+     * </p>
+     * 
+     * @param <T>
+     *            メッセージを定義した列挙の型
+     * @param enumClass
+     *            メッセージを定義した列挙の型
+     * @return リソースバンドル
+     * @see Control#getNoFallbackControl(List)
+     */
+    public static <T extends Enum<T> & EnumMessageCode> ResourceBundle getBundleNoFallback(
+            final Class<T> enumClass) {
+        return ResourceBundle.getBundle(enumClass.getName(),
+                new EnumMessageResourceBundleControl<T>(enumClass, false));
+    }
+
+    /**
+     * メッセージを定義した列挙を使用するリソースバンドルを返します．
+     * <p>
+     * フォールバックロケールは使用しません．
+     * </p>
+     * 
+     * @param <T>
+     *            メッセージを定義した列挙の型
+     * @param enumClass
+     *            メッセージを定義した列挙の型
+     * @param locale
+     *            ロケール
+     * @return リソースバンドル
+     * @see Control#getNoFallbackControl(List)
+     */
+    public static <T extends Enum<T> & EnumMessageCode> ResourceBundle getBundleNoFallback(
+            final Class<T> enumClass, final Locale locale) {
+        return ResourceBundle.getBundle(enumClass.getName(), locale,
+                new EnumMessageResourceBundleControl<T>(enumClass, false));
+    }
+
+    /**
      * インスタンスを構築します．
      * 
      * @param enumClass
@@ -91,18 +133,33 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
 
     @Override
     public Enumeration<String> getKeys() {
-        final EnumMessageCode[] codes = enumClass.getEnumConstants();
-        final List<String> keys = new ArrayList<String>(codes.length);
-        for (final EnumMessageCode code : codes) {
-            keys.add(code.getMessageFormat(locale));
+        final Set<String> keys = handleKeySet();
+        if (parent != null) {
+            for (final Enumeration<String> it = parent.getKeys(); it
+                    .hasMoreElements();) {
+                final String key = it.nextElement();
+                keys.add(key);
+            }
         }
-        return Collections.enumeration(keys);
+        return enumeration(keys);
+    }
+
+    @Override
+    protected Set<String> handleKeySet() {
+        final T[] codes = enumClass.getEnumConstants();
+        final Set<String> keys = new HashSet<String>(codes.length);
+        for (final T code : codes) {
+            if (code.getMessageFormat(locale) != null) {
+                keys.add(code.name());
+            }
+        }
+        return keys;
     }
 
     @Override
     protected Object handleGetObject(final String key) {
         try {
-            final EnumMessageCode code = Enum.valueOf(enumClass, key);
+            final T code = Enum.valueOf(enumClass, key);
             return code.getMessageFormat(locale);
         } catch (final IllegalArgumentException e) {
             return null;
@@ -123,13 +180,35 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
         protected final Class<T> enumClass;
 
         /**
+         * フォールバックしない場合は {@literal true}
+         * 
+         * @see Control#getFallbackLocale(String, Locale)
+         */
+        protected final boolean noFallback;
+
+        /**
          * インスタンスを構築します．
          * 
          * @param enumClass
          *            メッセージを定義した列挙の型
          */
         public EnumMessageResourceBundleControl(final Class<T> enumClass) {
+            this(enumClass, false);
+        }
+
+        /**
+         * インスタンスを構築します．
+         * 
+         * @param enumClass
+         *            メッセージを定義した列挙の型
+         * @param noFallback
+         *            フォールバックしない場合は {@literal true}
+         * @see Control#getFallbackLocale(String, Locale)
+         */
+        public EnumMessageResourceBundleControl(final Class<T> enumClass,
+                final boolean noFallback) {
             this.enumClass = enumClass;
+            this.noFallback = noFallback;
         }
 
         @Override
@@ -148,6 +227,12 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
                     return new EnumMessageResourceBundle<T>(enumClass, i);
                 }
             }
+            return null;
+        }
+
+        @Override
+        public Locale getFallbackLocale(final String baseName,
+                final Locale locale) {
             return null;
         }
 

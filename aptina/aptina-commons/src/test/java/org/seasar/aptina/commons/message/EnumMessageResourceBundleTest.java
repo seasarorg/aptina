@@ -31,10 +31,21 @@ public class EnumMessageResourceBundleTest extends TestCase {
      */
     public void testGetBundle() throws Exception {
         final ResourceBundle bundle = EnumMessageResourceBundle.getBundle(
-                TestMessageCode.class, Locale.JAPAN);
+                TestMessageCode.class, Locale.JAPANESE);
         assertNotNull(bundle);
         assertEquals(EnumMessageResourceBundle.class, bundle.getClass());
         assertEquals(1, EnumMessageResourceBundle.class.cast(bundle).locale);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetBundleNoFallback() throws Exception {
+        final ResourceBundle bundle = EnumMessageResourceBundle
+                .getBundleNoFallback(TestMessageCode.class, Locale.ENGLISH);
+        assertNotNull(bundle);
+        assertEquals(EnumMessageResourceBundle.class, bundle.getClass());
+        assertEquals(0, EnumMessageResourceBundle.class.cast(bundle).locale);
     }
 
 }

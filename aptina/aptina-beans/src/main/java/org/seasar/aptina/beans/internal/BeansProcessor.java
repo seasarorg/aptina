@@ -30,7 +30,7 @@ import javax.lang.model.util.ElementFilter;
 import org.seasar.aptina.beans.BeanState;
 import org.seasar.aptina.commons.message.EnumMessageFormatter;
 
-import static org.seasar.aptina.beans.internal.MessageCode.*;
+import static org.seasar.aptina.beans.internal.DiagnosticMessageCode.*;
 
 /**
  * {@link BeanState} で注釈されたクラス (状態クラス) のフィールドに対する getter/setter メソッドを持つサブクラス
@@ -43,7 +43,7 @@ import static org.seasar.aptina.beans.internal.MessageCode.*;
 public class BeansProcessor extends AbstractProcessor {
 
     /** メッセージフォーマッタ */
-    protected EnumMessageFormatter<MessageCode> messageFormatter;
+    protected EnumMessageFormatter<DiagnosticMessageCode> messageFormatter;
 
     /**
      * {@link BeanState} で注釈されたクラス (状態クラス) のフィールドに対する getter/setter メソッドを持つサブクラス
@@ -52,8 +52,8 @@ public class BeansProcessor extends AbstractProcessor {
     @Override
     public boolean process(final Set<? extends TypeElement> annotations,
             final RoundEnvironment roundEnv) {
-        messageFormatter = new EnumMessageFormatter<MessageCode>(
-                MessageCode.class, processingEnv.getLocale());
+        messageFormatter = new EnumMessageFormatter<DiagnosticMessageCode>(
+                DiagnosticMessageCode.class, processingEnv.getLocale());
         final BeanInfoFactory beanMetaFactory = new BeanInfoFactory(
                 processingEnv);
         final BeanClassGenerator beanClassGenerator = new BeanClassGenerator(
@@ -86,7 +86,7 @@ public class BeansProcessor extends AbstractProcessor {
      *            メッセージに埋め込む引数
      */
     protected void printMessage(final Element element,
-            final MessageCode messageCode, final Object... args) {
+            final DiagnosticMessageCode messageCode, final Object... args) {
         processingEnv.getMessager().printMessage(messageCode.getKind(),
                 messageFormatter.getMessage(messageCode, args), element);
     }
