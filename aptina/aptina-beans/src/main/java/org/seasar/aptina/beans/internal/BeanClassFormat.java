@@ -15,6 +15,8 @@
  */
 package org.seasar.aptina.beans.internal;
 
+import java.util.Locale;
+
 import javax.tools.Diagnostic.Kind;
 
 import org.seasar.aptina.commons.message.EnumMessageCode;
@@ -116,6 +118,10 @@ public enum BeanClassFormat implements EnumMessageCode {
                     + " @param listener 削除する {@link %1$s}%n"),
     //
     ;
+
+    /** サポートするロケールの配列 */
+    public static final Locale[] SUPPORTED_LOCALES = new Locale[] {
+            Locale.ROOT, Locale.JAPANESE };
 
     /** 診断の種類 */
     private final Kind kind;

@@ -20,31 +20,81 @@ import java.util.Locale;
 import javax.tools.Diagnostic.Kind;
 
 /**
- * メッセージコードを定義した列挙のインタフェースです．
+ * メッセージコードを定義した列挙が実装するインタフェースです．
  * <p>
- * メッセージコードは {@link Kind} とロケールごとのメッセージを持ちます． メッセージのロケールは
- * {@link #SUPORTED_LOCALE} と同じ並びで順序づけられます． この順序は {@link #getMessageFormat(int)}
- * の引数として使われます．
+ * メッセージコードを記述した列挙はそれぞれの列挙定数に {@link javax.tools.Diagnostic.Kind 診断レベル} と，
+ * ロケールごとのメッセージを持ちます． サポートするメッセージのロケールは {@literal SUPORTED_LOCALES} という名前の
+ * {@link static} フィールドに {@link Locale} の配列として定義します．
  * </p>
+ * 
+ * <pre>
+ * public static final Locale[] SUPORTED_LOCALES = new Locale[] { Locale.ROOT, Locale.JAPANESE };
+ * </pre>
+ * <p>
+ * {@literal SUPPORTED_LOCALES} 配列には {@link Locale.ROOT} を含めるべきです．
+ * {@link #getMessageFormat(int)} の引数には， {@literal SUPPORTED_LOCALES}
+ * 配列のインデックスがロケールとして渡されます．
+ * </p>
+ * <p>
+ * 典型的な列挙の定義は次のようになります．
+ * </p>
+ * 
+ * <pre>
+ * public enum TestMessageCode implements EnumMessageCode {
+ *     XXXX(Kind.ERROR, "...", "..."),
+ *     YYYY(Kind.ERROR, "...", "..."),
+ *     ...
+ *     ;
+ * 
+ *     &#x2F;** サポートするロケールの配列 *&#x2F;
+ *     public static final Locale[] SUPPORTED_LOCALES = new Locale[] {
+ *             Locale.ROOT, Locale.JAPANESE };
+ * 
+ *     &#x2F;** 診断の種類 *&#x2F;
+ *     private final Kind kind;
+ * 
+ *     &#x2F;** メッセージフォーマット *&#x2F;
+ *     private final String[] messageFormats;
+ * 
+ *     &#x2F;**
+ *      * インスタンスを構築します．
+ *      * 配列の要素は SUPPORTED_LOCALES 配列のロケールに対応するメッセージフォーマットです．
+ *      * 
+ *      * &#x40;param messageFormats
+ *      *            メッセージフォーマットの配列
+ *      *&#x2F;
+ *     private TestMessageCode(final Kind kind, final String... messageFormats) {
+ *         this.kind = kind;
+ *         this.messageFormats = messageFormats;
+ *     }
+ * 
+ *     &#x2F;**
+ *      * 診断の種類を返します．
+ *      * 
+ *      * &#x40;return 診断の種類
+ *      *&#x2F;
+ *     public Kind getKind() {
+ *         return kind;
+ *     }
+ * 
+ *     &#x2F;**
+ *      * 指定されたロケールのメッセージフォーマットを返します．
+ *      * 
+ *      * &#x40;param locale
+ *      *            ロケール
+ *      * &#x40;return 指定されたロケールのメッセージフォーマット
+ *      *&#x2F;
+ *     public String getMessageFormat(final int locale) {
+ *         return messageFormats[locale];
+ *     }
+ * </pre>
  * 
  * @author koichik
  */
 public interface EnumMessageCode {
 
-    /**
-     * サポートするロケールの配列．
-     * <p>
-     * 配列の並びは次の通りです．
-     * </p>
-     * <ol>
-     * <li>{@link Locale#ROOT}</li>
-     * <li>{@link Locale#JAPANESE}</li>
-     * </ol>
-     * <p>
-     * この並びに対応したロケールのインデックスが {@link #getMessageFormat(int)} の引数として渡されます．
-     * </p>
-     */
-    Locale[] SUPORTED_LOCALE = new Locale[] { Locale.ROOT, Locale.JAPANESE };
+    /** サポートするロケールの配列を定義した定数の名前 */
+    String SUPPORTED_LOCALES_NAME = "SUPPORTED_LOCALES";
 
     /**
      * 診断の種類を返します．

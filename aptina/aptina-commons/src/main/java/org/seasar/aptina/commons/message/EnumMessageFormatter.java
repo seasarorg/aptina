@@ -27,7 +27,8 @@ import java.util.ResourceBundle;
  * </p>
  * <p>
  * コンストラクタ引数で {@link Appendable} を渡した場合は {@link #format(Enum, Object...)}
- * を呼び出すことで組み立てられたメッセージが出力先に追加されます．
+ * を呼び出すことで組み立てられたメッセージが出力先に追加されます． 追加された文字列は {@link #toString()}
+ * を呼び出すことで取得することができます．
  * </p>
  * 
  * @author koichik
@@ -132,6 +133,11 @@ public class EnumMessageFormatter<T extends Enum<T> & EnumMessageCode> {
         return this;
     }
 
+    /**
+     * 出力先に追加された文字列を返します．
+     * 
+     * @return 追加された文字列
+     */
     @Override
     public String toString() {
         return formatter.toString();

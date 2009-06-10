@@ -17,35 +17,66 @@
  * プロパティファイルの代わりに列挙に記述されたメッセージを使用する 
  * {@link java.util.ResourceBundle} を提供します．
  * <p>
- * メッセージを記述した列挙は，
- * {@link org.seasar.aptina.commons.message.EnumMessageCode} を実装し，
- * {@link org.seasar.aptina.commons.message.EnumMessageCode#SUPORTED_LOCALE} に
- * 定義されたロケールの配列と同じ数・並びでロケールごとのメッセージをサポートしなくてはなりません．
- * また， 診断レベルとして {@link javax.tools.Diagnostic.Kind} を持たなくてはなりません．
+ * メッセージコードを記述した列挙は，
+ * {@link org.seasar.aptina.commons.message.EnumMessageCode} を実装し， 列挙定数ごとに
+ * {@link javax.tools.Diagnostic.Kind 診断レベル} と， ロケールごとのメッセージを持ちます．
+ * 列挙がサポートするメッセージのロケールは {@literal SUPORTED_LOCALES} という名前の
+ * {@link static} フィールドに {@link Locale} の配列として定義します．
+ * {@literal SUPPORTED_LOCALES} 配列には {@link Locale.ROOT} を含めるべきです．
+ * {@link org.seasar.aptina.commons.message.#getMessageFormat(int)} の引数には，
+ * {@literal SUPPORTED_LOCALES} 配列のインデックスがロケールとして渡されます．
+ * </p>
+ * <p>
  * メッセージを定義した列挙は次のようになります．
  * </p>
  * <pre>
- * public enum XxxMessageCode implements EnumMessageCode {
- *     WARN(Kind.WARNING, "warning", "警告"),
- *     ERROR(Kind.ERROR, "error", "エラー"),
+ * public enum TestMessageCode implements EnumMessageCode {
+ *     XXXX(Kind.ERROR, "...", "..."),
+ *     YYYY(Kind.ERROR, "...", "..."),
  *     ...
+ *     ;
  * 
+ *     &#x2F;** サポートするロケールの配列 *&#x2F;
+ *     public static final Locale[] SUPPORTED_LOCALES = new Locale[] {
+ *             Locale.ROOT, Locale.JAPANESE };
+ * 
+ *     &#x2F;** 診断の種類 *&#x2F;
  *     private final Kind kind;
+ * 
+ *     &#x2F;** メッセージフォーマット *&#x2F;
  *     private final String[] messageFormats;
  * 
- *     private XxxMessageCode(Kind kind, String... messageFormats) {
+ *     &#x2F;**
+ *      * インスタンスを構築します．
+ *      * 配列の要素は SUPPORTED_LOCALES 配列のロケールに対応するメッセージフォーマットです．
+ *      * 
+ *      * &#x40;param messageFormats
+ *      *            メッセージフォーマットの配列
+ *      *&#x2F;
+ *     private TestMessageCode(final Kind kind, final String... messageFormats) {
  *         this.kind = kind;
  *         this.messageFormats = messageFormats;
  *     }
  * 
+ *     &#x2F;**
+ *      * 診断の種類を返します．
+ *      * 
+ *      * &#x40;return 診断の種類
+ *      *&#x2F;
  *     public Kind getKind() {
  *         return kind;
  *     }
  * 
+ *     &#x2F;**
+ *      * 指定されたロケールのメッセージフォーマットを返します．
+ *      * 
+ *      * &#x40;param locale
+ *      *            ロケール
+ *      * &#x40;return 指定されたロケールのメッセージフォーマット
+ *      *&#x2F;
  *     public String getMessageFormat(final int locale) {
  *         return messageFormats[locale];
  *     }
- * }
  * </pre>
  * <p>
  * 列挙を指定して {@link java.util.ResourceBundle} を取得するには，

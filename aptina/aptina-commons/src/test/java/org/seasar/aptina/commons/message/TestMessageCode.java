@@ -1,5 +1,7 @@
 package org.seasar.aptina.commons.message;
 
+import java.util.Locale;
+
 import javax.tools.Diagnostic.Kind;
 
 /**
@@ -11,6 +13,10 @@ public enum TestMessageCode implements EnumMessageCode {
     FOO(Kind.WARNING, "aaa", "あああ"),
     /** */
     BAR(Kind.ERROR, "%1$s of %2$s", "%2$sの%1$s");
+
+    /** サポートするロケールの配列 */
+    public static final Locale[] SUPPORTED_LOCALES = new Locale[] {
+            Locale.ROOT, Locale.JAPANESE };
 
     /** 診断の種類 */
     private final Kind kind;

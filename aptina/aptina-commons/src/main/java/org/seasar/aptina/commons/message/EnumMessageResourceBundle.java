@@ -16,6 +16,7 @@
 package org.seasar.aptina.commons.message;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
@@ -54,9 +55,12 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
      * @param enumClass
      *            メッセージを定義した列挙の型
      * @return リソースバンドル
+     * @throws IllegalStateException
+     *             列挙に {@literal SUPPORTED_LOCALES} が定義されていない場合
+     * @see EnumMessageCode
      */
     public static <T extends Enum<T> & EnumMessageCode> ResourceBundle getBundle(
-            final Class<T> enumClass) {
+            final Class<T> enumClass) throws IllegalStateException {
         return ResourceBundle.getBundle(enumClass.getName(),
                 new EnumMessageResourceBundleControl<T>(enumClass));
     }
@@ -71,9 +75,13 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
      * @param locale
      *            ロケール
      * @return リソースバンドル
+     * @throws IllegalStateException
+     *             列挙に {@literal SUPPORTED_LOCALES} が定義されていない場合
+     * @see EnumMessageCode
      */
     public static <T extends Enum<T> & EnumMessageCode> ResourceBundle getBundle(
-            final Class<T> enumClass, final Locale locale) {
+            final Class<T> enumClass, final Locale locale)
+            throws IllegalStateException {
         return ResourceBundle.getBundle(enumClass.getName(), locale,
                 new EnumMessageResourceBundleControl<T>(enumClass));
     }
@@ -188,6 +196,8 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
          */
         protected final boolean noFallback;
 
+        protected final Locale[] supportedLocales;
+
         /**
          * インスタンスを構築します．
          * 
@@ -212,6 +222,7 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
                 final boolean noFallback) {
             this.enumClass = enumClass;
             this.noFallback = noFallback;
+            this.supportedLocales = getSupportedLocales(enumClass);
         }
 
         @Override
@@ -225,8 +236,8 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
                 final ClassLoader loader, final boolean reload)
                 throws IllegalAccessException, InstantiationException,
                 IOException {
-            for (int i = 0; i < SUPORTED_LOCALE.length; ++i) {
-                if (SUPORTED_LOCALE[i].equals(locale)) {
+            for (int i = 0; i < supportedLocales.length; ++i) {
+                if (supportedLocales[i].equals(locale)) {
                     return new EnumMessageResourceBundle<T>(enumClass, i);
                 }
             }
@@ -237,6 +248,20 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
         public Locale getFallbackLocale(final String baseName,
                 final Locale locale) {
             return null;
+        }
+
+        protected Locale[] getSupportedLocales(final Class<T> enumClass) {
+            try {
+                final Field field = enumClass
+                        .getDeclaredField(SUPPORTED_LOCALES_NAME);
+                field.setAccessible(true);
+                if (field != null) {
+                    return (Locale[]) field.get(null);
+                }
+            } catch (final Exception ignore) {
+            }
+            throw new IllegalStateException(enumClass.getName() + " must have "
+                    + SUPPORTED_LOCALES_NAME + " field.");
         }
 
     }

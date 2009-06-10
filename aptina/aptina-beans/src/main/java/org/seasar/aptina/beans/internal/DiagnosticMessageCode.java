@@ -15,6 +15,8 @@
  */
 package org.seasar.aptina.beans.internal;
 
+import java.util.Locale;
+
 import javax.tools.Diagnostic.Kind;
 
 import org.seasar.aptina.commons.message.EnumMessageCode;
@@ -56,6 +58,10 @@ public enum DiagnosticMessageCode implements EnumMessageCode {
     APT0000(Kind.ERROR, "", "注釈処理中に例外が発生しました．%1$s%n"),
     //
     ;
+
+    /** サポートするロケールの配列 */
+    public static final Locale[] SUPPORTED_LOCALES = new Locale[] {
+            Locale.ROOT, Locale.JAPANESE };
 
     /** 診断の種類 */
     private final Kind kind;
