@@ -31,7 +31,7 @@ import javax.tools.Diagnostic.Kind;
  * public static final Locale[] SUPORTED_LOCALES = new Locale[] { Locale.ROOT, Locale.JAPANESE };
  * </pre>
  * <p>
- * {@literal SUPPORTED_LOCALES} 配列には {@link Locale.ROOT} を含めるべきです．
+ * {@literal SUPPORTED_LOCALES} 配列には {@link Locale#ROOT} を含めるべきです．
  * {@link #getMessageFormat(int)} の引数には， {@literal SUPPORTED_LOCALES}
  * 配列のインデックスがロケールとして渡されます．
  * </p>
@@ -41,8 +41,9 @@ import javax.tools.Diagnostic.Kind;
  * 
  * <pre>
  * public enum TestMessageCode implements EnumMessageCode {
- *     XXXX(Kind.ERROR, "...", "..."),
- *     YYYY(Kind.ERROR, "...", "..."),
+ *     // 第 2 引数はルートロケールのメッセージ，第 3 引数は日本語ロケールのメッセージ
+ *     XXXX(Kind.ERROR,   "Error",   "エラー"),
+ *     YYYY(Kind.WARNING, "Warning", "警告"),
  *     ...
  *     ;
  * 
@@ -87,6 +88,7 @@ import javax.tools.Diagnostic.Kind;
  *     public String getMessageFormat(final int locale) {
  *         return messageFormats[locale];
  *     }
+ * }
  * </pre>
  * 
  * @author koichik

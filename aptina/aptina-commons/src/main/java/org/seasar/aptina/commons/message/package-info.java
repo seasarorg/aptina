@@ -22,7 +22,7 @@
  * {@link javax.tools.Diagnostic.Kind 診断レベル} と， ロケールごとのメッセージを持ちます．
  * 列挙がサポートするメッセージのロケールは {@literal SUPORTED_LOCALES} という名前の
  * {@link static} フィールドに {@link Locale} の配列として定義します．
- * {@literal SUPPORTED_LOCALES} 配列には {@link Locale.ROOT} を含めるべきです．
+ * {@literal SUPPORTED_LOCALES} 配列には {@link java.util.Locale#ROOT} を含めるべきです．
  * {@link org.seasar.aptina.commons.message.#getMessageFormat(int)} の引数には，
  * {@literal SUPPORTED_LOCALES} 配列のインデックスがロケールとして渡されます．
  * </p>
@@ -31,8 +31,9 @@
  * </p>
  * <pre>
  * public enum TestMessageCode implements EnumMessageCode {
- *     XXXX(Kind.ERROR, "...", "..."),
- *     YYYY(Kind.ERROR, "...", "..."),
+ *     // 第 2 引数はルートロケールのメッセージ，第 3 引数は日本語ロケールのメッセージ
+ *     XXXX(Kind.ERROR,   "Error",   "エラー"),
+ *     YYYY(Kind.WARNING, "Warning", "警告"),
  *     ...
  *     ;
  * 
@@ -77,6 +78,7 @@
  *     public String getMessageFormat(final int locale) {
  *         return messageFormats[locale];
  *     }
+ * }
  * </pre>
  * <p>
  * 列挙を指定して {@link java.util.ResourceBundle} を取得するには，
