@@ -15,13 +15,7 @@
  */
 package org.seasar.aptina.beans.internal;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
@@ -34,7 +28,6 @@ import org.seasar.aptina.beans.example.ConstrainedBeanState;
 import org.seasar.aptina.beans.example.FooBeanState;
 import org.seasar.aptina.unit.AptinaTestCase;
 
-import static org.seasar.aptina.commons.util.ClassUtils.*;
 import static org.seasar.aptina.commons.util.IOUtils.*;
 
 /**
@@ -51,8 +44,6 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
 
     BeanClassGenerator generator;
 
-    StringWriter stringWriter;
-
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -67,8 +58,8 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
     public void testPutClassHeaderFoo() throws Exception {
         createGenerator(FooBeanState.class);
         generator.putClassHeader(beanInfo);
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
+        generator.putFields(beanInfo);
+        assertEqualsByLine();
     }
 
     /**
@@ -77,8 +68,8 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
     public void testPutClassHeaderBar() throws Exception {
         createGenerator(BarBeanState.class);
         generator.putClassHeader(beanInfo);
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
+        generator.putFields(beanInfo);
+        assertEqualsByLine();
     }
 
     /**
@@ -87,8 +78,8 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
     public void testPutClassHeaderBound() throws Exception {
         createGenerator(BoundBeanState.class);
         generator.putClassHeader(beanInfo);
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
+        generator.putFields(beanInfo);
+        assertEqualsByLine();
     }
 
     /**
@@ -97,8 +88,8 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
     public void testPutClassHeaderConstrained() throws Exception {
         createGenerator(ConstrainedBeanState.class);
         generator.putClassHeader(beanInfo);
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
+        generator.putFields(beanInfo);
+        assertEqualsByLine();
     }
 
     /**
@@ -107,8 +98,8 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
     public void testPutClassHeaderBoundAndConstrained() throws Exception {
         createGenerator(BoundAndConstrainedBeanState.class);
         generator.putClassHeader(beanInfo);
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
+        generator.putFields(beanInfo);
+        assertEqualsByLine();
     }
 
     /**
@@ -117,8 +108,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
     public void testPutClassFooter() throws Exception {
         createGenerator(FooBeanState.class);
         generator.putClassFooter(beanInfo);
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
+        assertEqualsByLine();
     }
 
     /**
@@ -129,8 +119,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
         for (final ConstructorInfo constructorInfo : beanInfo.getConstructors()) {
             generator.putConstructor(beanInfo, constructorInfo);
         }
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
+        assertEqualsByLine();
     }
 
     /**
@@ -141,8 +130,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
         for (final ConstructorInfo constructorInfo : beanInfo.getConstructors()) {
             generator.putConstructor(beanInfo, constructorInfo);
         }
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
+        assertEqualsByLine();
     }
 
     /**
@@ -155,8 +143,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
                     .getPropertyInfo(propertyName);
             generator.putGetter(beanInfo, propertyInfo);
         }
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
+        assertEqualsByLine();
     }
 
     /**
@@ -169,8 +156,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
                     .getPropertyInfo(propertyName);
             generator.putGetter(beanInfo, propertyInfo);
         }
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
+        assertEqualsByLine();
     }
 
     /**
@@ -183,8 +169,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
                     .getPropertyInfo(propertyName);
             generator.putSetter(beanInfo, propertyInfo);
         }
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
+        assertEqualsByLine();
     }
 
     /**
@@ -197,8 +182,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
                     .getPropertyInfo(propertyName);
             generator.putSetter(beanInfo, propertyInfo);
         }
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
+        assertEqualsByLine();
     }
 
     /**
@@ -211,8 +195,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
                     .getPropertyInfo(propertyName);
             generator.putSetter(beanInfo, propertyInfo);
         }
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
+        assertEqualsByLine();
     }
 
     /**
@@ -225,8 +208,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
                     .getPropertyInfo(propertyName);
             generator.putSetter(beanInfo, propertyInfo);
         }
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
+        assertEqualsByLine();
     }
 
     /**
@@ -239,8 +221,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
                     .getPropertyInfo(propertyName);
             generator.putSetter(beanInfo, propertyInfo);
         }
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
+        assertEqualsByLine();
     }
 
     /**
@@ -249,8 +230,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
     public void testPutListenerBound() throws Exception {
         createGenerator(BoundBeanState.class);
         generator.putEventListener(beanInfo);
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
+        assertEqualsByLine();
     }
 
     /**
@@ -259,8 +239,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
     public void testPutListenerConstrained() throws Exception {
         createGenerator(ConstrainedBeanState.class);
         generator.putEventListener(beanInfo);
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
+        assertEqualsByLine();
     }
 
     /**
@@ -269,8 +248,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
     public void testPutListenerBoundAndConstrained() throws Exception {
         createGenerator(BoundAndConstrainedBeanState.class);
         generator.putEventListener(beanInfo);
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
+        assertEqualsByLine();
     }
 
     /**
@@ -283,8 +261,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
                     .getPropertyInfo(propertyName);
             generator.putSpecificEventListener(beanInfo, propertyInfo);
         }
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
+        assertEqualsByLine();
     }
 
     /**
@@ -297,8 +274,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
                     .getPropertyInfo(propertyName);
             generator.putSpecificEventListener(beanInfo, propertyInfo);
         }
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
+        assertEqualsByLine();
     }
 
     /**
@@ -311,17 +287,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
                     .getPropertyInfo(propertyName);
             generator.putSpecificEventListener(beanInfo, propertyInfo);
         }
-        generator.writer.close();
-        assertEqualsByLine(new StringReader(stringWriter.toString()));
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testToQualifiedName() throws Exception {
-        assertEquals(FooBeanState.class.getName(), getQualifiedName(
-                "org.seasar.aptina.beans.example", "FooBeanState"));
-        assertEquals("FooBeanState", getQualifiedName(null, "FooBeanState"));
+        assertEqualsByLine();
     }
 
     /**
@@ -337,26 +303,21 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
         beanInfo = beanInfoFactory.createBeanInfo(typeElement);
 
         generator = new BeanClassGenerator(getProcessingEnvironment());
-        stringWriter = new StringWriter();
-        generator.writer = new PrintWriter(stringWriter);
     }
 
     /**
      * @param actualReader
      * @throws Exception
      */
-    void assertEqualsByLine(final Reader actualReader) throws Exception {
+    void assertEqualsByLine() throws Exception {
         final String expectedResourceName = getClass().getSimpleName() + "_"
                 + getName() + ".txt";
-        final InputStream expectedInputStream = getClass().getClassLoader()
-                .getResourceAsStream(expectedResourceName);
+        final InputStream is = getClass().getClassLoader().getResourceAsStream(
+                expectedResourceName);
         try {
-            assertEqualsByLine(new BufferedReader(new InputStreamReader(
-                    expectedInputStream, getCharset())), new BufferedReader(
-                    actualReader));
+            assertEqualsByLine(readString(is, "UTF-8"), generator.toString());
         } finally {
-            closeSilently(expectedInputStream);
-            closeSilently(actualReader);
+            closeSilently(is);
         }
     }
 

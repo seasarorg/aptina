@@ -1,7 +1,7 @@
 package org.seasar.aptina.beans.example;
 
-@javax.annotation.Generated({"Aptina Beans", "DEV"})
 @org.seasar.aptina.beans.JavaBean
+@javax.annotation.Generated({"Aptina Beans", "org.seasar.aptina", "aptina-beans", "DEV"})
 public class BoundBean extends org.seasar.aptina.beans.example.BoundBeanState {
 
     java.beans.PropertyChangeSupport propertyChangeSupport =

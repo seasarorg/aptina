@@ -74,7 +74,7 @@ public class EnumMessageFormatter<T extends Enum<T> & EnumMessageCode> {
      *            ロケール
      */
     public EnumMessageFormatter(final Class<T> enumClass, final Locale locale) {
-        this(enumClass, locale, new NullWriter());
+        this(enumClass, new NullWriter(), locale);
     }
 
     /**
@@ -82,13 +82,13 @@ public class EnumMessageFormatter<T extends Enum<T> & EnumMessageCode> {
      * 
      * @param enumClass
      *            パターンを定義した列挙の型
-     * @param locale
-     *            ロケール
      * @param out
      *            出力先
+     * @param locale
+     *            ロケール
      */
-    public EnumMessageFormatter(final Class<T> enumClass, final Locale locale,
-            final Appendable out) {
+    public EnumMessageFormatter(final Class<T> enumClass, final Appendable out,
+            final Locale locale) {
         bundle = EnumMessageResourceBundle.getBundle(enumClass, locale);
         formatter = new Formatter(out, locale);
     }

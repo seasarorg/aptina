@@ -1,3 +1,5 @@
+import org.seasar.aptina.beans.BeanState;
+
 /*
  * Copyright 2004-2009 the Seasar Foundation and the Others.
  *
@@ -13,22 +15,22 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.aptina.beans.internal;
 
 /**
- * AptinaBeans の情報です．
+ * デフォルトパッケージな JavaBeans
  * 
  * @author koichik
  */
-public interface AptinaBeans {
+@BeanState
+public class DefaultPackageBeanState {
 
-    /** プロダクト名 */
-    String PRODUCT_NAME = "Aptina Beans";
+    /** 名前 */
+    String[] names;
 
-    /** グループ ID */
-    String GROUP_ID = "org.seasar.aptina";
-
-    /** アーティファクト ID */
-    String ARTIFACT_ID = "aptina-beans";
+    /**
+     * インスタンスを構築します。
+     */
+    public DefaultPackageBeanState() {
+    }
 
 }

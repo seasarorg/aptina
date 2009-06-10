@@ -65,7 +65,8 @@ public class BeansProcessor extends AbstractProcessor {
                         .createBeanInfo(typeElement);
                 if (beanInfo != null) {
                     try {
-                        beanClassGenerator.generate(beanInfo, typeElement);
+                        beanClassGenerator.generateAndWrite(beanInfo,
+                                typeElement);
                     } catch (final IOException e) {
                         printMessage(typeElement, APT0000, e);
                     }

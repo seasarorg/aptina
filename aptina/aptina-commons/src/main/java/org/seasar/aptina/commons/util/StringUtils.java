@@ -39,6 +39,17 @@ public class StringUtils {
     }
 
     /**
+     * 文字列が {@literal null} でも空でもなければ {@literal true} を返します．
+     * 
+     * @param s
+     *            文字列
+     * @return 文字列が {@literal null} でも空でもなければ {@literal true}
+     */
+    public static boolean isNotEmpty(final CharSequence s) {
+        return !isEmpty(s);
+    }
+
+    /**
      * 文字列の先頭文字を大文字化した文字列を返します．
      * 
      * @param s

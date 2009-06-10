@@ -7,8 +7,8 @@ package org.seasar.aptina.beans.example;
  * @param <E>
  * @param <T>
  */
-@javax.annotation.Generated({"Aptina Beans", "DEV"})
 @org.seasar.aptina.beans.JavaBean
+@javax.annotation.Generated({"Aptina Beans", "org.seasar.aptina", "aptina-beans", "DEV"})
 public class BarBean<E, T extends java.util.List<E> & java.io.Serializable> extends org.seasar.aptina.beans.example.BarBeanState<E, T> {
 
     /**

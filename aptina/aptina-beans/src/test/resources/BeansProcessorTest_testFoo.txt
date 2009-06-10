@@ -5,8 +5,8 @@ package org.seasar.aptina.beans.example;
  * 
  * @author koichik
  */
-@javax.annotation.Generated({"Aptina Beans", "DEV"})
 @org.seasar.aptina.beans.JavaBean
+@javax.annotation.Generated({"Aptina Beans", "org.seasar.aptina", "aptina-beans", "DEV"})
 public class FooBean extends org.seasar.aptina.beans.example.FooBeanState {
 
     public  FooBean() {

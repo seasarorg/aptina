@@ -17,44 +17,28 @@ package org.seasar.aptina.beans.internal;
 
 import java.beans.PropertyChangeListener;
 import java.beans.VetoableChangeListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
-import javax.tools.JavaFileObject;
 
-import org.seasar.aptina.commons.message.EnumMessageFormatter;
+import org.seasar.aptina.commons.source.SourceGenerator;
 
 import static org.seasar.aptina.beans.internal.AptinaBeans.*;
 import static org.seasar.aptina.beans.internal.BeanClassFormat.*;
 import static org.seasar.aptina.commons.util.ClassUtils.*;
 import static org.seasar.aptina.commons.util.ModifierUtils.*;
 import static org.seasar.aptina.commons.util.StringUtils.*;
-import static org.seasar.aptina.commons.util.VersionUtils.*;
 
 /**
  * 状態クラスを継承した Bean クラスのソースを生成するクラスです．
  * 
  * @author koichik
  */
-public class BeanClassGenerator {
-
-    /** Aptina Beans のバージョン情報 */
-    protected static final String PRODUCT_VERSION = getVersion(GROUP_ID,
-            ARTIFACT_ID, "DEV");
-
-    /** {@link ProcessingEnvironment} */
-    protected ProcessingEnvironment env;
-
-    /** ソースの出力先 */
-    protected PrintWriter writer;
-
-    /** メッセージフォーマッタ */
-    protected EnumMessageFormatter<BeanClassFormat> messageFormatter;
+public class BeanClassGenerator extends SourceGenerator<BeanClassFormat> {
 
     /**
      * インスタンスを構築します．
@@ -63,9 +47,24 @@ public class BeanClassGenerator {
      *            {@link ProcessingEnvironment}
      */
     public BeanClassGenerator(final ProcessingEnvironment env) {
-        this.env = env;
-        messageFormatter = new EnumMessageFormatter<BeanClassFormat>(
-                BeanClassFormat.class, env.getLocale());
+        super(env, BeanClassFormat.class);
+    }
+
+    /**
+     * Bean クラスのソースを生成して {@link Filer} に出力します．
+     * 
+     * @param beanInfo
+     *            生成する JavaBeans の情報
+     * @param originalElement
+     *            生成元となった状態クラスの{@link TypeElement}
+     * @throws IOException
+     *             入出力で例外が発生した場合
+     */
+    public void generateAndWrite(final BeanInfo beanInfo,
+            final TypeElement originalElement) throws IOException {
+        generate(beanInfo, originalElement);
+        write(getQualifiedName(beanInfo.getPackageName(), beanInfo
+                .getBeanClassName()), originalElement);
     }
 
     /**
@@ -73,38 +72,28 @@ public class BeanClassGenerator {
      * 
      * @param beanInfo
      *            生成する JavaBeans の情報
-     * @param typeElement
+     * @param originalElement
      *            生成元となった状態クラスの{@link TypeElement}
      * @throws IOException
      *             入出力で例外が発生した場合
      */
-    public void generate(final BeanInfo beanInfo, final TypeElement typeElement)
-            throws IOException {
-        final Filer filer = env.getFiler();
-        final JavaFileObject sourceFile = filer.createSourceFile(
-                getQualifiedName(beanInfo.getPackageName(), beanInfo
-                        .getBeanClassName()), typeElement);
-        writer = new PrintWriter(sourceFile.openWriter());
-        messageFormatter = new EnumMessageFormatter<BeanClassFormat>(
-                BeanClassFormat.class, env.getLocale(), writer);
-        try {
-            putClassHeader(beanInfo);
-            for (final ConstructorInfo constructorInfo : beanInfo
-                    .getConstructors()) {
-                putConstructor(beanInfo, constructorInfo);
-            }
-            putEventListener(beanInfo);
-            for (final String propertyName : beanInfo.getPropertyNames()) {
-                final PropertyInfo propertyInfo = beanInfo
-                        .getPropertyInfo(propertyName);
-                putGetter(beanInfo, propertyInfo);
-                putSetter(beanInfo, propertyInfo);
-                putSpecificEventListener(beanInfo, propertyInfo);
-            }
-            putClassFooter(beanInfo);
-        } finally {
-            writer.close();
+    public void generate(final BeanInfo beanInfo,
+            final TypeElement originalElement) {
+        buf.setLength(0);
+        putClassHeader(beanInfo);
+        putFields(beanInfo);
+        for (final ConstructorInfo constructorInfo : beanInfo.getConstructors()) {
+            putConstructor(beanInfo, constructorInfo);
         }
+        putEventListener(beanInfo);
+        for (final String propertyName : beanInfo.getPropertyNames()) {
+            final PropertyInfo propertyInfo = beanInfo
+                    .getPropertyInfo(propertyName);
+            putGetter(beanInfo, propertyInfo);
+            putSetter(beanInfo, propertyInfo);
+            putSpecificEventListener(beanInfo, propertyInfo);
+        }
+        putClassFooter(beanInfo);
     }
 
     /**
@@ -114,24 +103,36 @@ public class BeanClassGenerator {
      *            生成する JavaBeans の情報
      */
     protected void putClassHeader(final BeanInfo beanInfo) {
-        put("package %1$s;%n%n", beanInfo.getPackageName());
-        putJavadoc(beanInfo.getComment(), "");
-        put("@javax.annotation.Generated({\"Aptina Beans\", \"%1$s\"})%n",
-                PRODUCT_VERSION);
-        put("@org.seasar.aptina.beans.JavaBean%n");
-        put("public class %1$s%2$s extends %3$s {%n", beanInfo
+        final String packageName = beanInfo.getPackageName();
+        if (isNotEmpty(packageName)) {
+            printf("package %1$s;%n%n", packageName);
+        }
+        printJavadoc(beanInfo.getComment());
+        printf("@org.seasar.aptina.beans.JavaBean%n");
+        printGeneratedAnnotation(PRODUCT_NAME, GROUP_ID, ARTIFACT_ID);
+        printf("public class %1$s%2$s extends %3$s {%n", beanInfo
                 .getBeanClassName(), beanInfo.getTypeParameter(), beanInfo
                 .getStateClassName());
-        put("%n");
+        printf("%n");
+    }
 
+    /**
+     * フィールドを出力します．
+     * 
+     * @param beanInfo
+     *            生成する JavaBeans の情報
+     */
+    protected void putFields(final BeanInfo beanInfo) {
+        enter();
         if (beanInfo.isBoundProperties()) {
-            put("    java.beans.PropertyChangeSupport propertyChangeSupport =%n"
-                    + "        new java.beans.PropertyChangeSupport(this);%n%n");
+            printf("java.beans.PropertyChangeSupport propertyChangeSupport =%n");
+            printf("    new java.beans.PropertyChangeSupport(this);%n%n");
         }
         if (beanInfo.isConstrainedProperties()) {
-            put("    java.beans.VetoableChangeSupport vetoableChangeSupport =%n"
-                    + "        new java.beans.VetoableChangeSupport(this);%n%n");
+            printf("java.beans.VetoableChangeSupport vetoableChangeSupport =%n");
+            printf("    new java.beans.VetoableChangeSupport(this);%n%n");
         }
+        leave();
     }
 
     /**
@@ -141,7 +142,7 @@ public class BeanClassGenerator {
      *            生成する JavaBeans の情報
      */
     protected void putClassFooter(final BeanInfo beanInfo) {
-        put("}%n");
+        printf("}%n");
     }
 
     /**
@@ -160,16 +161,19 @@ public class BeanClassGenerator {
         final String className = beanInfo.getBeanClassName();
         final String params = join(constructorInfo.getParameterTypes(),
                 constructorInfo.getParameterNames(), " ", ", ");
-        putJavadoc(constructorInfo.getComment(), "    ");
-        put("    %1$s%2$s %3$s(%4$s)", modifiers, typeParameters, className,
-                params);
-        if (!constructorInfo.getThrownTypes().isEmpty()) {
-            put(" throws %1$s", join(constructorInfo.getThrownTypes(), ", "));
-        }
-        put(" {%n");
-        put("        super(%1$s);%n", join(constructorInfo.getParameterNames(),
-                ", "));
-        put("    }%n%n");
+        final String exceptions = constructorInfo.getThrownTypes().isEmpty() ? ""
+                : " throws " + join(constructorInfo.getThrownTypes(), ", ");
+
+        enter();
+        printJavadoc(constructorInfo.getComment());
+        printf("%1$s%2$s %3$s(%4$s)%5$s {%n", modifiers, typeParameters,
+                className, params, exceptions);
+        enter();
+        printf("super(%1$s);%n",
+                join(constructorInfo.getParameterNames(), ", "));
+        leave();
+        printf("}%n%n");
+        leave();
     }
 
     /**
@@ -205,11 +209,15 @@ public class BeanClassGenerator {
         final String name = propertyInfo.getName();
         final String capitalizedName = capitalize(name);
 
-        putJavadoc(messageFormatter.getMessage(JDOC0000, comment), "    ");
-        put("    public %1$s %2$s%3$s() {%n", type,
+        enter();
+        printJavadoc(JDOC0000, comment);
+        printf("public %1$s %2$s%3$s() {%n", type,
                 type.equals("boolean") ? "is" : "get", capitalizedName);
-        put("        return %1$s;%n", name);
-        put("    }%n%n");
+        enter();
+        printf("return %1$s;%n", name);
+        leave();
+        printf("}%n%n");
+        leave();
     }
 
     /**
@@ -224,17 +232,21 @@ public class BeanClassGenerator {
             final PropertyInfo propertyInfo) {
         final String comment = propertyInfo.getComment();
         final String type = propertyInfo.getType();
+        final String methodPrefix = type.equals("boolean") ? "is" : "get";
         final String name = propertyInfo.getName();
         final String capitalizedName = capitalize(name);
-
         final String componentType = propertyInfo.getComponentType();
-        putJavadoc(messageFormatter.getMessage(JDOC0001, comment), "    ");
-        put(
-                "    public %1$s %2$s%3$s(int n) throws ArrayIndexOutOfBoundsException {%n",
-                componentType, type.equals("boolean") ? "is" : "get",
-                capitalizedName);
-        put("        return %1$s[n];%n", name);
-        put("    }%n%n");
+
+        enter();
+        printJavadoc(JDOC0001, comment);
+        printf(
+                "public %1$s %2$s%3$s(int n) throws ArrayIndexOutOfBoundsException {%n",
+                componentType, methodPrefix, capitalizedName);
+        enter();
+        printf("return %1$s[n];%n", name);
+        leave();
+        printf("}%n%n");
+        leave();
     }
 
     /**
@@ -274,26 +286,28 @@ public class BeanClassGenerator {
         final String exceptions = constrained ? " throws java.beans.PropertyVetoException"
                 : "";
 
-        putJavadoc(messageFormatter.getMessage(constrained ? JDOC0004
-                : JDOC0002, comment, name), "    ");
-        put("    public void set%1$s(%2$s %3$s)%4$s {%n", capitalizedName,
-                type, name, exceptions);
+        enter();
+        printJavadoc(constrained ? JDOC0004 : JDOC0002, comment, name);
+        printf("public void set%1$s(%2$s %3$s)%4$s {%n", capitalizedName, type,
+                name, exceptions);
+        enter();
         if (bound || constrained) {
-            put("        %1$s old%2$s = this.%3$s;%n", type, capitalizedName,
-                    name);
+            printf("%1$s old%2$s = this.%3$s;%n", type, capitalizedName, name);
         }
         if (constrained) {
-            put(
-                    "        vetoableChangeSupport.fireVetoableChange(\"%1$s\", old%2$s, %1$s);%n",
+            printf(
+                    "vetoableChangeSupport.fireVetoableChange(\"%1$s\", old%2$s, %1$s);%n",
                     name, capitalizedName);
         }
-        put("        this.%1$s = %1$s;%n", name);
+        printf("this.%1$s = %1$s;%n", name);
         if (bound) {
-            put(
-                    "        propertyChangeSupport.firePropertyChange(\"%1$s\", old%2$s, %1$s);%n",
+            printf(
+                    "propertyChangeSupport.firePropertyChange(\"%1$s\", old%2$s, %1$s);%n",
                     name, capitalizedName);
         }
-        put("    }%n%n");
+        leave();
+        printf("}%n%n");
+        leave();
     }
 
     /**
@@ -312,30 +326,35 @@ public class BeanClassGenerator {
         final String componentType = propertyInfo.getComponentType();
         final boolean bound = beanInfo.isBoundProperties();
         final boolean constrained = beanInfo.isConstrainedProperties();
-        final String exceptions = (constrained ? ", java.beans.PropertyVetoException"
-                : "");
+        final List<String> exceptions = new ArrayList<String>();
+        exceptions.add("ArrayIndexOutOfBoundsException");
+        if (constrained) {
+            exceptions.add("java.beans.PropertyVetoException");
+        }
 
-        putJavadoc(messageFormatter.getMessage(constrained ? JDOC0005
-                : JDOC0003, comment, name), "    ");
-        put("    public void set%1$s(int n, %2$s %3$s) "
-                + "throws ArrayIndexOutOfBoundsException%4$s {%n",
-                capitalizedName, componentType, name, exceptions);
+        enter();
+        printJavadoc(constrained ? JDOC0005 : JDOC0003, comment, name);
+        printf("public void set%1$s(int n, %2$s %3$s) throws %4$s {%n",
+                capitalizedName, componentType, name, join(exceptions, ", "));
+        enter();
         if (bound || constrained) {
-            put("        %1$s old%2$s = this.%3$s[n];%n", componentType,
+            printf("%1$s old%2$s = this.%3$s[n];%n", componentType,
                     capitalizedName, name);
         }
         if (constrained) {
-            put("        vetoableChangeSupport.fireVetoableChange("
+            printf("vetoableChangeSupport.fireVetoableChange("
                     + "new java.beans.IndexedPropertyChangeEvent("
                     + "this, \"%1$s\", old%2$s, %1$s, n));%n", name,
                     capitalizedName);
         }
-        put("        this.%1$s[n] = %1$s;%n", name);
+        printf("this.%1$s[n] = %1$s;%n", name);
         if (bound) {
-            put("        propertyChangeSupport.fireIndexedPropertyChange("
+            printf("propertyChangeSupport.fireIndexedPropertyChange("
                     + "\"%1$s\", n, old%2$s, %1$s);%n", name, capitalizedName);
         }
-        put("    }%n%n");
+        leave();
+        printf("}%n%n");
+        leave();
     }
 
     /**
@@ -345,69 +364,79 @@ public class BeanClassGenerator {
      *            生成する JavaBeans の情報
      */
     protected void putEventListener(final BeanInfo beanInfo) {
+        enter();
         if (beanInfo.isBoundProperties()) {
-            putJavadoc(messageFormatter.getMessage(JDOC0006,
-                    PropertyChangeListener.class.getName()), "    ");
-            put("    public void addPropertyChangeListener("
+            printJavadoc(JDOC0006, PropertyChangeListener.class.getName());
+            printf("public void addPropertyChangeListener("
                     + "java.beans.PropertyChangeListener listener) {%n");
-            put("        propertyChangeSupport.addPropertyChangeListener(listener);%n");
-            put("    }%n%n");
+            enter();
+            printf("propertyChangeSupport.addPropertyChangeListener(listener);%n");
+            leave();
+            printf("}%n%n");
 
-            putJavadoc(messageFormatter.getMessage(JDOC0007,
-                    PropertyChangeListener.class.getName()), "    ");
-            put("    public void addPropertyChangeListener("
+            printJavadoc(JDOC0007, PropertyChangeListener.class.getName());
+            printf("public void addPropertyChangeListener("
                     + "String propertyName, java.beans.PropertyChangeListener listener) {%n");
-            put("        propertyChangeSupport.addPropertyChangeListener("
+            enter();
+            printf("propertyChangeSupport.addPropertyChangeListener("
                     + "propertyName, listener);%n");
-            put("    }%n%n");
+            leave();
+            printf("}%n%n");
 
-            putJavadoc(messageFormatter.getMessage(JDOC0008,
-                    PropertyChangeListener.class.getName()), "    ");
-            put("    public void removePropertyChangeListener("
+            printJavadoc(JDOC0008, PropertyChangeListener.class.getName());
+            printf("public void removePropertyChangeListener("
                     + "java.beans.PropertyChangeListener listener) {%n");
-            put("        propertyChangeSupport.removePropertyChangeListener(listener);%n");
-            put("    }%n%n");
+            enter();
+            printf("propertyChangeSupport.removePropertyChangeListener(listener);%n");
+            leave();
+            printf("}%n%n");
 
-            putJavadoc(messageFormatter.getMessage(JDOC0009,
-                    PropertyChangeListener.class.getName()), "    ");
-            put("    public void removePropertyChangeListener("
+            printJavadoc(JDOC0009, PropertyChangeListener.class.getName());
+            printf("public void removePropertyChangeListener("
                     + "String propertyName, java.beans.PropertyChangeListener listener) {%n");
-            put("        propertyChangeSupport.removePropertyChangeListener("
+            enter();
+            printf("propertyChangeSupport.removePropertyChangeListener("
                     + "propertyName, listener);%n");
-            put("    }%n%n");
+            leave();
+            printf("}%n%n");
         }
 
         if (beanInfo.isConstrainedProperties()) {
-            putJavadoc(messageFormatter.getMessage(JDOC0006,
-                    VetoableChangeListener.class.getName()), "    ");
-            put("    public void addVetoableChangeListener("
+            printJavadoc(JDOC0006, VetoableChangeListener.class.getName());
+            printf("public void addVetoableChangeListener("
                     + "java.beans.VetoableChangeListener listener) {%n");
-            put("        vetoableChangeSupport.addVetoableChangeListener(listener);%n");
-            put("    }%n%n");
+            enter();
+            printf("vetoableChangeSupport.addVetoableChangeListener(listener);%n");
+            leave();
+            printf("}%n%n");
 
-            putJavadoc(messageFormatter.getMessage(JDOC0007,
-                    VetoableChangeListener.class.getName()), "    ");
-            put("    public void addVetoableChangeListener("
+            printJavadoc(JDOC0007, VetoableChangeListener.class.getName());
+            printf("public void addVetoableChangeListener("
                     + "String propertyName, java.beans.VetoableChangeListener listener) {%n");
-            put("        vetoableChangeSupport.addVetoableChangeListener("
+            enter();
+            printf("vetoableChangeSupport.addVetoableChangeListener("
                     + "propertyName, listener);%n");
-            put("    }%n%n");
+            leave();
+            printf("}%n%n");
 
-            putJavadoc(messageFormatter.getMessage(JDOC0008,
-                    VetoableChangeListener.class.getName()), "    ");
-            put("    public void removeVetoableChangeListener("
+            printJavadoc(JDOC0008, VetoableChangeListener.class.getName());
+            printf("public void removeVetoableChangeListener("
                     + "java.beans.VetoableChangeListener listener) {%n");
-            put("        vetoableChangeSupport.removeVetoableChangeListener(listener);%n");
-            put("    }%n%n");
+            enter();
+            printf("vetoableChangeSupport.removeVetoableChangeListener(listener);%n");
+            leave();
+            printf("}%n%n");
 
-            putJavadoc(messageFormatter.getMessage(JDOC0009,
-                    VetoableChangeListener.class.getName()), "    ");
-            put("    public void removeVetoableChangeListener("
+            printJavadoc(JDOC0009, VetoableChangeListener.class.getName());
+            printf("public void removeVetoableChangeListener("
                     + "String propertyName, java.beans.VetoableChangeListener listener) {%n");
-            put("        vetoableChangeSupport.removeVetoableChangeListener("
+            enter();
+            printf("vetoableChangeSupport.removeVetoableChangeListener("
                     + "propertyName, listener);%n");
-            put("    }%n%n");
+            leave();
+            printf("}%n%n");
         }
+        leave();
     }
 
     /**
@@ -427,97 +456,55 @@ public class BeanClassGenerator {
         final String name = propertyInfo.getName();
         final String capitalizeName = capitalize(name);
 
+        enter();
         if (beanInfo.isBoundProperties()) {
-            putJavadoc(messageFormatter.getMessage(JDOC0010,
-                    PropertyChangeListener.class.getName(), comment), "    ");
-            put("    public void add%1$sChangeListener("
+            printJavadoc(JDOC0010, PropertyChangeListener.class.getName(),
+                    comment);
+            printf("public void add%1$sChangeListener("
                     + "java.beans.PropertyChangeListener listener) {%n",
                     capitalizeName);
-            put("        propertyChangeSupport.addPropertyChangeListener("
+            enter();
+            printf("propertyChangeSupport.addPropertyChangeListener("
                     + "\"%1$s\", listener);%n", name);
-            put("    }%n%n");
+            leave();
+            printf("}%n%n");
 
-            putJavadoc(messageFormatter.getMessage(JDOC0011,
-                    PropertyChangeListener.class.getName(), comment), "    ");
-            put("    public void remove%1$sChangeListener("
+            printJavadoc(JDOC0011, PropertyChangeListener.class.getName(),
+                    comment);
+            printf("public void remove%1$sChangeListener("
                     + "java.beans.PropertyChangeListener listener) {%n",
                     capitalizeName);
-            put("        propertyChangeSupport.removePropertyChangeListener("
+            enter();
+            printf("propertyChangeSupport.removePropertyChangeListener("
                     + "\"%1$s\", listener);%n", name);
-            put("    }%n%n");
+            leave();
+            printf("}%n%n");
         }
 
         if (beanInfo.isConstrainedProperties()) {
-            putJavadoc(messageFormatter.getMessage(JDOC0010,
-                    VetoableChangeListener.class.getName(), comment), "    ");
-            put("    public void add%1$sChangeListener("
+            printJavadoc(JDOC0010, VetoableChangeListener.class.getName(),
+                    comment);
+            printf("public void add%1$sChangeListener("
                     + "java.beans.VetoableChangeListener listener) {%n",
                     capitalizeName);
-            put("        vetoableChangeSupport.addVetoableChangeListener("
+            enter();
+            printf("vetoableChangeSupport.addVetoableChangeListener("
                     + "\"%1$s\", listener);%n", name);
-            put("    }%n%n");
+            leave();
+            printf("}%n%n");
 
-            putJavadoc(messageFormatter.getMessage(JDOC0011,
-                    VetoableChangeListener.class.getName(), comment), "    ");
-            put("    public void remove%1$sChangeListener("
+            printJavadoc(JDOC0011, VetoableChangeListener.class.getName(),
+                    comment);
+            printf("public void remove%1$sChangeListener("
                     + "java.beans.VetoableChangeListener listener) {%n",
                     capitalizeName);
-            put("        vetoableChangeSupport.removeVetoableChangeListener("
+            enter();
+            printf("vetoableChangeSupport.removeVetoableChangeListener("
                     + "\"%1$s\", listener);%n", name);
-            put("    }%n%n");
+            leave();
+            printf("}%n%n");
         }
-    }
-
-    /**
-     * Javadoc コメントを出力します．
-     * 
-     * @param comment
-     *            Javadoc コメント
-     * @param indent
-     *            インデントするスペース
-     */
-    protected void putJavadoc(final String comment, final String indent) {
-        if (comment == null || comment.isEmpty()) {
-            return;
-        }
-        put("%1$s/**%n", indent);
-        final BufferedReader reader = new BufferedReader(new StringReader(
-                comment));
-        try {
-            String line = reader.readLine();
-            if (!line.isEmpty()) {
-                put("%1$s *%2$s%n", indent, line);
-            }
-            while ((line = reader.readLine()) != null) {
-                put("%1$s *%2$s%n", indent, line);
-            }
-        } catch (final IOException ignore) {
-        }
-        put("%1$s */%n", indent);
-    }
-
-    /**
-     * フォーマットした文字列を出力します．
-     * 
-     * @param format
-     *            フォーマット文字列
-     * @param args
-     *            フォーマットから参照される引数の並び
-     */
-    protected void put(final String format, final Object... args) {
-        writer.printf(format, args);
-    }
-
-    /**
-     * フォーマットした文字列を出力します．
-     * 
-     * @param format
-     *            フォーマットを示す列挙
-     * @param args
-     *            フォーマットから参照される引数の並び
-     */
-    protected void put(final BeanClassFormat format, final Object... args) {
-        messageFormatter.format(format, args);
+        leave();
     }
 
 }
