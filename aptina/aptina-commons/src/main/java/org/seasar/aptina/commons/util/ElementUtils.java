@@ -62,11 +62,9 @@ public class ElementUtils {
      * @param clazz
      *            クラス
      * @return クラスに対応する{@link TypeElement}， 存在しない場合は {@literal null}
-     * @throws IllegalStateException
-     *             {@link #compile()} が呼び出されていない場合
      */
     public static TypeElement getTypeElement(final Elements elementUtils,
-            final Class<?> clazz) throws IllegalStateException {
+            final Class<?> clazz) {
         assertNotNull("elements", elementUtils);
         assertNotNull("clazz", clazz);
         return getTypeElement(elementUtils, clazz.getName());
@@ -346,12 +344,13 @@ public class ElementUtils {
     }
 
     /**
-     * 引数型の配列と{@link VariableElement}のリストの， それぞれの要素の型名が等しければ {@link true} を返します．
+     * 引数型の配列と{@link VariableElement}のリストの， それぞれの要素の型名が等しければ {@literal true}
+     * を返します．
      * 
      * @param parameterTypes
      *            引数型の配列
      * @param variableElements
-     * @return 二つのリストのそれぞれの要素の型がマッチすれば {@link true}
+     * @return 二つのリストのそれぞれの要素の型がマッチすれば {@literal true}
      */
     public static boolean isSameTypes(final Class<?>[] parameterTypes,
             final List<? extends VariableElement> variableElements) {
@@ -362,12 +361,13 @@ public class ElementUtils {
     }
 
     /**
-     * 型名の配列と{@link VariableElement}のリストの， それぞれの要素の型名が等しければ {@link true} を返します．
+     * 型名の配列と{@link VariableElement}のリストの， それぞれの要素の型名が等しければ {@literal true}
+     * を返します．
      * 
      * @param typeNames
      *            型名の配列
      * @param variableElements
-     * @return 二つのリストのそれぞれの要素の型がマッチすれば {@link true}
+     * @return 二つのリストのそれぞれの要素の型がマッチすれば {@literal true}
      */
     public static boolean isSameTypes(final String[] typeNames,
             final List<? extends VariableElement> variableElements) {

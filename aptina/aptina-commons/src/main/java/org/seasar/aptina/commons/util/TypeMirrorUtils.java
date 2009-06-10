@@ -41,7 +41,7 @@ import static org.seasar.aptina.commons.util.ElementUtils.*;
  */
 public class TypeMirrorUtils {
 
-    /** プリミティブ型の名前と {@link TypeKine} のマップです． */
+    /** プリミティブ型の名前と {@link TypeKind} のマップです． */
     public static final Map<String, TypeKind> PRIMITIVE_TYPES;
     static {
         final Map<String, TypeKind> map = new HashMap<String, TypeKind>();
@@ -70,12 +70,9 @@ public class TypeMirrorUtils {
      * @param clazz
      *            クラス
      * @return クラスに対応する{@link TypeMirror}， クラスが存在しない場合は {@literal null}
-     * @throws IllegalStateException
-     *             {@link #compile()} が呼び出されていない場合
      */
     public static TypeMirror getTypeMirror(final Types typeUtils,
-            final Elements elementUtils, final Class<?> clazz)
-            throws IllegalStateException {
+            final Elements elementUtils, final Class<?> clazz) {
         assertNotNull("typeUtils", typeUtils);
         assertNotNull("elementUtils", elementUtils);
         assertNotNull("clazz", clazz);
@@ -100,12 +97,9 @@ public class TypeMirrorUtils {
      * @param className
      *            クラスの完全限定名
      * @return クラスに対応する{@link TypeMirror}， クラスが存在しない場合は {@literal null}
-     * @throws IllegalStateException
-     *             {@link #compile()} が呼び出されていない場合
      */
     public static TypeMirror getTypeMirror(final Types typeUtils,
-            final Elements elementUtils, final String className)
-            throws IllegalStateException {
+            final Elements elementUtils, final String className) {
         assertNotNull("typeUtils", typeUtils);
         assertNotNull("elementUtils", elementUtils);
         assertNotEmpty("className", className);

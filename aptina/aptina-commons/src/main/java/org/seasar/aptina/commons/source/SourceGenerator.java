@@ -33,6 +33,7 @@ import javax.tools.JavaFileObject;
 
 import org.seasar.aptina.commons.message.EnumMessageCode;
 import org.seasar.aptina.commons.message.EnumMessageFormatter;
+import org.seasar.aptina.commons.util.VersionUtils;
 
 import static java.util.Arrays.*;
 
@@ -70,6 +71,8 @@ public abstract class SourceGenerator<T extends Enum<T> & EnumMessageCode> {
     protected int depth;
 
     /**
+     * インスタンスを構築します．
+     * 
      * @param env
      *            {@link ProcessingEnvironment}
      * @param enumClass
@@ -91,6 +94,13 @@ public abstract class SourceGenerator<T extends Enum<T> & EnumMessageCode> {
     @Override
     public String toString() {
         return new String(buf);
+    }
+
+    /**
+     * 生成されたソースを破棄し，状態をリセットします．
+     */
+    protected void reset() {
+        buf.setLength(0);
     }
 
     /**
@@ -239,6 +249,11 @@ public abstract class SourceGenerator<T extends Enum<T> & EnumMessageCode> {
 
     /**
      * {@link Generated} アノテーションを出力します．
+     * <p>
+     * アノテーションの属性には引数で渡された項目に加えて，
+     * {@link VersionUtils#getVersion(String, String, String)}
+     * で取得したバージョン情報が出力されます． バージョン情報が取得できなかった場合は {@literal "DEV"} が出力されます．
+     * </p>
      * 
      * @param productName
      *            プロダクト名

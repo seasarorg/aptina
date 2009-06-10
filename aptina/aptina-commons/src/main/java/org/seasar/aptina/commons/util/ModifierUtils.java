@@ -54,17 +54,17 @@ public class ModifierUtils {
     }
 
     /**
-     * {@link Modifiers 修飾子} の {@link Set} を文字列化します．
+     * {@link Modifier} の {@link Set} を文字列化します．
      * <p>
      * {@link Set} が空の場合は空文字列が返されます． {@link Set} が空でない場合は，修飾子を Java
-     * 言語仕様の順で並べた文字列を返します． 文字列の最後には空白が一つ付きます． これは，修飾子の後に {@literal class}
-     * (クラス宣言の場合) や型名 (フィールド宣言やメソッドの場合) を続ける場合を考慮しています． 空白が不要な場合は
+     * 言語仕様の順で並べた文字列を返します． 文字列の最後には空白が一つ付きます． これはソースを生成する際， 修飾子の後に {@literal
+     * class} (クラス宣言の場合) や型名 (フィールド宣言やメソッドの場合) を続ける場合を考慮しています． 空白が不要な場合は
      * {@link String#trim()} してください．
      * </p>
      * 
      * @param modifiers
-     *            {@link Modifiers 修飾子} の {@link Set}
-     * @return {@link Modifiers 修飾子} の {@link Set} の文字列表現
+     *            {@link Modifier} の {@link Set}
+     * @return {@link Modifier} の {@link Set} の文字列表現
      */
     public static String toStringOfModifiers(final Set<Modifier> modifiers) {
         if (modifiers.isEmpty()) {

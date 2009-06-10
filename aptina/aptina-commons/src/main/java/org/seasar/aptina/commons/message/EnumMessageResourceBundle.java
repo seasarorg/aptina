@@ -89,7 +89,7 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
      * @param enumClass
      *            メッセージを定義した列挙の型
      * @return リソースバンドル
-     * @see Control#getNoFallbackControl(List)
+     * @see java.util.ResourceBundle.Control#getNoFallbackControl(List)
      */
     public static <T extends Enum<T> & EnumMessageCode> ResourceBundle getBundleNoFallback(
             final Class<T> enumClass) {
@@ -110,7 +110,7 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
      * @param locale
      *            ロケール
      * @return リソースバンドル
-     * @see Control#getNoFallbackControl(List)
+     * @see java.util.ResourceBundle.Control#getNoFallbackControl(List)
      */
     public static <T extends Enum<T> & EnumMessageCode> ResourceBundle getBundleNoFallback(
             final Class<T> enumClass, final Locale locale) {
@@ -167,7 +167,8 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
     }
 
     /**
-     * {@link EnumMessageResourceBundle} を作成する {@link Control} です．
+     * {@link EnumMessageResourceBundle} を作成する
+     * {@link java.util.ResourceBundle.Control} です．
      * 
      * @author koichik
      * @param <T>
@@ -182,7 +183,8 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
         /**
          * フォールバックしない場合は {@literal true}
          * 
-         * @see Control#getFallbackLocale(String, Locale)
+         * @see java.util.ResourceBundle.Control#getFallbackLocale(String,
+         *      Locale)
          */
         protected final boolean noFallback;
 
@@ -203,7 +205,8 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
          *            メッセージを定義した列挙の型
          * @param noFallback
          *            フォールバックしない場合は {@literal true}
-         * @see Control#getFallbackLocale(String, Locale)
+         * @see java.util.ResourceBundle.Control#getFallbackLocale(String,
+         *      Locale)
          */
         public EnumMessageResourceBundleControl(final Class<T> enumClass,
                 final boolean noFallback) {

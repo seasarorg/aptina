@@ -48,7 +48,7 @@
  * }
  * </pre>
  * <p>
- * 列挙を指定して {@link ResourceBundle} を取得するには，
+ * 列挙を指定して {@link java.util.ResourceBundle} を取得するには，
  * {@link org.seasar.aptina.commons.message.EnumMessageResourceBundle} の
  * {@literal static} メソッドを使用します．
  * </p>

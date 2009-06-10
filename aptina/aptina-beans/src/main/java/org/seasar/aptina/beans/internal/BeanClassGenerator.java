@@ -79,7 +79,7 @@ public class BeanClassGenerator extends SourceGenerator<BeanClassFormat> {
      */
     public void generate(final BeanInfo beanInfo,
             final TypeElement originalElement) {
-        buf.setLength(0);
+        reset();
         putClassHeader(beanInfo);
         putFields(beanInfo);
         for (final ConstructorInfo constructorInfo : beanInfo.getConstructors()) {
