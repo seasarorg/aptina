@@ -41,13 +41,13 @@ import static org.seasar.aptina.commons.util.IOUtils.*;
 import static org.seasar.aptina.commons.util.VersionUtils.*;
 
 /**
- * ソースを生成するための抽象クラスです．
+ * {@literal printf} でソースを生成する単純なジェネレータのための抽象クラスです．
  * 
  * @author koichik
  * @param <T>
  *            パターンを定義した列挙の型
  */
-public abstract class SourceGenerator<T extends Enum<T> & EnumMessageCode> {
+public abstract class SimpleSourceGenerator<T extends Enum<T> & EnumMessageCode> {
 
     /** インデント用の空白 */
     protected static final char[] SPACES = new char[100];
@@ -78,7 +78,7 @@ public abstract class SourceGenerator<T extends Enum<T> & EnumMessageCode> {
      * @param enumClass
      *            パターンを定義した列挙のクラス
      */
-    public SourceGenerator(final ProcessingEnvironment env,
+    public SimpleSourceGenerator(final ProcessingEnvironment env,
             final Class<T> enumClass) {
         this.env = env;
         final Locale locale = env.getLocale();

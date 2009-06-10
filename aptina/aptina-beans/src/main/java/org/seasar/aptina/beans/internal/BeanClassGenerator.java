@@ -25,7 +25,7 @@ import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 
-import org.seasar.aptina.commons.source.SourceGenerator;
+import org.seasar.aptina.commons.source.SimpleSourceGenerator;
 
 import static org.seasar.aptina.beans.internal.AptinaBeans.*;
 import static org.seasar.aptina.beans.internal.BeanClassFormat.*;
@@ -38,7 +38,7 @@ import static org.seasar.aptina.commons.util.StringUtils.*;
  * 
  * @author koichik
  */
-public class BeanClassGenerator extends SourceGenerator<BeanClassFormat> {
+public class BeanClassGenerator extends SimpleSourceGenerator<BeanClassFormat> {
 
     /**
      * インスタンスを構築します．
@@ -69,6 +69,9 @@ public class BeanClassGenerator extends SourceGenerator<BeanClassFormat> {
 
     /**
      * Bean クラスのソースを生成します．
+     * <p>
+     * 生成されたソースは {@link #toString()} で取得することができます．
+     * </p>
      * 
      * @param beanInfo
      *            生成する JavaBeans の情報
