@@ -15,6 +15,7 @@
  */
 package org.seasar.aptina.beans.internal;
 
+import java.text.MessageFormat;
 import java.util.Locale;
 
 import javax.tools.Diagnostic.Kind;
@@ -22,7 +23,7 @@ import javax.tools.Diagnostic.Kind;
 import org.seasar.aptina.commons.message.EnumMessageCode;
 
 /**
- * 診断用のメッセージコードです．
+ * 診断用のメッセージを {@link MessageFormat} のパターンで持つ列挙です．
  * 
  * @author koichik
  */
@@ -55,7 +56,7 @@ public enum DiagnosticMessageCode implements EnumMessageCode {
     /** */
     CTOR0001(Kind.ERROR, "", "サブクラスから可視のコンストラクタがありません"),
     /** */
-    APT0000(Kind.ERROR, "", "注釈処理中に例外が発生しました．%1$s%n"),
+    APT0000(Kind.ERROR, "", "注釈処理中に例外が発生しました．{0}"),
     //
     ;
 
@@ -78,7 +79,8 @@ public enum DiagnosticMessageCode implements EnumMessageCode {
      * @param messageFormats
      *            メッセージフォーマットの配列
      */
-    private DiagnosticMessageCode(final Kind kind, final String... messageFormats) {
+    private DiagnosticMessageCode(final Kind kind,
+            final String... messageFormats) {
         this.kind = kind;
         this.messageFormats = messageFormats;
     }

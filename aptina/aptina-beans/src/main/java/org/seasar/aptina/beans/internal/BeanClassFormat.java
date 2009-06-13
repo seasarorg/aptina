@@ -15,6 +15,7 @@
  */
 package org.seasar.aptina.beans.internal;
 
+import java.util.Formatter;
 import java.util.Locale;
 
 import javax.tools.Diagnostic.Kind;
@@ -22,7 +23,7 @@ import javax.tools.Diagnostic.Kind;
 import org.seasar.aptina.commons.message.EnumMessageCode;
 
 /**
- * Bean クラスを生成するためのフォーマット定義です．
+ * Bean クラスを生成するためのフォーマットを {@link Formatter} のパターンで持つ列挙です．
  * 
  * @author koichik
  */

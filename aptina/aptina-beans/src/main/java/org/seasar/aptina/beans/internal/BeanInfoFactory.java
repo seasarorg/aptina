@@ -36,7 +36,7 @@ import javax.tools.Diagnostic.Kind;
 
 import org.seasar.aptina.beans.BeanState;
 import org.seasar.aptina.beans.Property;
-import org.seasar.aptina.commons.message.EnumMessageFormatter;
+import org.seasar.aptina.commons.message.EnumMessageTextFormatter;
 
 import static org.seasar.aptina.beans.internal.DiagnosticMessageCode.*;
 import static org.seasar.aptina.commons.util.ClassUtils.*;
@@ -62,7 +62,7 @@ public class BeanInfoFactory {
     protected ProcessingEnvironment env;
 
     /** メッセージフォーマッタ */
-    protected EnumMessageFormatter<DiagnosticMessageCode> messageFormatter;
+    protected EnumMessageTextFormatter<DiagnosticMessageCode> messageFormatter;
 
     /** 処理対象のクラスに付けられた {@link BeanState} アノテーションを表現する {@link AnnotationMirror} */
     protected AnnotationMirror beanStateAnnotation;
@@ -78,7 +78,7 @@ public class BeanInfoFactory {
      */
     public BeanInfoFactory(final ProcessingEnvironment env) {
         this.env = env;
-        messageFormatter = new EnumMessageFormatter<DiagnosticMessageCode>(
+        messageFormatter = new EnumMessageTextFormatter<DiagnosticMessageCode>(
                 DiagnosticMessageCode.class, env.getLocale());
     }
 
