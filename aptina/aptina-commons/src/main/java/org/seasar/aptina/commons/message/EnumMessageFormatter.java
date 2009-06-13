@@ -16,12 +16,17 @@
 package org.seasar.aptina.commons.message;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Formatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
  * 列挙に定義された {@link Formatter} のパターンを使用してメッセージを組み立てるクラスです．
+ * <p>
+ * {@link MessageFormat} のパターンを使用する場合は {@link EnumMessageTextFormatter}
+ * を使用してください．
+ * </p>
  * <p>
  * パターンを定義した列挙は {@link EnumMessageCode} を実装していなければなりません．
  * </p>

@@ -116,8 +116,22 @@
  * <pre>
  * StringBuilder builder = new StringBuilder();
  * EnumMessageFormatter&lt;YyyMessageCode&gt; formatter = 
- *     new EnumMessageFormatter&lt;TestMessageCode&gt;(YyyMessageCode.class, builder);
+ *     new EnumMessageFormatter&lt;YyyMessageCode&gt;(YyyMessageCode.class, builder);
  * formatter.format(E0000, e); // builder にフォーマットされた文字列が追加される
+ * </pre>
+ * <p>
+ * 列挙のメッセージとして {@link java.text.MessageFormat} のパターンを定義した場合は
+ * {@link org.seasar.aptina.commons.message.EnumMessageTextFormatter} を使用することができます．
+ * </p>
+ * <pre>
+ * public enum ZzzMessageCode implements EnumMessageCode {
+ *     E0000(Kind.ERROR, "Exception occurred : {0}", "例外が発生しました : {0}"),
+ *     ...
+ * </pre>
+ * <pre>
+ * EnumMessageTextFormatter&lt;ZzzMessageCode&gt; formatter = 
+ *     new EnumMessageTextFormatter&lt;ZzzMessageCode&gt;(ZzzMessageCode.class);
+ * String message = formatter.getMessage(E0000, e);
  * </pre>
  */
 package org.seasar.aptina.commons.message;
