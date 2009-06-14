@@ -102,7 +102,7 @@ public class BeansProcessorTest extends AptinaTestCase {
 
     void assertGeneratedSource(final String generatedClassName)
             throws IOException {
-        final String expectedResourceName = getClass().getSimpleName() + "_"
+        final String expectedResourceName = getClass().getSimpleName() + "/"
                 + getName() + ".txt";
         System.out.println(getGeneratedSource(generatedClassName));
         assertEqualsGeneratedSourceWithResource(expectedResourceName,

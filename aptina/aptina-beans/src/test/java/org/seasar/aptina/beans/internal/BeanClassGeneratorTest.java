@@ -310,7 +310,7 @@ public class BeanClassGeneratorTest extends AptinaTestCase {
      * @throws Exception
      */
     void assertEqualsByLine() throws Exception {
-        final String expectedResourceName = getClass().getSimpleName() + "_"
+        final String expectedResourceName = getClass().getSimpleName() + "/"
                 + getName() + ".txt";
         final InputStream is = getClass().getClassLoader().getResourceAsStream(
                 expectedResourceName);
