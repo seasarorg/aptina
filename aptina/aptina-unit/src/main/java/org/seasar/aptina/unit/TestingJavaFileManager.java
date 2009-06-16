@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.processing.Processor;
@@ -30,6 +29,8 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.JavaFileObject.Kind;
 
+import static org.seasar.aptina.commons.util.CollectionUtils.*;
+
 /**
  * {@link Processor}をテストする環境用の{@link JavaFileManager}の実装です。
  * 
@@ -38,9 +39,9 @@ import javax.tools.JavaFileObject.Kind;
 class TestingJavaFileManager extends
         ForwardingJavaFileManager<StandardJavaFileManager> {
 
-    final Map<String, InMemoryJavaFileObject> fileObjects = new HashMap<String, InMemoryJavaFileObject>();
+    final Map<String, InMemoryJavaFileObject> fileObjects = newHashMap();
 
-    final Map<String, InMemoryJavaFileObject> javaFileObjects = new HashMap<String, InMemoryJavaFileObject>();
+    final Map<String, InMemoryJavaFileObject> javaFileObjects = newHashMap();
 
     final Charset charset;
 

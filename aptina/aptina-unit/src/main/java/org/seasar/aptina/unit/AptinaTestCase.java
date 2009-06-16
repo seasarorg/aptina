@@ -59,12 +59,15 @@ import javax.tools.JavaFileObject.Kind;
 import junit.framework.ComparisonFailure;
 import junit.framework.TestCase;
 
+import org.seasar.aptina.commons.util.AssertionUtils;
+import org.seasar.aptina.commons.util.DiagnosticUtils;
 import org.seasar.aptina.commons.util.ElementUtils;
 import org.seasar.aptina.commons.util.TypeMirrorUtils;
 
 import static java.util.Arrays.*;
 
 import static org.seasar.aptina.commons.util.AssertionUtils.*;
+import static org.seasar.aptina.commons.util.CollectionUtils.*;
 import static org.seasar.aptina.commons.util.IOUtils.*;
 
 /**
@@ -98,6 +101,11 @@ import static org.seasar.aptina.commons.util.IOUtils.*;
  * <ul>
  * <li>{@link #getCompiledResult()}</li>
  * <li>{@link #getDiagnostics()}</li>
+ * <li>{@link #getDiagnostics(Class)}</li>
+ * <li>{@link #getDiagnostics(String)}</li>
+ * <li>{@link #getDiagnostics(javax.tools.Diagnostic.Kind)}</li>
+ * <li>{@link #getDiagnostics(Class, javax.tools.Diagnostic.Kind)}</li>
+ * <li>{@link #getDiagnostics(String, javax.tools.Diagnostic.Kind)}</li>
  * <li>{@link #getProcessingEnvironment()}</li>
  * <li>{@link #getElementUtils()}</li>
  * <li>{@link #getTypeUtils()}</li>
@@ -182,16 +190,16 @@ public abstract class AptinaTestCase extends TestCase {
 
     Writer out;
 
-    final List<String> options = new ArrayList<String>();
+    final List<String> options = newArrayList();
 
-    final List<File> sourcePaths = new ArrayList<File>();
+    final List<File> sourcePaths = newArrayList();
 
-    final List<Processor> processors = new ArrayList<Processor>();
+    final List<Processor> processors = newArrayList();
     {
         processors.add(new AptinaUnitProcessor());
     }
 
-    final List<CompilationUnit> compilationUnits = new ArrayList<CompilationUnit>();
+    final List<CompilationUnit> compilationUnits = newArrayList();
 
     JavaCompiler javaCompiler;
 
@@ -366,7 +374,7 @@ public abstract class AptinaTestCase extends TestCase {
      *            コンパイル対象クラス
      */
     protected void addCompilationUnit(final Class<?> clazz) {
-        assertNotNull("clazz", clazz);
+        AssertionUtils.assertNotNull("clazz", clazz);
         addCompilationUnit(clazz.getName());
     }
 
@@ -394,7 +402,7 @@ public abstract class AptinaTestCase extends TestCase {
      */
     protected void addCompilationUnit(final Class<?> clazz,
             final CharSequence source) {
-        assertNotNull("clazz", clazz);
+        AssertionUtils.assertNotNull("clazz", clazz);
         assertNotEmpty("source", source);
         addCompilationUnit(clazz.getName(), source);
     }
@@ -466,6 +474,82 @@ public abstract class AptinaTestCase extends TestCase {
             throws IllegalStateException {
         assertCompiled();
         return diagnostics.getDiagnostics();
+    }
+
+    /**
+     * 指定されたクラスに対する {@link Diagnostic} のリストを返します．
+     * 
+     * @param clazz
+     *            取得するクラス
+     * @return 指定されたクラスに対する {@link Diagnostic} のリスト
+     */
+    protected List<Diagnostic<? extends JavaFileObject>> getDiagnostics(
+            final Class<?> clazz) {
+        assertCompiled();
+        return DiagnosticUtils.getDiagnostics(getDiagnostics(), clazz);
+    }
+
+    /**
+     * 指定されたクラスに対する {@link Diagnostic} のリストを返します．
+     * 
+     * @param className
+     *            取得するクラス名
+     * @return 指定されたクラスに対する {@link Diagnostic} のリスト
+     */
+    protected List<Diagnostic<? extends JavaFileObject>> getDiagnostics(
+            final String className) {
+        assertCompiled();
+        return DiagnosticUtils.getDiagnostics(getDiagnostics(), className);
+    }
+
+    /**
+     * 指定された {@link javax.tools.Diagnostic.Kind} を持つ {@link Diagnostic}
+     * のリストを返します．
+     * 
+     * @param kind
+     *            取得する {@link javax.tools.Diagnostic.Kind}
+     * @return 指定された{@link javax.tools.Diagnostic.Kind} を持つ {@link Diagnostic}
+     *         のリスト
+     */
+    protected List<Diagnostic<? extends JavaFileObject>> getDiagnostics(
+            final javax.tools.Diagnostic.Kind kind) {
+        assertCompiled();
+        return DiagnosticUtils.getDiagnostics(getDiagnostics(), kind);
+    }
+
+    /**
+     * 指定されたクラスに対する指定された {@link javax.tools.Diagnostic.Kind} を持つ
+     * {@link Diagnostic} のリストを返します．
+     * 
+     * @param clazz
+     *            取得するクラス
+     * @param kind
+     *            取得する {@link javax.tools.Diagnostic.Kind}
+     * @return 指定されたクラスに対する指定された {@link javax.tools.Diagnostic.Kind} を持つ
+     *         {@link Diagnostic} のリスト
+     */
+    protected List<Diagnostic<? extends JavaFileObject>> getDiagnostics(
+            final Class<?> clazz, final javax.tools.Diagnostic.Kind kind) {
+        assertCompiled();
+        return DiagnosticUtils.getDiagnostics(getDiagnostics(), clazz, kind);
+    }
+
+    /**
+     * 指定されたクラスに対する指定された {@link javax.tools.Diagnostic.Kind} を持つ
+     * {@link Diagnostic} のリストを返します．
+     * 
+     * @param className
+     *            取得するクラス名
+     * @param kind
+     *            取得する {@link javax.tools.Diagnostic.Kind}
+     * @return 指定されたクラスに対する指定された {@link javax.tools.Diagnostic.Kind} を持つ
+     *         {@link Diagnostic} のリスト
+     */
+    protected List<Diagnostic<? extends JavaFileObject>> getDiagnostics(
+            final String className, final javax.tools.Diagnostic.Kind kind) {
+        assertCompiled();
+        return DiagnosticUtils
+                .getDiagnostics(getDiagnostics(), className, kind);
     }
 
     /**

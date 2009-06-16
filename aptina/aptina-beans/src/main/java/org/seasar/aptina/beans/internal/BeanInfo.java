@@ -15,11 +15,12 @@
  */
 package org.seasar.aptina.beans.internal;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static org.seasar.aptina.commons.util.CollectionUtils.*;
 
 /**
  * 生成する Bean クラスの情報を保持するクラスです．
@@ -53,7 +54,7 @@ public class BeanInfo {
     protected final Map<String, PropertyInfo> properties = new LinkedHashMap<String, PropertyInfo>();
 
     /** コンストラクタ情報の {@link List} */
-    protected final List<ConstructorInfo> constructors = new ArrayList<ConstructorInfo>();
+    protected final List<ConstructorInfo> constructors = newArrayList();
 
     /**
      * インスタンスを構築します．

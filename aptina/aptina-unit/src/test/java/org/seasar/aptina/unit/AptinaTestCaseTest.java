@@ -18,9 +18,13 @@ package org.seasar.aptina.unit;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Locale;
 
 import javax.lang.model.element.TypeElement;
+import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
+import javax.tools.Diagnostic.Kind;
 
 /**
  * 
@@ -77,6 +81,39 @@ public class AptinaTestCaseTest extends AptinaTestCase {
         assertTrue(processor.called);
         assertEqualsGeneratedSource("package foo.bar;public class Baz {}",
                 "foo.bar.Baz");
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetDiagnostics() throws Exception {
+        addProcessor(new TestDiagnosticsProcessor());
+        addCompilationUnit(TestSource.class);
+
+        compile();
+
+        List<Diagnostic<? extends JavaFileObject>> diagnostics = getDiagnostics();
+        assertNotNull(diagnostics);
+        assertEquals(3, diagnostics.size());
+        assertTrue(diagnostics.get(0).getMessage(null).endsWith("hoge"));
+        assertTrue(diagnostics.get(1).getMessage(null).endsWith("foo"));
+        assertTrue(diagnostics.get(2).getMessage(null).endsWith("bar"));
+
+        diagnostics = getDiagnostics(TestSource.class);
+        assertNotNull(diagnostics);
+        assertEquals(2, diagnostics.size());
+        assertTrue(diagnostics.get(0).getMessage(null).endsWith("foo"));
+        assertTrue(diagnostics.get(1).getMessage(null).endsWith("bar"));
+
+        diagnostics = getDiagnostics(Kind.NOTE);
+        assertNotNull(diagnostics);
+        assertEquals(1, diagnostics.size());
+        assertTrue(diagnostics.get(0).getMessage(null).endsWith("hoge"));
+
+        diagnostics = getDiagnostics(TestSource.class, Kind.ERROR);
+        assertNotNull(diagnostics);
+        assertEquals(1, diagnostics.size());
+        assertTrue(diagnostics.get(0).getMessage(null).endsWith("foo"));
     }
 
     /**

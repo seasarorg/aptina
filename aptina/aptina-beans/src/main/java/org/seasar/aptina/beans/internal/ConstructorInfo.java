@@ -1,12 +1,13 @@
 package org.seasar.aptina.beans.internal;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.element.Modifier;
+
+import static org.seasar.aptina.commons.util.CollectionUtils.*;
 
 /*
  * Copyright 2004-2009 the Seasar Foundation and the Others.
@@ -41,13 +42,13 @@ public class ConstructorInfo {
     protected String typeParameters;
 
     /** 引数型の {@link List} */
-    protected final List<String> parameterTypes = new ArrayList<String>();
+    protected final List<String> parameterTypes = newArrayList();
 
     /** 引き数名の {@link List} */
-    protected final List<String> parameterNames = new ArrayList<String>();
+    protected final List<String> parameterNames = newArrayList();
 
     /** 例外型の {@link List} */
-    protected final List<String> thrownTypes = new ArrayList<String>();
+    protected final List<String> thrownTypes = newArrayList();
 
     /**
      * インスタンスを構築します．

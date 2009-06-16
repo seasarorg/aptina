@@ -15,8 +15,6 @@
  */
 package org.seasar.aptina.commons.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +27,7 @@ import javax.lang.model.util.Types;
 import static java.util.Collections.*;
 
 import static org.seasar.aptina.commons.util.AssertionUtils.*;
+import static org.seasar.aptina.commons.util.CollectionUtils.*;
 import static org.seasar.aptina.commons.util.ElementUtils.*;
 
 /**
@@ -44,7 +43,7 @@ public class TypeMirrorUtils {
     /** プリミティブ型の名前と {@link TypeKind} のマップです． */
     public static final Map<String, TypeKind> PRIMITIVE_TYPES;
     static {
-        final Map<String, TypeKind> map = new HashMap<String, TypeKind>();
+        final Map<String, TypeKind> map = newHashMap();
         map.put(void.class.getName(), TypeKind.VOID);
         map.put(boolean.class.getName(), TypeKind.BOOLEAN);
         map.put(char.class.getName(), TypeKind.CHAR);
@@ -168,7 +167,7 @@ public class TypeMirrorUtils {
         assertNotNull("typeUtils", typeUtils);
         assertNotNull("elementUtils", elementUtils);
         assertNotNull("types", types);
-        final List<TypeMirror> typeMirrors = new ArrayList<TypeMirror>();
+        final List<TypeMirror> typeMirrors = newArrayList();
         for (final Class<?> type : types) {
             final TypeMirror typeMirror = getTypeMirror(typeUtils,
                     elementUtils, type);
@@ -198,7 +197,7 @@ public class TypeMirrorUtils {
         assertNotNull("typeUtils", typeUtils);
         assertNotNull("elementUtils", elementUtils);
         assertNotNull("typeNames", typeNames);
-        final List<TypeMirror> typeMirrors = new ArrayList<TypeMirror>();
+        final List<TypeMirror> typeMirrors = newArrayList();
         for (final String typeName : typeNames) {
             final TypeMirror typeMirror = getTypeMirror(typeUtils,
                     elementUtils, typeName);
@@ -219,7 +218,7 @@ public class TypeMirrorUtils {
      */
     public static List<String> toTypeNameList(
             final List<? extends TypeMirror> typeMirrors) {
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = newArrayList();
         for (final TypeMirror typeMirror : typeMirrors) {
             result.add(typeMirror.toString());
         }

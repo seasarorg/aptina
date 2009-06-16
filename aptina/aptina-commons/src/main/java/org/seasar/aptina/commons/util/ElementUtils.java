@@ -17,7 +17,6 @@ package org.seasar.aptina.commons.util;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.lang.model.element.AnnotationMirror;
@@ -33,6 +32,7 @@ import javax.lang.model.util.Elements;
 
 import static org.seasar.aptina.commons.util.AssertionUtils.*;
 import static org.seasar.aptina.commons.util.ClassUtils.*;
+import static org.seasar.aptina.commons.util.CollectionUtils.*;
 import static org.seasar.aptina.commons.util.StringUtils.*;
 import static org.seasar.aptina.commons.util.TypeMirrorUtils.*;
 
@@ -394,7 +394,7 @@ public class ElementUtils {
      */
     public static List<String> toSimpleNameList(
             final List<? extends Element> elements) {
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = newArrayList();
         for (final Element element : elements) {
             result.add(element.getSimpleName().toString());
         }

@@ -18,7 +18,6 @@ package org.seasar.aptina.beans.internal;
 import java.beans.PropertyChangeListener;
 import java.beans.VetoableChangeListener;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.processing.Filer;
@@ -30,6 +29,7 @@ import org.seasar.aptina.commons.source.SimpleSourceGenerator;
 import static org.seasar.aptina.beans.internal.AptinaBeans.*;
 import static org.seasar.aptina.beans.internal.BeanClassFormat.*;
 import static org.seasar.aptina.commons.util.ClassUtils.*;
+import static org.seasar.aptina.commons.util.CollectionUtils.*;
 import static org.seasar.aptina.commons.util.ModifierUtils.*;
 import static org.seasar.aptina.commons.util.StringUtils.*;
 
@@ -329,7 +329,7 @@ public class BeanClassGenerator extends SimpleSourceGenerator<BeanClassFormat> {
         final String componentType = propertyInfo.getComponentType();
         final boolean bound = beanInfo.isBoundProperties();
         final boolean constrained = beanInfo.isConstrainedProperties();
-        final List<String> exceptions = new ArrayList<String>();
+        final List<String> exceptions = newArrayList();
         exceptions.add("ArrayIndexOutOfBoundsException");
         if (constrained) {
             exceptions.add("java.beans.PropertyVetoException");
