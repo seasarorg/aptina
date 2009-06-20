@@ -21,6 +21,7 @@
 
 		<section name="Eclipse での使い方">
 			<p>
+				Eclipse 自体を Java6 以降で実行する必要があります．
 				プロジェクトのプロパティで以下の設定をしてください．
 			</p>
 			<ul>
@@ -43,6 +44,7 @@
 
 		<section name="Maven での使い方">
 			<p>
+				Maven を Java6 以降で実行する必要があります．
 				maven-compiler-plugin のコンパイラ引数に
 				<code>-XprintProcessorInfo</code>
 				を追加し，
@@ -77,6 +79,7 @@
 
 		<section name="コマンドラインでの使い方">
 			<p>
+				JDK6 以降が必要です．
 				javac のクラスパスに Aptina Beans の Jar ファイルを含めてください．
 			</p>
 			<source><![CDATA[

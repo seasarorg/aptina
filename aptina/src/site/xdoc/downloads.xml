@@ -6,9 +6,14 @@
 	</properties>
 	<body>
 		<section name="ダウンロード">
-			<p>
-				準備中
-			</p>
+			<table>
+				<tr>
+					<td>2009/06/20</td>
+					<td>
+						<a href="aptina-downloads/2009-06-20/Aptina-0.0.0.zip">Aptina-0.0.0.zip</a>
+					</td>
+				</tr>
+			</table>
 		</section>
 	</body>
 </document>

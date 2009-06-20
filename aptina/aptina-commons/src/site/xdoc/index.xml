@@ -2,15 +2,15 @@
 <document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 	<properties>
-		<title>Common Libraries for Aptina Project</title>
+		<title>Common Libraries for Annotation Processor</title>
 	</properties>
 	<body>
 		<section name="Aptina Commons">
 			<p>
 				<strong>Aptina Commons</strong>
-				は， Aptina プロジェクトで共通に使用するライブラリを提供します．
-				Aptina Commons の提供するクラスは Aptina プロジェクトの他のサブプロジェクトの Jar
-				に含められます．
+				は， 注釈処理ツールで共通に利用できるライブラリを提供します．
+				Aptina Commons の提供するクラスは Aptina Commons 自身の Jar ファイルで提供される他，
+				Aptina Beans および Aptina Unit の Jar ファイルにも含められています．
 			</p>
 			<p>
 				詳細は

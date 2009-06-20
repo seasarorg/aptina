@@ -13,8 +13,7 @@
 					Pluggable Annotation Processing API (JSR 269)
 				</a>
 				を利用して，フィールドを定義したクラスから， getter/setter
-				メソッドを定義したサブクラスを生成する Annotation
-				Processor を提供します．
+				メソッドを定義したサブクラスを生成する注釈処理ツールを提供します．
 			</p>
 		</section>
 

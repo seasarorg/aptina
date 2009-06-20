@@ -30,14 +30,13 @@
 					Java Compiler API (JSR 199)
 				</a>
 				を使用して実際に Java コンパイラを起動し，
-				Annotation Processor
-				の単体テストを可能にします．
+				注釈処理ツールの単体テストを可能にします．
 			</p>
 			<p>
 				テストクラスを IDE で起動すれば， Annotation Processor のデバッグも容易にできます．
 			</p>
 			<p>
-				Annotation Processor のテストクラスを作成するには，
+				注釈処理ツールのテストクラスを作成するには，
 				<code>AptinaTestCase</code>
 				のサブクラスを作成します．
 			</p>
@@ -46,11 +45,9 @@
 				<code>src/test/java</code>
 				フォルダにある
 				<code>TestSource.java</code>
-				がコンパイルすると，
+				をコンパイルすると，
 				<code>foo.bar.Baz</code>
-				クラスのソースを生成する
-				<code>TestProcessor</code>
-				のテストクラスです．
+				クラスのソースを生成する注釈処理ツール (TestProcessor) のテストクラスです．
 			</p>
 
 			<source><![CDATA[

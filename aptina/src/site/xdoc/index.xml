@@ -22,20 +22,11 @@
 				<tbody>
 					<tr>
 						<td>
-							<a href="aptina-unit/index.html">Aptina Unit</a>
-						</td>
-						<td>注釈処理ツールの単体テストを支援する JUnit 拡張を提供します．</td>
-						<td>
-							<a href="aptina-unit/apidocs/index.html">Javadoc</a>
-						</td>
-					</tr>
-					<tr>
-						<td>
 							<a href="aptina-beans/index.html">Aptina Beans</a>
 						</td>
 						<td>
 							フィールドを定義したクラスから， getter/setter メソッドを定義したサブクラスを生成する
-							Annotation Processor を提供します．
+							注釈処理ツールを提供します．
 						</td>
 						<td>
 							<a href="aptina-beans/apidocs/index.html">Javadoc</a>
@@ -46,10 +37,19 @@
 							<a href="aptina-commons/index.html">Aptina Commons</a>
 						</td>
 						<td>
-							Aptina プロジェクトで共通に使用するライブラリを提供します．
+							注釈処理ツールで共通に利用できるライブラリを提供します．
 						</td>
 						<td>
 							<a href="aptina-commons/apidocs/index.html">Javadoc</a>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="aptina-unit/index.html">Aptina Unit</a>
+						</td>
+						<td>注釈処理ツールの単体テストを支援する JUnit 拡張を提供します．</td>
+						<td>
+							<a href="aptina-unit/apidocs/index.html">Javadoc</a>
 						</td>
 					</tr>
 				</tbody>
@@ -58,10 +58,14 @@
 
 		<section name="News">
 			<dl>
-				<!--
-					<dt>2009/06/01</dt> <dd> <div> Aptina 0.0.0 をリリースしました． ( <a href="downloads.html">ダウンロード</a> )
-					( <a href="">変更履歴</a> ) </div> </dd>
-				-->
+				<dt>2009/06/20</dt>
+				<dd>
+					<div>
+						Aptina 0.0.0 をリリースしました． (
+						<a href="downloads.html">ダウンロード</a>
+						)
+					</div>
+				</dd>
 				<dt>2009/06/01</dt>
 				<dd>
 					<div>
