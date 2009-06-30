@@ -21,9 +21,9 @@
  * {@link org.seasar.aptina.commons.message.EnumMessageCode} を実装し， 列挙定数ごとに
  * {@link javax.tools.Diagnostic.Kind 診断レベル} と， ロケールごとのメッセージを持ちます．
  * 列挙がサポートするメッセージのロケールは {@literal SUPORTED_LOCALES} という名前の
- * {@link static} フィールドに {@link Locale} の配列として定義します．
+ * {@literal static} フィールドに {@link java.util.Locale} の配列として定義します．
  * {@literal SUPPORTED_LOCALES} 配列には {@link java.util.Locale#ROOT} を含めるべきです．
- * {@link org.seasar.aptina.commons.message.#getMessageFormat(int)} の引数には，
+ * {@link org.seasar.aptina.commons.message.EnumMessageCode#getMessageFormat(int)} の引数には，
  * {@literal SUPPORTED_LOCALES} 配列のインデックスがロケールとして渡されます．
  * </p>
  * <p>

@@ -24,7 +24,7 @@ import javax.tools.Diagnostic.Kind;
  * <p>
  * メッセージコードを記述した列挙はそれぞれの列挙定数に {@link javax.tools.Diagnostic.Kind 診断レベル} と，
  * ロケールごとのメッセージを持ちます． サポートするメッセージのロケールは {@literal SUPORTED_LOCALES} という名前の
- * {@link static} フィールドに {@link Locale} の配列として定義します．
+ * {@literal static} フィールドに {@link Locale} の配列として定義します．
  * </p>
  * 
  * <pre>
