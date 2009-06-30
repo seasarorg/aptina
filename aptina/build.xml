@@ -1,11 +1,12 @@
 <project name="aptina" default="update-pom" basedir=".">
-	<property name="newVersion" value="0.0.0" />
+	<property name="newVersion" value="0.0.1-SNAPSHOT" />
 
 	<target name="update-pom">
 		<replaceregexp
 			match="(&lt;artifactId&gt;aptina-project&lt;/artifactId&gt;\s*&lt;version&gt;)(?:[^&lt;]+)(&lt;/version&gt;)"
 			replace="\1${newVersion}\2" encoding="UTF-8">
 			<fileset dir="." includes="**/pom.xml" />
+			<fileset dir="../aptina-beans-it/" includes="**/pom.xml" />
 		</replaceregexp>
 	</target>
 </project>
