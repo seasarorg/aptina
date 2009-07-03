@@ -34,16 +34,16 @@ public class VersionUtils {
     }
 
     /**
-     * Maven が作成した Jar に含まれている {@literal pom.properties} からプロダクトのバージョンを返します．
+     * Maven が作成した Jar に含まれている {@code pom.properties} からプロダクトのバージョンを返します．
      * <p>
-     * バージョンを取得できなかった場合は {@literal null} を返します．
+     * バージョンを取得できなかった場合は {@code null} を返します．
      * </p>
      * 
      * @param groupId
      *            グループ ID
      * @param artifactId
      *            アーティファクト ID
-     * @return バージョンまたは {@literal null}
+     * @return バージョンまたは {@code null}
      */
     public static String getVersion(final String groupId,
             final String artifactId) {
@@ -51,7 +51,7 @@ public class VersionUtils {
     }
 
     /**
-     * Maven が作成した Jar に含まれている {@literal pom.properties} からプロダクトのバージョンを返します．
+     * Maven が作成した Jar に含まれている {@code pom.properties} からプロダクトのバージョンを返します．
      * <p>
      * バージョンを取得できなかった場合はデフォルト値を返します．
      * </p>

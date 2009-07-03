@@ -36,11 +36,11 @@ import static org.seasar.aptina.commons.util.CollectionUtils.*;
 import static org.seasar.aptina.commons.util.StringUtils.*;
 import static org.seasar.aptina.commons.util.TypeMirrorUtils.*;
 
+/*
+ * {@link Element} のインスタンスを手に入れる都合により，このクラスのテストケースは Aptina Unit に存在します．
+ */
 /**
  * {@link Element} を扱うユーティリティです．
- * <p>
- * {@link Element} のインスタンスを手に入れる都合により，このクラスのテストケースは Aptina Unit に存在します．
- * </p>
  * 
  * @author koichik
  */
@@ -103,7 +103,7 @@ public class ElementUtils {
      *            型エレメント
      * @param field
      *            フィールド
-     * @return 型エレメントに定義されたフィールドの変数エレメント． 存在しない場合は {@literal null}
+     * @return 型エレメントに定義されたフィールドの変数エレメント． 存在しない場合は {@code null}
      */
     public static VariableElement getFieldElement(
             final TypeElement typeElement, final Field field) {
@@ -119,14 +119,14 @@ public class ElementUtils {
      *            型エレメント
      * @param fieldName
      *            フィールド名
-     * @return 型エレメントに定義されたフィールドの変数エレメント． 存在しない場合は {@literal null}
+     * @return 型エレメントに定義されたフィールドの変数エレメント． 存在しない場合は {@code null}
      */
     public static VariableElement getFieldElement(
             final TypeElement typeElement, final String fieldName) {
         assertNotNull("typeElement", typeElement);
         assertNotEmpty("fieldName", fieldName);
         for (final VariableElement variableElement : ElementFilter
-                .fieldsIn(typeElement.getEnclosedElements())) {
+            .fieldsIn(typeElement.getEnclosedElements())) {
             if (fieldName.equals(variableElement.getSimpleName().toString())) {
                 return variableElement;
             }
@@ -139,13 +139,13 @@ public class ElementUtils {
      * 
      * @param typeElement
      *            型エレメント
-     * @return 型エレメントに定義されたデフォルトコンストラクタの実行可能エレメント． 存在しない場合は {@literal null}
+     * @return 型エレメントに定義されたデフォルトコンストラクタの実行可能エレメント． 存在しない場合は {@code null}
      */
     public static ExecutableElement getConstructorElement(
             final TypeElement typeElement) {
         assertNotNull("typeElement", typeElement);
         for (final ExecutableElement executableElement : ElementFilter
-                .constructorsIn(typeElement.getEnclosedElements())) {
+            .constructorsIn(typeElement.getEnclosedElements())) {
             if (executableElement.getParameters().size() == 0) {
                 return executableElement;
             }
@@ -164,14 +164,14 @@ public class ElementUtils {
      *            型エレメント
      * @param parameterTypes
      *            引数型の並び
-     * @return 型エレメントに定義されたコンストラクタの実行可能エレメント． 存在しない場合は {@literal null}
+     * @return 型エレメントに定義されたコンストラクタの実行可能エレメント． 存在しない場合は {@code null}
      */
     public static ExecutableElement getConstructorElement(
             final TypeElement typeElement, final Class<?>... parameterTypes) {
         assertNotNull("typeElement", typeElement);
         assertNotNull("parameterTypes", parameterTypes);
         for (final ExecutableElement executableElement : ElementFilter
-                .constructorsIn(typeElement.getEnclosedElements())) {
+            .constructorsIn(typeElement.getEnclosedElements())) {
             if (isSameTypes(parameterTypes, executableElement.getParameters())) {
                 return executableElement;
             }
@@ -182,27 +182,27 @@ public class ElementUtils {
     /**
      * 型エレメントに定義されたコンストラクタの実行可能エレメントを返します．
      * <p>
-     * 引数がの型が配列の場合は， 要素型の名前の後に <code>[]</code> を連ねる形式と， <code>[[LString;</code>
+     * 引数がの型が配列の場合は， 要素型の名前の後に {@code []} を連ねる形式と， {@code [[LString;}
      * のような形式のどちらでも指定することができます．
      * </p>
      * <p>
-     * 引数型が型引数を持つ場合は <code>"java.util.List&lt;T&gt;"</code> のようにそのまま指定します．
+     * 引数型が型引数を持つ場合は {@code "java.util.List&lt;T&gt;"} のようにそのまま指定します．
      * </p>
      * 
      * @param typeElement
      *            型エレメント
      * @param parameterTypeNames
      *            引数の型名の並び
-     * @return 型エレメントに定義されたコンストラクタの実行可能エレメント． 存在しない場合は {@literal null}
+     * @return 型エレメントに定義されたコンストラクタの実行可能エレメント． 存在しない場合は {@code null}
      */
     public static ExecutableElement getConstructorElement(
             final TypeElement typeElement, final String... parameterTypeNames) {
         assertNotNull("typeElement", typeElement);
         assertNotNull("parameterTypeNames", parameterTypeNames);
         for (final ExecutableElement executableElement : ElementFilter
-                .constructorsIn(typeElement.getEnclosedElements())) {
+            .constructorsIn(typeElement.getEnclosedElements())) {
             if (isSameTypes(parameterTypeNames, executableElement
-                    .getParameters())) {
+                .getParameters())) {
                 return executableElement;
             }
         }
@@ -216,16 +216,16 @@ public class ElementUtils {
      *            型エレメント
      * @param methodName
      *            メソッド名
-     * @return 型エレメントに定義されたメソッドの実行可能エレメント．存在しない場合は {@literal null}
+     * @return 型エレメントに定義されたメソッドの実行可能エレメント．存在しない場合は {@code null}
      */
     public static ExecutableElement getMethodElement(
             final TypeElement typeElement, final String methodName) {
         assertNotNull("typeElement", typeElement);
         assertNotEmpty("methodName", methodName);
         for (final ExecutableElement executableElement : ElementFilter
-                .methodsIn(typeElement.getEnclosedElements())) {
+            .methodsIn(typeElement.getEnclosedElements())) {
             if (!methodName
-                    .equals(executableElement.getSimpleName().toString())) {
+                .equals(executableElement.getSimpleName().toString())) {
                 continue;
             }
             if (executableElement.getParameters().size() == 0) {
@@ -248,7 +248,7 @@ public class ElementUtils {
      *            メソッド名
      * @param parameterTypes
      *            引数型の並び
-     * @return 型エレメントに定義されたメソッドの実行可能エレメント． 存在しない場合は {@literal null}
+     * @return 型エレメントに定義されたメソッドの実行可能エレメント． 存在しない場合は {@code null}
      */
     public static ExecutableElement getMethodElement(
             final TypeElement typeElement, final String methodName,
@@ -257,9 +257,9 @@ public class ElementUtils {
         assertNotEmpty("methodName", methodName);
         assertNotNull("parameterTypes", parameterTypes);
         for (final ExecutableElement executableElement : ElementFilter
-                .methodsIn(typeElement.getEnclosedElements())) {
+            .methodsIn(typeElement.getEnclosedElements())) {
             if (!methodName
-                    .equals(executableElement.getSimpleName().toString())) {
+                .equals(executableElement.getSimpleName().toString())) {
                 continue;
             }
             if (isSameTypes(parameterTypes, executableElement.getParameters())) {
@@ -272,11 +272,11 @@ public class ElementUtils {
     /**
      * 型エレメントに定義されたメソッドの実行可能エレメントを返します．
      * <p>
-     * 引数がの型が配列の場合は， 要素型の名前の後に <code>[]</code> を連ねる形式と， <code>[[LString;</code>
+     * 引数がの型が配列の場合は， 要素型の名前の後に {@code []} を連ねる形式と， {@code [[LString;}
      * のような形式のどちらでも指定することができます．
      * </p>
      * <p>
-     * 引数型が型引数を持つ場合は <code>"java.util.List&lt;T&gt;"</code> のようにそのまま指定します．
+     * 引数型が型引数を持つ場合は {@code "java.util.List&lt;T&gt;"} のようにそのまま指定します．
      * </p>
      * 
      * @param typeElement
@@ -285,7 +285,7 @@ public class ElementUtils {
      *            メソッド名
      * @param parameterTypeNames
      *            引数の型名の並び
-     * @return 型エレメントに定義されたメソッドの実行可能エレメント． 存在しない場合は {@literal null}
+     * @return 型エレメントに定義されたメソッドの実行可能エレメント． 存在しない場合は {@code null}
      */
     public static ExecutableElement getMethodElement(
             final TypeElement typeElement, final String methodName,
@@ -294,13 +294,13 @@ public class ElementUtils {
         assertNotEmpty("methodName", methodName);
         assertNotNull("parameterTypeNames", parameterTypeNames);
         for (final ExecutableElement executableElement : ElementFilter
-                .methodsIn(typeElement.getEnclosedElements())) {
+            .methodsIn(typeElement.getEnclosedElements())) {
             if (!methodName
-                    .equals(executableElement.getSimpleName().toString())) {
+                .equals(executableElement.getSimpleName().toString())) {
                 continue;
             }
             if (isSameTypes(parameterTypeNames, executableElement
-                    .getParameters())) {
+                .getParameters())) {
                 return executableElement;
             }
         }
@@ -333,9 +333,9 @@ public class ElementUtils {
     public static AnnotationMirror getAnnotationMirror(final Element element,
             final String annotationClassName) {
         for (final AnnotationMirror annotationMirror : element
-                .getAnnotationMirrors()) {
+            .getAnnotationMirrors()) {
             final DeclaredType annotationType = annotationMirror
-                    .getAnnotationType();
+                .getAnnotationType();
             if (annotationType.toString().equals(annotationClassName)) {
                 return annotationMirror;
             }
@@ -344,30 +344,29 @@ public class ElementUtils {
     }
 
     /**
-     * 引数型の配列と{@link VariableElement}のリストの， それぞれの要素の型名が等しければ {@literal true}
-     * を返します．
+     * 引数型の配列と{@link VariableElement}のリストの， それぞれの要素の型名が等しければ {@code true} を返します．
      * 
      * @param parameterTypes
      *            引数型の配列
      * @param variableElements
-     * @return 二つのリストのそれぞれの要素の型がマッチすれば {@literal true}
+     * @return 二つのリストのそれぞれの要素の型がマッチすれば {@code true}
      */
     public static boolean isSameTypes(final Class<?>[] parameterTypes,
             final List<? extends VariableElement> variableElements) {
         assertNotNull("parameterTypes", parameterTypes);
         assertNotNull("variableElements", variableElements);
-        return isSameTypes(getQualifiedNameArray(parameterTypes),
-                variableElements);
+        return isSameTypes(
+            getQualifiedNameArray(parameterTypes),
+            variableElements);
     }
 
     /**
-     * 型名の配列と{@link VariableElement}のリストの， それぞれの要素の型名が等しければ {@literal true}
-     * を返します．
+     * 型名の配列と{@link VariableElement}のリストの， それぞれの要素の型名が等しければ {@code true} を返します．
      * 
      * @param typeNames
      *            型名の配列
      * @param variableElements
-     * @return 二つのリストのそれぞれの要素の型がマッチすれば {@literal true}
+     * @return 二つのリストのそれぞれの要素の型がマッチすれば {@code true}
      */
     public static boolean isSameTypes(final String[] typeNames,
             final List<? extends VariableElement> variableElements) {
@@ -377,8 +376,10 @@ public class ElementUtils {
             return false;
         }
         for (int i = 0; i < typeNames.length; ++i) {
-            if (!typeNames[i].equals(variableElements.get(i).asType()
-                    .toString())) {
+            if (!typeNames[i].equals(variableElements
+                .get(i)
+                .asType()
+                .toString())) {
                 return false;
             }
         }
@@ -421,7 +422,7 @@ public class ElementUtils {
             if (bounds.size() > 1
                     || bounds.get(0).toString() == "java.lang.Object") {
                 buf.append(" extends ").append(
-                        join(toTypeNameList(bounds), " & "));
+                    join(toTypeNameList(bounds), " & "));
             }
             parameterPrefix = ", ";
         }
@@ -442,8 +443,10 @@ public class ElementUtils {
             return "";
         }
         final StringBuilder buf = new StringBuilder(64);
-        buf.append("<").append(join(toSimpleNameList(typeParameters), ", "))
-                .append(">");
+        buf
+            .append("<")
+            .append(join(toSimpleNameList(typeParameters), ", "))
+            .append(">");
         return new String(buf);
     }
 

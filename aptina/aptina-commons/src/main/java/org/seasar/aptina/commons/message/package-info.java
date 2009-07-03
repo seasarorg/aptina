@@ -21,10 +21,10 @@
  * {@link org.seasar.aptina.commons.message.EnumMessageCode} を実装し， 列挙定数ごとに
  * {@link javax.tools.Diagnostic.Kind 診断レベル} と， ロケールごとのメッセージを持ちます．
  * 列挙がサポートするメッセージのロケールは {@literal SUPORTED_LOCALES} という名前の
- * {@literal static} フィールドに {@link java.util.Locale} の配列として定義します．
- * {@literal SUPPORTED_LOCALES} 配列には {@link java.util.Locale#ROOT} を含めるべきです．
+ * {@code static} フィールドに {@link java.util.Locale} の配列として定義します．
+ * {@code SUPPORTED_LOCALES} 配列には {@link java.util.Locale#ROOT} を含めるべきです．
  * {@link org.seasar.aptina.commons.message.EnumMessageCode#getMessageFormat(int)} の引数には，
- * {@literal SUPPORTED_LOCALES} 配列のインデックスがロケールとして渡されます．
+ * {@code SUPPORTED_LOCALES} 配列のインデックスがロケールとして渡されます．
  * </p>
  * <p>
  * メッセージを定義した列挙は次のようになります．
@@ -83,7 +83,7 @@
  * <p>
  * 列挙を指定して {@link java.util.ResourceBundle} を取得するには，
  * {@link org.seasar.aptina.commons.message.EnumMessageResourceBundle} の
- * {@literal static} メソッドを使用します．
+ * {@code static} メソッドを使用します．
  * </p>
  * <pre>
  * ResourceBundle bundle = EnumMessageResourceBundle.getBundle(XxxMessageCode.class);

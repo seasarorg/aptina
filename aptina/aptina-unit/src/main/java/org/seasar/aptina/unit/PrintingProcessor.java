@@ -47,9 +47,8 @@ import static java.util.Arrays.*;
  * </p>
  * 
  * <p>
- * 次のサンプルは， <code>src/test/java</code> フォルダにある <code>TestSource.java</code>
- * をコンパイルし， <code>PrintingProcessor</code> で {@link Element}
- * 階層をコンソールに出力するテストクラスです．
+ * 次のサンプルは， {@code src/test/java} フォルダにある {@code TestSource.java} をコンパイルし，
+ * {@code PrintingProcessor} で {@link Element} 階層をコンソールに出力するテストクラスです．
  * </p>
  * 
  * <pre>

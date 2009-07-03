@@ -23,16 +23,16 @@ import javax.tools.Diagnostic.Kind;
  * メッセージコードを定義した列挙が実装するインタフェースです．
  * <p>
  * メッセージコードを記述した列挙はそれぞれの列挙定数に {@link javax.tools.Diagnostic.Kind 診断レベル} と，
- * ロケールごとのメッセージを持ちます． サポートするメッセージのロケールは {@literal SUPORTED_LOCALES} という名前の
- * {@literal static} フィールドに {@link Locale} の配列として定義します．
+ * ロケールごとのメッセージを持ちます． サポートするメッセージのロケールは {@code SUPORTED_LOCALES} という名前の {@code
+ * static} フィールドに {@link Locale} の配列として定義します．
  * </p>
  * 
  * <pre>
  * public static final Locale[] SUPORTED_LOCALES = new Locale[] { Locale.ROOT, Locale.JAPANESE };
  * </pre>
  * <p>
- * {@literal SUPPORTED_LOCALES} 配列には {@link Locale#ROOT} を含めるべきです．
- * {@link #getMessageFormat(int)} の引数には， {@literal SUPPORTED_LOCALES}
+ * {@code SUPPORTED_LOCALES} 配列には {@link Locale#ROOT} を含めるべきです．
+ * {@link #getMessageFormat(int)} の引数には， {@code SUPPORTED_LOCALES}
  * 配列のインデックスがロケールとして渡されます．
  * </p>
  * <p>

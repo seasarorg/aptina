@@ -67,7 +67,7 @@ public class BeanInfoFactory {
     /** 処理対象のクラスに付けられた {@link BeanState} アノテーションを表現する {@link AnnotationMirror} */
     protected AnnotationMirror beanStateAnnotation;
 
-    /** 状態クラスにエラーがある場合は {@literal true} */
+    /** 状態クラスにエラーがある場合は {@code true} */
     protected boolean hasError;
 
     /**

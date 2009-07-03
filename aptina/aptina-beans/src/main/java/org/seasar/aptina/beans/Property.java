@@ -37,8 +37,8 @@ public @interface Property {
     /**
      * プロパティのアクセス型を指定します．
      * <p>
-     * デフォルトは {@link AccessType#READ_WRITE} です． ただし，{@literal final}
-     * フィールドに注釈された場合は {@link AccessType#READ_ONLY} として扱われます．
+     * デフォルトは {@link AccessType#READ_WRITE} です． ただし，{@code final} フィールドに注釈された場合は
+     * {@link AccessType#READ_ONLY} として扱われます．
      * </p>
      * 
      * @return プロパティのアクセス型

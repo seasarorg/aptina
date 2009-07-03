@@ -43,11 +43,11 @@ public class ModifierUtils {
     }
 
     /**
-     * 修飾子の可視性がデフォルト (パッケージ) の場合は {@literal true} を返します．
+     * 修飾子の可視性がデフォルト (パッケージ) の場合は {@code true} を返します．
      * 
      * @param modifiers
      *            修飾子
-     * @return 修飾子の可視性がデフォルト (パッケージ) の場合は {@literal true}
+     * @return 修飾子の可視性がデフォルト (パッケージ) の場合は {@code true}
      */
     public static boolean isDefault(final Set<Modifier> modifiers) {
         return disjoint(modifiers, ACCESS_MODIFIERS);

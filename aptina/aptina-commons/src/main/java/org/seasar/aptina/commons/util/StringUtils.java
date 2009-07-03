@@ -28,22 +28,22 @@ public class StringUtils {
     }
 
     /**
-     * 文字列が {@literal null} または空なら {@literal true} を返します．
+     * 文字列が {@code null} または空なら {@code true} を返します．
      * 
      * @param s
      *            文字列
-     * @return 文字列が {@literal null} または空なら {@literal true}
+     * @return 文字列が {@code null} または空なら {@code true}
      */
     public static boolean isEmpty(final CharSequence s) {
         return s == null || s.length() == 0;
     }
 
     /**
-     * 文字列が {@literal null} でも空でもなければ {@literal true} を返します．
+     * 文字列が {@code null} でも空でもなければ {@code true} を返します．
      * 
      * @param s
      *            文字列
-     * @return 文字列が {@literal null} でも空でもなければ {@literal true}
+     * @return 文字列が {@code null} でも空でもなければ {@code true}
      */
     public static boolean isNotEmpty(final CharSequence s) {
         return !isEmpty(s);
@@ -90,8 +90,7 @@ public class StringUtils {
     /**
      * シーケンスの要素をセパレータで区切って連結した文字列を返します．
      * <p>
-     * <code>join(asList("a", "b", "c"), ", ")</code> は <code>"a, b, c"</code>
-     * を返します．
+     * {@code join(asList("a", "b", "c"), ", ")} は {@code "a, b, c"} を返します．
      * </p>
      * 
      * @param elements
@@ -116,8 +115,8 @@ public class StringUtils {
      * 同じ長さを持つ二つの文字列シーケンスのそれぞれの対応する要素をセパレータ 1 で区切って連結し， それらをセパレータ 2
      * で区切って連結した文字列を返します．
      * <p>
-     * <code>join(asList("a", "b", "c"), asList("1", "2", "3"), ":", ", ")</code>
-     * は <code>"a:1, b:2, c:3"</code> を返します．
+     * {@code join(asList("a", "b", "c"), asList("1", "2", "3"), ":", ", ")} は
+     * {@code "a:1, b:2, c:3"} を返します．
      * </p>
      * 
      * @param elements1
@@ -141,7 +140,7 @@ public class StringUtils {
             }
             final CharSequence element2 = it.next();
             buf.append(element1).append(separator1).append(element2).append(
-                    separator2);
+                separator2);
         }
         if (it.hasNext()) {
             throw new IllegalArgumentException("elements1 < elements2");

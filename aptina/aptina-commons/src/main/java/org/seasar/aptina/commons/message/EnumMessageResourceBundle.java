@@ -76,7 +76,7 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
      *            ロケール
      * @return リソースバンドル
      * @throws IllegalStateException
-     *             列挙に {@literal SUPPORTED_LOCALES} が定義されていない場合
+     *             列挙に {@code SUPPORTED_LOCALES} が定義されていない場合
      * @see EnumMessageCode
      */
     public static <T extends Enum<T> & EnumMessageCode> ResourceBundle getBundle(

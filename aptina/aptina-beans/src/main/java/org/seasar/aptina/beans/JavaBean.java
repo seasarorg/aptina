@@ -27,14 +27,14 @@ import java.lang.annotation.Target;
  * 生成される Bean クラスは状態クラスと同じパッケージに生成されます． Bean クラスの名前は次のようになります．
  * </p>
  * <dl>
- * <dt>状態クラスの名前が <code>Abstract</code> で始まっている場合</dt>
- * <dd>状態クラスの名前の先頭から <code>Abstract</code> を除去した名前になります．</dd>
- * <dt>状態クラスの名前が <code>State</code> で終わっている場合</dt>
- * <dd>状態クラスの名前の末尾から <code>State</code> を除去した名前になります．</dd>
- * <dt>状態クラスの名前が <code>Bean</code> で終わっている場合</dt>
- * <dd>状態クラスの名前の末尾に <code>Impl</code> を付加した名前になります．</dd>
+ * <dt>状態クラスの名前が {@code Abstract} で始まっている場合</dt>
+ * <dd>状態クラスの名前の先頭から {@code Abstract} を除去した名前になります．</dd>
+ * <dt>状態クラスの名前が {@code State} で終わっている場合</dt>
+ * <dd>状態クラスの名前の末尾から {@code State} を除去した名前になります．</dd>
+ * <dt>状態クラスの名前が {@code Bean} で終わっている場合</dt>
+ * <dd>状態クラスの名前の末尾に {@code Impl} を付加した名前になります．</dd>
  * <dt>その他の場合</dt>
- * <dd>状態クラスの名前の末尾に <code>Bean</code> を付加した名前になります．</dd>
+ * <dd>状態クラスの名前の末尾に {@code Bean} を付加した名前になります．</dd>
  * </dl>
  * <p>
  * 例
@@ -45,20 +45,20 @@ import java.lang.annotation.Target;
  * <th>生成される Bean クラスの名前</th>
  * </tr>
  * <tr>
- * <td><code>AbstractHogeBean</code></td>
- * <td><code>HogeBean</code></td>
+ * <td>{@code AbstractHogeBean}</td>
+ * <td>{@code HogeBean}</td>
  * </tr>
  * <tr>
- * <td><code>HogeBeanState</code></td>
- * <td><code>HogeBean</code></td>
+ * <td>{@code HogeBeanState}</td>
+ * <td>{@code HogeBean}</td>
  * </tr>
  * <tr>
- * <td><code>HogeBean</code></td>
- * <td><code>HogeBeanImpl</code></td>
+ * <td>{@code HogeBean}</td>
+ * <td>{@code HogeBeanImpl}</td>
  * </tr>
  * <tr>
- * <td><code>Hoge</code></td>
- * <td><code>HogeBean</code></td>
+ * <td>{@code Hoge}</td>
+ * <td>{@code HogeBean}</td>
  * </tr>
  * </table>
  * <h3>プロパティ</h3>
@@ -67,7 +67,7 @@ import java.lang.annotation.Target;
  * </p>
  * <h3>コンストラクタ</h3>
  * <p>
- * Bean クラスは状態クラスの非 {@literal private} コンストラクタを引き継ぎます．
+ * Bean クラスは状態クラスの非 {@code private} コンストラクタを引き継ぎます．
  * 引き継ぐことのできるコンストラクタが一つもない場合はエラーとなります．
  * </p>
  * 

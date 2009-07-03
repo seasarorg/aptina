@@ -29,8 +29,8 @@
  * <ul>
  * <li>通常のクラスであること (インタフェースやアノテーション，列挙は状態クラスにできません)．</li>
  * <li>トップレベルのクラスであること (ネストしたクラスは状態クラスにできません)．</li>
- * <li>{@literal public} なクラスであること．</li>
- * <li>{@literal final} クラスではないこと．</li>
+ * <li>{@code public} なクラスであること．</li>
+ * <li>{@code final} クラスではないこと．</li>
  * </ul>
  * <h3>Bean クラス</h3>
  * <p>
@@ -39,14 +39,14 @@
  * Bean クラスの名前は次のようになります．
  * </p>
  * <dl>
- * <dt>状態クラスの名前が <code>Abstract</code> で始まっている場合</dt>
- * <dd>状態クラスの名前の先頭から <code>Abstract</code> を除去した名前になります．</dd>
- * <dt>状態クラスの名前が <code>State</code> で終わっている場合</dt>
- * <dd>状態クラスの名前の末尾から <code>State</code> を除去した名前になります．</dd>
- * <dt>状態クラスの名前が <code>Bean</code> で終わっている場合</dt>
- * <dd>状態クラスの名前の末尾に <code>Impl</code> を付加した名前になります．</dd>
+ * <dt>状態クラスの名前が {@code Abstract} で始まっている場合</dt>
+ * <dd>状態クラスの名前の先頭から {@code Abstract} を除去した名前になります．</dd>
+ * <dt>状態クラスの名前が {@code State} で終わっている場合</dt>
+ * <dd>状態クラスの名前の末尾から {@code State} を除去した名前になります．</dd>
+ * <dt>状態クラスの名前が {@code Bean} で終わっている場合</dt>
+ * <dd>状態クラスの名前の末尾に {@code Impl} を付加した名前になります．</dd>
  * <dt>その他の場合</dt>
- * <dd>状態クラスの名前の末尾に <code>Bean</code> を付加した名前になります．</dd>
+ * <dd>状態クラスの名前の末尾に {@code Bean} を付加した名前になります．</dd>
  * </dl>
  * <p>
  * 例
@@ -57,20 +57,20 @@
  * <th>生成される Bean クラスの名前</th>
  * </tr>
  * <tr>
- * <td><code>AbstractHogeBean</code></td>
- * <td><code>HogeBean</code></td>
+ * <td>{@code AbstractHogeBean}</td>
+ * <td>{@code HogeBean}</td>
  * </tr>
  * <tr>
- * <td><code>HogeBeanState</code></td>
- * <td><code>HogeBean</code></td>
+ * <td>{@code HogeBeanState}</td>
+ * <td>{@code HogeBean}</td>
  * </tr>
  * <tr>
- * <td><code>HogeBean</code></td>
- * <td><code>HogeBeanImpl</code></td>
+ * <td>{@code HogeBean}</td>
+ * <td>{@code HogeBeanImpl}</td>
  * </tr>
  * <tr>
- * <td><code>Hoge</code></td>
- * <td><code>HogeBean</code></td>
+ * <td>{@code Hoge}</td>
+ * <td>{@code HogeBean}</td>
  * </tr>
  * </table>
  * <h3>プロパティ</h3>
@@ -78,7 +78,7 @@
  * 状態クラスの次の条件を満たすフィールドが Bean クラスのプロパティとなります．
  * </p>
  * <ul>
- * <li>{@literal static}，{@literal private}，{@literal public} の修飾子が付けられていないこと．</li>
+ * <li>{@code static}，{@code private}，{@code public} の修飾子が付けられていないこと．</li>
  * <li>{@link org.seasar.aptina.beans.Property} アノテーションで 
  * {@link org.seasar.aptina.beans.AccessType#NONE} が指定されていないこと．</li>
  * </ul>
@@ -113,14 +113,14 @@
  * <td>{@link org.seasar.aptina.beans.AccessType#WRITE_ONLY}</td>
  * <td>
  * 変更のみ可能なプロパティです (setter のみ生成されます)．
- * フィールドが {@literal final} の場合はエラーになります．
+ * フィールドが {@code final} の場合はエラーになります．
  * </td>
  * </tr>
  * <tr>
  * <td>{@link org.seasar.aptina.beans.AccessType#READ_WRITE}<br />(デフォルト)</td>
  * <td>
  * 参照・変更とも可能なプロパティです (getter/setter とも生成されます)．
- * フィールドが {@literal final} の場合， setter は生成されません．
+ * フィールドが {@code final} の場合， setter は生成されません．
  * </td>
  * </tr>
  * </table>
@@ -130,29 +130,29 @@
  * </p>
  * <ul>
  * <li>
- * <code>public &lt;PropertyType&gt; get&lt;PropertyName&gt;(int n)</code>
+ * {@code public &lt;PropertyType&gt; get&lt;PropertyName&gt;(int n)}
  * </li>
  * <li>
- * <code>public void set&lt;PropertyName&gt;(int n, &lt;PoerptyType&gt; &lt;propertyName&gt;)</code>
+ * {@code public void set&lt;PropertyName&gt;(int n, &lt;PoerptyType&gt; &lt;propertyName&gt;)}
  * </li>
  * </ul>
  * <h3>bound プロパティ</h3>
  * <p>
- * {@link org.seasar.aptina.beans.BeanState#boundProperties()} に {@literal true} を指定すると
+ * {@link org.seasar.aptina.beans.BeanState#boundProperties()} に {@code true} を指定すると
  * bound プロパティ ({@link java.beans.PropertyChangeListener}) がサポートされ， 次のメソッドが生成されます．
  * </p>
  * <ul>
  * <li>
- * <code>public void addPropertyChangeListener(PropertyChangeListener listener)</code>
+ * {@code public void addPropertyChangeListener(PropertyChangeListener listener)}
  * </li>
  * <li>
- * <code>public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)</code>
+ * {@code public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)}
  * </li>
  * <li>
- * <code>public void removePropertyChangeListener(PropertyChangeListener listener)</code>
+ * {@code public void removePropertyChangeListener(PropertyChangeListener listener)}
  * </li>
  * <li>
- * <code>public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener)</code>
+ * {@code public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener)}
  * </li>
  * </ul>
  * <p>
@@ -160,29 +160,29 @@
  * </p>
  * <ul>
  * <li>
- * <code>public void add&lt;PropertyName&gt;Listener(PropertyChangeListener listener)</code>
+ * {@code public void add&lt;PropertyName&gt;Listener(PropertyChangeListener listener)}
  * </li>
  * <li>
- * <code>public void remove&lt;PropertyName&gt;Listener(PropertyChangeListener listener)</code>
+ * {@code public void remove&lt;PropertyName&gt;Listener(PropertyChangeListener listener)}
  * </li>
  * </ul>
  * <h3>constrained プロパティ</h3>
  * <p>
- * {@link org.seasar.aptina.beans.BeanState#constrainedProperties()} に {@literal true} を指定すると
+ * {@link org.seasar.aptina.beans.BeanState#constrainedProperties()} に {@code true} を指定すると
  * constrained プロパティ ({@link java.beans.VetoableChangeListener}) がサポートされ， 次のメソッドが生成されます．
  * </p>
  * <ul>
  * <li>
- * <code>public void addVetoableChangeListener(VetoableChangeListener listener)</code>
+ * {@code public void addVetoableChangeListener(VetoableChangeListener listener)}
  * </li>
  * <li>
- * <code>public void addVetoableChangeListener(String propertyName, VetoableChangeListener listener)</code>
+ * {@code public void addVetoableChangeListener(String propertyName, VetoableChangeListener listener)}
  * </li>
  * <li>
- * <code>public void removeVetoableChangeListener(VetoableChangeListener listener)</code>
+ * {@code public void removeVetoableChangeListener(VetoableChangeListener listener)}
  * </li>
  * <li>
- * <code>public void removeVetoableChangeListener(String propertyName, VetoableChangeListener listener)</code>
+ * {@code public void removeVetoableChangeListener(String propertyName, VetoableChangeListener listener)}
  * </li>
  * </ul>
  * <p>
@@ -190,10 +190,10 @@
  * </p>
  * <ul>
  * <li>
- * <code>public void add&lt;PropertyName&gt;Listener(VetoableChangeListener listener)</code>
+ * {@code public void add&lt;PropertyName&gt;Listener(VetoableChangeListener listener)}
  * </li>
  * <li>
- * <code>public void remove&lt;PropertyName&gt;Listener(VetoableChangeListener listener)</code>
+ * {@code public void remove&lt;PropertyName&gt;Listener(VetoableChangeListener listener)}
  * </li>
  * </ul>
  * <h3>コンストラクタ</h3>

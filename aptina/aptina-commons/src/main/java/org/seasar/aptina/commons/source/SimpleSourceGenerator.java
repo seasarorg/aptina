@@ -41,7 +41,7 @@ import static org.seasar.aptina.commons.util.IOUtils.*;
 import static org.seasar.aptina.commons.util.VersionUtils.*;
 
 /**
- * {@literal printf} でソースを生成する単純なジェネレータのための抽象クラスです．
+ * {@code printf} でソースを生成する単純なジェネレータのための抽象クラスです．
  * 
  * @author koichik
  * @param <T>
@@ -116,8 +116,9 @@ public abstract class SimpleSourceGenerator<T extends Enum<T> & EnumMessageCode>
     protected void write(final String className,
             final TypeElement originalElement) throws IOException {
         final Filer filer = env.getFiler();
-        final JavaFileObject sourceFile = filer.createSourceFile(className,
-                originalElement);
+        final JavaFileObject sourceFile = filer.createSourceFile(
+            className,
+            originalElement);
         final Writer writer = new BufferedWriter(sourceFile.openWriter());
         try {
             writer.write(new String(buf));
@@ -198,7 +199,7 @@ public abstract class SimpleSourceGenerator<T extends Enum<T> & EnumMessageCode>
      * </p>
      * <p>
      * 引数で渡されたコメントは {@link Elements#getDocComment(Element)}
-     * が返す文字列と同じ形式の文字列として扱われます． この形式は， Javadoc コメントから各行の先頭の {@literal '*'}
+     * が返す文字列と同じ形式の文字列として扱われます． この形式は， Javadoc コメントから各行の先頭の {@literal "*"}
      * までを除去したものです． 最初の行は空白 ({@literal "/**"} の後に改行があるため) で， 最初と最後を除いた各行の先頭は空白 (
      * {@literal "/*"} の後の空白) で始まります．
      * </p>
@@ -212,7 +213,7 @@ public abstract class SimpleSourceGenerator<T extends Enum<T> & EnumMessageCode>
         }
         printf("/**%n");
         final BufferedReader reader = new BufferedReader(new StringReader(
-                comment));
+            comment));
         try {
             String line = reader.readLine();
             if (!line.isEmpty()) {
@@ -233,7 +234,7 @@ public abstract class SimpleSourceGenerator<T extends Enum<T> & EnumMessageCode>
      * </p>
      * <p>
      * 組み立てられたコメントは {@link Elements#getDocComment(Element)}
-     * が返す文字列と同じ形式の文字列として扱われます． この形式は， Javadoc コメントから各行の先頭の {@literal '*'}
+     * が返す文字列と同じ形式の文字列として扱われます． この形式は， Javadoc コメントから各行の先頭の {@literal "*"}
      * までを除去したものです． 最初の行は空白 ({@literal "/**"} の後に改行があるため) で， 最初と最後を除いた各行の先頭は空白 (
      * {@literal "/*"} の後の空白) で始まります．
      * </p>
@@ -265,8 +266,11 @@ public abstract class SimpleSourceGenerator<T extends Enum<T> & EnumMessageCode>
     protected void printGeneratedAnnotation(final String productName,
             final String groupId, final String artifactId) {
         printf(
-                "@javax.annotation.Generated({\"%1$s\", \"%2$s\", \"%3$s\", \"%4$s\"})%n",
-                productName, groupId, artifactId, getVersion(groupId,
-                        artifactId, "DEV"));
+            "@javax.annotation.Generated({\"%1$s\", \"%2$s\", \"%3$s\", \"%4$s\"})%n",
+            productName,
+            groupId,
+            artifactId,
+            getVersion(groupId, artifactId, "DEV"));
     }
+
 }

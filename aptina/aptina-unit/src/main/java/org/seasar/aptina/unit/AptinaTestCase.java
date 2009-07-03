@@ -146,9 +146,8 @@ import static org.seasar.aptina.commons.util.IOUtils.*;
  * </p>
  * 
  * <p>
- * 次のサンプルは， <code>src/test/java</code> フォルダにある <code>TestSource.java</code>
- * をコンパイルすると， <code>foo.bar.Baz</code> クラスのソースを生成する <code>TestProcessor</code>
- * のテストクラスです．
+ * 次のサンプルは， {@code src/test/java} フォルダにある {@code TestSource.java} をコンパイルすると，
+ * {@code foo.bar.Baz} クラスのソースを生成する {@code TestProcessor} のテストクラスです．
  * </p>
  * 
  * <pre>
@@ -232,7 +231,7 @@ public abstract class AptinaTestCase extends TestCase {
     /**
      * ロケールを返します．
      * 
-     * @return ロケールまたは {@literal null}
+     * @return ロケールまたは {@code null}
      */
     protected Locale getLocale() {
         return locale;
@@ -270,7 +269,7 @@ public abstract class AptinaTestCase extends TestCase {
     /**
      * 文字セットを返します．
      * 
-     * @return 文字セットまたは {@literal null}
+     * @return 文字セットまたは {@code null}
      */
     protected Charset getCharset() {
         return charset;
@@ -420,7 +419,7 @@ public abstract class AptinaTestCase extends TestCase {
         assertNotEmpty("className", className);
         assertNotEmpty("source", source);
         compilationUnits.add(new InMemoryCompilationUnit(className, source
-                .toString()));
+            .toString()));
     }
 
     /**
@@ -433,18 +432,26 @@ public abstract class AptinaTestCase extends TestCase {
         javaCompiler = ToolProvider.getSystemJavaCompiler();
         diagnostics = new DiagnosticCollector<JavaFileObject>();
         final DiagnosticListener<JavaFileObject> listener = new LoggingDiagnosticListener(
-                diagnostics);
+            diagnostics);
 
-        standardJavaFileManager = javaCompiler.getStandardFileManager(listener,
-                locale, charset);
-        standardJavaFileManager.setLocation(StandardLocation.SOURCE_PATH,
-                sourcePaths);
+        standardJavaFileManager = javaCompiler.getStandardFileManager(
+            listener,
+            locale,
+            charset);
+        standardJavaFileManager.setLocation(
+            StandardLocation.SOURCE_PATH,
+            sourcePaths);
         testingJavaFileManager = new TestingJavaFileManager(
-                standardJavaFileManager, charset);
+            standardJavaFileManager,
+            charset);
 
-        final CompilationTask task = javaCompiler.getTask(out,
-                testingJavaFileManager, listener, options, null,
-                getCompilationUnits());
+        final CompilationTask task = javaCompiler.getTask(
+            out,
+            testingJavaFileManager,
+            listener,
+            options,
+            null,
+            getCompilationUnits());
         task.setProcessors(processors);
         compiledResult = task.call();
         compilationUnits.clear();
@@ -549,7 +556,7 @@ public abstract class AptinaTestCase extends TestCase {
             final String className, final javax.tools.Diagnostic.Kind kind) {
         assertCompiled();
         return DiagnosticUtils
-                .getDiagnostics(getDiagnostics(), className, kind);
+            .getDiagnostics(getDiagnostics(), className, kind);
     }
 
     /**
@@ -601,7 +608,7 @@ public abstract class AptinaTestCase extends TestCase {
      * 
      * @param clazz
      *            クラス
-     * @return クラスに対応する{@link TypeElement}， 存在しない場合は {@literal null}
+     * @return クラスに対応する{@link TypeElement}， 存在しない場合は {@code null}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      */
@@ -621,7 +628,7 @@ public abstract class AptinaTestCase extends TestCase {
      * 
      * @param className
      *            クラスの完全限定名
-     * @return クラスに対応する{@link TypeElement}， 存在しない場合は {@literal null}
+     * @return クラスに対応する{@link TypeElement}， 存在しない場合は {@code null}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      */
@@ -638,7 +645,7 @@ public abstract class AptinaTestCase extends TestCase {
      *            型エレメント
      * @param field
      *            フィールド
-     * @return 型エレメントに定義されたフィールドの変数エレメント． 存在しない場合は {@literal null}
+     * @return 型エレメントに定義されたフィールドの変数エレメント． 存在しない場合は {@code null}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      */
@@ -655,7 +662,7 @@ public abstract class AptinaTestCase extends TestCase {
      *            型エレメント
      * @param fieldName
      *            フィールド名
-     * @return 型エレメントに定義されたフィールドの変数エレメント． 存在しない場合は {@literal null}
+     * @return 型エレメントに定義されたフィールドの変数エレメント． 存在しない場合は {@code null}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      */
@@ -670,7 +677,7 @@ public abstract class AptinaTestCase extends TestCase {
      * 
      * @param typeElement
      *            型エレメント
-     * @return 型エレメントに定義されたデフォルトコンストラクタの実行可能エレメント． 存在しない場合は {@literal null}
+     * @return 型エレメントに定義されたデフォルトコンストラクタの実行可能エレメント． 存在しない場合は {@code null}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      */
@@ -691,7 +698,7 @@ public abstract class AptinaTestCase extends TestCase {
      *            型エレメント
      * @param parameterTypes
      *            引数型の並び
-     * @return 型エレメントに定義されたコンストラクタの実行可能エレメント． 存在しない場合は {@literal null}
+     * @return 型エレメントに定義されたコンストラクタの実行可能エレメント． 存在しない場合は {@code null}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      */
@@ -705,18 +712,18 @@ public abstract class AptinaTestCase extends TestCase {
     /**
      * 型エレメントに定義されたコンストラクタの実行可能エレメントを返します．
      * <p>
-     * 引数がの型が配列の場合は， 要素型の名前の後に <code>[]</code> を連ねる形式と， <code>[[LString;</code>
+     * 引数がの型が配列の場合は， 要素型の名前の後に {@code []} を連ねる形式と， {@code [[LString;}
      * のような形式のどちらでも指定することができます．
      * </p>
      * <p>
-     * 引数型が型引数を持つ場合は <code>"java.util.List&lt;T&gt;"</code> のようにそのまま指定します．
+     * 引数型が型引数を持つ場合は {@code "java.util.List&lt;T&gt;"} のようにそのまま指定します．
      * </p>
      * 
      * @param typeElement
      *            型エレメント
      * @param parameterTypeNames
      *            引数の型名の並び
-     * @return 型エレメントに定義されたコンストラクタの実行可能エレメント． 存在しない場合は {@literal null}
+     * @return 型エレメントに定義されたコンストラクタの実行可能エレメント． 存在しない場合は {@code null}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      */
@@ -724,8 +731,9 @@ public abstract class AptinaTestCase extends TestCase {
             final TypeElement typeElement, final String... parameterTypeNames)
             throws IllegalStateException {
         assertCompiled();
-        return ElementUtils.getConstructorElement(typeElement,
-                parameterTypeNames);
+        return ElementUtils.getConstructorElement(
+            typeElement,
+            parameterTypeNames);
     }
 
     /**
@@ -735,7 +743,7 @@ public abstract class AptinaTestCase extends TestCase {
      *            型エレメント
      * @param methodName
      *            メソッド名
-     * @return 型エレメントに定義されたメソッドの実行可能エレメント．存在しない場合は {@literal null}
+     * @return 型エレメントに定義されたメソッドの実行可能エレメント．存在しない場合は {@code null}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      */
@@ -758,7 +766,7 @@ public abstract class AptinaTestCase extends TestCase {
      *            メソッド名
      * @param parameterTypes
      *            引数型の並び
-     * @return 型エレメントに定義されたメソッドの実行可能エレメント． 存在しない場合は {@literal null}
+     * @return 型エレメントに定義されたメソッドの実行可能エレメント． 存在しない場合は {@code null}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      */
@@ -766,18 +774,20 @@ public abstract class AptinaTestCase extends TestCase {
             final String methodName, final Class<?>... parameterTypes)
             throws IllegalStateException {
         assertCompiled();
-        return ElementUtils.getMethodElement(typeElement, methodName,
-                parameterTypes);
+        return ElementUtils.getMethodElement(
+            typeElement,
+            methodName,
+            parameterTypes);
     }
 
     /**
      * 型エレメントに定義されたメソッドの実行可能エレメントを返します．
      * <p>
-     * 引数がの型が配列の場合は， 要素型の名前の後に <code>[]</code> を連ねる形式と， <code>[[LString;</code>
+     * 引数がの型が配列の場合は， 要素型の名前の後に {@code []} を連ねる形式と， {@code [[LString;}
      * のような形式のどちらでも指定することができます．
      * </p>
      * <p>
-     * 引数型が型引数を持つ場合は <code>"java.util.List&lt;T&gt;"</code> のようにそのまま指定します．
+     * 引数型が型引数を持つ場合は {@code "java.util.List&lt;T&gt;"} のようにそのまま指定します．
      * </p>
      * 
      * @param typeElement
@@ -786,7 +796,7 @@ public abstract class AptinaTestCase extends TestCase {
      *            メソッド名
      * @param parameterTypeNames
      *            引数の型名の並び
-     * @return 型エレメントに定義されたメソッドの実行可能エレメント． 存在しない場合は {@literal null}
+     * @return 型エレメントに定義されたメソッドの実行可能エレメント． 存在しない場合は {@code null}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      */
@@ -794,8 +804,10 @@ public abstract class AptinaTestCase extends TestCase {
             final String methodName, final String... parameterTypeNames)
             throws IllegalStateException {
         assertCompiled();
-        return ElementUtils.getMethodElement(typeElement, methodName,
-                parameterTypeNames);
+        return ElementUtils.getMethodElement(
+            typeElement,
+            methodName,
+            parameterTypeNames);
     }
 
     /**
@@ -803,35 +815,39 @@ public abstract class AptinaTestCase extends TestCase {
      * 
      * @param clazz
      *            クラス
-     * @return クラスに対応する{@link TypeMirror}， クラスが存在しない場合は {@literal null}
+     * @return クラスに対応する{@link TypeMirror}， クラスが存在しない場合は {@code null}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      */
     protected TypeMirror getTypeMirror(final Class<?> clazz)
             throws IllegalStateException {
         assertCompiled();
-        return TypeMirrorUtils.getTypeMirror(getTypeUtils(), getElementUtils(),
-                clazz);
+        return TypeMirrorUtils.getTypeMirror(
+            getTypeUtils(),
+            getElementUtils(),
+            clazz);
     }
 
     /**
      * クラスに対応する {@link TypeMirror} を返します．
      * <p>
-     * 配列の場合は要素型の名前の後に <code>[]</code> を連ねる形式と， <code>[[LString;</code> のような
+     * 配列の場合は要素型の名前の後に {@code []} を連ねる形式と， {@code [[LString;} のような
      * 形式のどちらでも指定することができます．
      * </p>
      * 
      * @param className
      *            クラスの完全限定名
-     * @return クラスに対応する{@link TypeMirror}， クラスが存在しない場合は {@literal null}
+     * @return クラスに対応する{@link TypeMirror}， クラスが存在しない場合は {@code null}
      * @throws IllegalStateException
      *             {@link #compile()} が呼び出されていない場合
      */
     protected TypeMirror getTypeMirror(final String className)
             throws IllegalStateException {
         assertCompiled();
-        return TypeMirrorUtils.getTypeMirror(getTypeUtils(), getElementUtils(),
-                className);
+        return TypeMirrorUtils.getTypeMirror(
+            getTypeUtils(),
+            getElementUtils(),
+            className);
     }
 
     /**
@@ -874,8 +890,10 @@ public abstract class AptinaTestCase extends TestCase {
         assertNotEmpty("className", className);
         assertCompiled();
         final JavaFileObject javaFileObject = testingJavaFileManager
-                .getJavaFileForInput(StandardLocation.SOURCE_OUTPUT, className,
-                        Kind.SOURCE);
+            .getJavaFileForInput(
+                StandardLocation.SOURCE_OUTPUT,
+                className,
+                Kind.SOURCE);
         if (javaFileObject == null) {
             throw new SourceNotGeneratedException(className);
         }
@@ -900,9 +918,9 @@ public abstract class AptinaTestCase extends TestCase {
             return;
         }
         final BufferedReader expectedReader = new BufferedReader(
-                new StringReader(expected.toString()));
+            new StringReader(expected.toString()));
         final BufferedReader actualReader = new BufferedReader(
-                new StringReader(actual));
+            new StringReader(actual));
         try {
             assertEqualsByLine(expectedReader, actualReader);
         } catch (final IOException ignore) {
@@ -985,8 +1003,9 @@ public abstract class AptinaTestCase extends TestCase {
         assertCompiled();
         final String actual = getGeneratedSource(className);
         assertNotNull("actual", actual);
-        assertEqualsByLine(expected == null ? null : expected.toString(),
-                actual);
+        assertEqualsByLine(
+            expected == null ? null : expected.toString(),
+            actual);
     }
 
     /**
@@ -1038,8 +1057,9 @@ public abstract class AptinaTestCase extends TestCase {
         assertNotNull("expectedSourceFile", expectedSourceFile);
         assertNotEmpty("className", className);
         assertCompiled();
-        assertEqualsGeneratedSource(readString(expectedSourceFile, charset),
-                className);
+        assertEqualsGeneratedSource(
+            readString(expectedSourceFile, charset),
+            className);
     }
 
     /**
@@ -1066,7 +1086,7 @@ public abstract class AptinaTestCase extends TestCase {
         assertNotNull("clazz", clazz);
         assertCompiled();
         assertEqualsGeneratedSourceWithFile(expectedSourceFilePath, clazz
-                .getName());
+            .getName());
     }
 
     /**
@@ -1092,8 +1112,9 @@ public abstract class AptinaTestCase extends TestCase {
         assertNotEmpty("expectedSourceFilePath", expectedSourceFilePath);
         assertNotEmpty("className", className);
         assertCompiled();
-        assertEqualsGeneratedSourceWithFile(new File(expectedSourceFilePath),
-                className);
+        assertEqualsGeneratedSourceWithFile(
+            new File(expectedSourceFilePath),
+            className);
     }
 
     /**
@@ -1120,7 +1141,7 @@ public abstract class AptinaTestCase extends TestCase {
         assertNotNull("clazz", clazz);
         assertCompiled();
         assertEqualsGeneratedSourceWithResource(expectedResourceUrl, clazz
-                .getName());
+            .getName());
     }
 
     /**
@@ -1146,8 +1167,9 @@ public abstract class AptinaTestCase extends TestCase {
         assertNotNull("expectedResourceUrl", expectedResourceUrl);
         assertNotEmpty("className", className);
         assertCompiled();
-        assertEqualsGeneratedSource(readFromResource(expectedResourceUrl),
-                className);
+        assertEqualsGeneratedSource(
+            readFromResource(expectedResourceUrl),
+            className);
     }
 
     /**
@@ -1173,8 +1195,9 @@ public abstract class AptinaTestCase extends TestCase {
         assertNotEmpty("expectedResource", expectedResource);
         assertNotNull("clazz", clazz);
         assertCompiled();
-        assertEqualsGeneratedSourceWithResource(clazz.getName(),
-                expectedResource);
+        assertEqualsGeneratedSourceWithResource(
+            clazz.getName(),
+            expectedResource);
     }
 
     /**
@@ -1200,8 +1223,10 @@ public abstract class AptinaTestCase extends TestCase {
         assertNotEmpty("expectedResource", expectedResource);
         assertNotEmpty("className", className);
         assertCompiled();
-        final URL url = Thread.currentThread().getContextClassLoader()
-                .getResource(expectedResource);
+        final URL url = Thread
+            .currentThread()
+            .getContextClassLoader()
+            .getResource(expectedResource);
         if (url == null) {
             throw new FileNotFoundException(expectedResource);
         }
@@ -1241,7 +1266,7 @@ public abstract class AptinaTestCase extends TestCase {
      */
     List<JavaFileObject> getCompilationUnits() throws IOException {
         final List<JavaFileObject> result = new ArrayList<JavaFileObject>(
-                compilationUnits.size());
+            compilationUnits.size());
         for (final CompilationUnit compilationUnit : compilationUnits) {
             result.add(compilationUnit.getJavaFileObject());
         }
@@ -1379,7 +1404,9 @@ public abstract class AptinaTestCase extends TestCase {
         @Override
         public JavaFileObject getJavaFileObject() throws IOException {
             return standardJavaFileManager.getJavaFileForInput(
-                    StandardLocation.SOURCE_PATH, className, Kind.SOURCE);
+                StandardLocation.SOURCE_PATH,
+                className,
+                Kind.SOURCE);
         }
 
     }
@@ -1412,8 +1439,11 @@ public abstract class AptinaTestCase extends TestCase {
         @Override
         public JavaFileObject getJavaFileObject() throws IOException {
             final JavaFileObject javaFileObject = testingJavaFileManager
-                    .getJavaFileForOutput(StandardLocation.SOURCE_OUTPUT,
-                            className, Kind.SOURCE, null);
+                .getJavaFileForOutput(
+                    StandardLocation.SOURCE_OUTPUT,
+                    className,
+                    Kind.SOURCE,
+                    null);
             final Writer writer = javaFileObject.openWriter();
             try {
                 writer.write(source);

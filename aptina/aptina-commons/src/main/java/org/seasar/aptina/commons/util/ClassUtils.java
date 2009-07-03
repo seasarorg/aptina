@@ -48,12 +48,12 @@ public class ClassUtils {
     /**
      * クラスの完全限定名からパッケージ名を返します．
      * <p>
-     * 完全限定名がパッケージ名を含んでいない場合 (デフォルトパッケージ) は {@literal null} を返します．
+     * 完全限定名がパッケージ名を含んでいない場合 (デフォルトパッケージ) は {@code null} を返します．
      * </p>
      * 
      * @param qualifiedName
      *            完全限定名
-     * @return パッケージ名または {@literal null}
+     * @return パッケージ名または {@code null}
      */
     public static String getPackageName(final String qualifiedName) {
         final int pos = qualifiedName.lastIndexOf('.');
@@ -66,12 +66,12 @@ public class ClassUtils {
     /**
      * クラスの完全限定名を返します．
      * <p>
-     * 配列型はバイナリ名 ({@literal [[;intL} 形式) ではなく正規名 ({@literal int[]} 形式) となります．
+     * 配列型はバイナリ名 ({@code [[;intL} 形式) ではなく正規名 ({@code int[]} 形式) となります．
      * </p>
      * 
      * @param clazz
      *            クラス
-     * @return クラスの完全限定名または {@literal null}
+     * @return クラスの完全限定名または {@code null}
      */
     public static String getQualifiedName(final Class<?> clazz) {
         if (clazz == null) {
@@ -86,7 +86,7 @@ public class ClassUtils {
     /**
      * クラスの完全限定名の配列を返します．
      * <p>
-     * 配列型はバイナリ名 ({@literal [[;intL} 形式) ではなく正規名 ({@literal int[]} 形式) となります．
+     * 配列型はバイナリ名 ({@code [[;intL} 形式) ではなく正規名 ({@code int[]} 形式) となります．
      * </p>
      * 
      * @param classes
@@ -105,12 +105,12 @@ public class ClassUtils {
     /**
      * クラスの単純名を返します．
      * <p>
-     * 配列型はバイナリ名 ({@literal [[;intL} 形式) ではなく正規名 ({@literal int[]} 形式) となります．
+     * 配列型はバイナリ名 ({@code [[;intL} 形式) ではなく正規名 ({@code int[]} 形式) となります．
      * </p>
      * 
      * @param clazz
      *            クラス
-     * @return クラスの単純名または {@literal null}
+     * @return クラスの単純名または {@code null}
      */
     public static String getSimpleName(final Class<?> clazz) {
         if (clazz == null) {
@@ -125,7 +125,7 @@ public class ClassUtils {
     /**
      * クラスの単純名の配列を返します．
      * <p>
-     * 配列型はバイナリ名 ({@literal [[;intL} 形式) ではなく正規名 ({@literal int[]} 形式) となります．
+     * 配列型はバイナリ名 ({@code [[;intL} 形式) ではなく正規名 ({@code int[]} 形式) となります．
      * </p>
      * 
      * @param classes

@@ -31,16 +31,16 @@ public class PropertyInfo {
     /** プロパティの型 */
     protected String type;
 
-    /** プロパティの型が配列型なら {@literal true} */
+    /** プロパティの型が配列型なら {@code true} */
     protected boolean array;
 
     /** プロパティの型が配列の場合の要素型 */
     protected String componentType;
 
-    /** プロパティが参照可能なら {@literal true} */
+    /** プロパティが参照可能なら {@code true} */
     protected boolean readable = true;
 
-    /** プロパティが変更可能なら {@literal true} */
+    /** プロパティが変更可能なら {@code true} */
     protected boolean writable = true;
 
     /**
@@ -107,19 +107,19 @@ public class PropertyInfo {
     }
 
     /**
-     * プロパティの型が配列型なら {@literal true} を返します．
+     * プロパティの型が配列型なら {@code true} を返します．
      * 
-     * @return プロパティの型が配列型なら {@literal true}
+     * @return プロパティの型が配列型なら {@code true}
      */
     public boolean isArray() {
         return array;
     }
 
     /**
-     * プロパティの型が配列型なら {@literal true} を設定します．
+     * プロパティの型が配列型なら {@code true} を設定します．
      * 
      * @param array
-     *            プロパティの型が配列型なら {@literal true}
+     *            プロパティの型が配列型なら {@code true}
      */
     public void setArray(final boolean array) {
         this.array = array;
@@ -145,38 +145,38 @@ public class PropertyInfo {
     }
 
     /**
-     * プロパティが参照可能なら {@literal true} を返します．
+     * プロパティが参照可能なら {@code true} を返します．
      * 
-     * @return プロパティが参照可能なら {@literal true}
+     * @return プロパティが参照可能なら {@code true}
      */
     public boolean isReadable() {
         return readable;
     }
 
     /**
-     * プロパティが参照可能なら {@literal true} を設定します．
+     * プロパティが参照可能なら {@code true} を設定します．
      * 
      * @param readable
-     *            プロパティが参照可能なら {@literal true}
+     *            プロパティが参照可能なら {@code true}
      */
     public void setReadable(final boolean readable) {
         this.readable = readable;
     }
 
     /**
-     * プロパティが変更可能なら {@literal true} を返します．
+     * プロパティが変更可能なら {@code true} を返します．
      * 
-     * @return プロパティが変更可能なら {@literal true}
+     * @return プロパティが変更可能なら {@code true}
      */
     public boolean isWritable() {
         return writable;
     }
 
     /**
-     * プロパティが変更可能なら {@literal true} を設定します．
+     * プロパティが変更可能なら {@code true} を設定します．
      * 
      * @param writable
-     *            プロパティが変更可能なら {@literal true}
+     *            プロパティが変更可能なら {@code true}
      */
     public void setWritable(final boolean writable) {
         this.writable = writable;

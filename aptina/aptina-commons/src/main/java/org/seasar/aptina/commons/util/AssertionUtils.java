@@ -28,14 +28,14 @@ public class AssertionUtils {
     }
 
     /**
-     * パラメータが {@literal null} ではいけないことを表明します．
+     * パラメータが {@code null} ではいけないことを表明します．
      * 
      * @param name
      *            パラメータの名前
      * @param param
      *            パラメータ
      * @throws AssertionError
-     *             パラメータが {@literal null} の場合
+     *             パラメータが {@code null} の場合
      */
     public static void assertNotNull(final String name, final Object param)
             throws AssertionError {
@@ -45,14 +45,14 @@ public class AssertionUtils {
     }
 
     /**
-     * 文字列が {@literal null} でも空でもいけないことを表明します．
+     * 文字列が {@code null} でも空でもいけないことを表明します．
      * 
      * @param name
      *            配列の名前
      * @param string
      *            文字列
      * @throws AssertionError
-     *             文字列が {@literal null} または場合
+     *             文字列が {@code null} または場合
      */
     public static void assertNotEmpty(final String name,
             final CharSequence string) throws AssertionError {
@@ -65,14 +65,14 @@ public class AssertionUtils {
     }
 
     /**
-     * 配列が {@literal null} でも空でもいけないことを表明します．
+     * 配列が {@code null} でも空でもいけないことを表明します．
      * 
      * @param name
      *            配列の名前
      * @param array
      *            配列
      * @throws AssertionError
-     *             配列が {@literal null} または空の場合
+     *             配列が {@code null} または空の場合
      */
     public static void assertNotEmpty(final String name, final Object[] array)
             throws AssertionError {
@@ -90,14 +90,14 @@ public class AssertionUtils {
     }
 
     /**
-     * コレクションが {@literal null} でも空でもいけないことを表明します．
+     * コレクションが {@code null} でも空でもいけないことを表明します．
      * 
      * @param name
      *            配列の名前
      * @param collection
      *            コレクション
      * @throws AssertionError
-     *             配列が {@literal null} または空の場合
+     *             配列が {@code null} または空の場合
      */
     public static void assertNotEmpty(final String name,
             final Collection<?> collection) throws AssertionError {

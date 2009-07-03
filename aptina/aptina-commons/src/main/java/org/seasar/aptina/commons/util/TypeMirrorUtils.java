@@ -30,11 +30,11 @@ import static org.seasar.aptina.commons.util.AssertionUtils.*;
 import static org.seasar.aptina.commons.util.CollectionUtils.*;
 import static org.seasar.aptina.commons.util.ElementUtils.*;
 
+/*
+ * {@link TypeMirror} のインスタンスを手に入れる都合により，このクラスのテストケースは Aptina Unit に存在します．
+ */
 /**
  * {@link TypeMirror} を扱うユーティリティです．
- * <p>
- * {@link TypeMirror} のインスタンスを手に入れる都合により，このクラスのテストケースは Aptina Unit に存在します．
- * </p>
  * 
  * @author koichik
  */
@@ -76,8 +76,10 @@ public class TypeMirrorUtils {
         assertNotNull("elementUtils", elementUtils);
         assertNotNull("clazz", clazz);
         if (clazz.isArray()) {
-            return toArrayType(typeUtils, getTypeMirror(typeUtils,
-                    elementUtils, clazz.getComponentType()));
+            return toArrayType(typeUtils, getTypeMirror(
+                typeUtils,
+                elementUtils,
+                clazz.getComponentType()));
         }
         return getTypeMirror(typeUtils, elementUtils, clazz.getName());
     }
@@ -85,7 +87,7 @@ public class TypeMirrorUtils {
     /**
      * クラス名に対応する {@link TypeMirror} を返します．
      * <p>
-     * 配列の場合は要素型の名前の後に <code>[]</code> を連ねる形式と， <code>[[LString;</code> のような
+     * 配列の場合は要素型の名前の後に {@code []} を連ねる形式と， {@code [[LString;} のような
      * 形式のどちらでも指定することができます．
      * </p>
      * 
@@ -95,7 +97,7 @@ public class TypeMirrorUtils {
      *            {@link Elements}
      * @param className
      *            クラスの完全限定名
-     * @return クラスに対応する{@link TypeMirror}， クラスが存在しない場合は {@literal null}
+     * @return クラスに対応する{@link TypeMirror}， クラスが存在しない場合は {@code null}
      */
     public static TypeMirror getTypeMirror(final Types typeUtils,
             final Elements elementUtils, final String className) {
@@ -104,16 +106,21 @@ public class TypeMirrorUtils {
         assertNotEmpty("className", className);
         if (className.endsWith("[]")) {
             final String componentTypeName = className.substring(0, className
-                    .length() - 2);
-            return toArrayType(typeUtils, getTypeMirror(typeUtils,
-                    elementUtils, componentTypeName));
+                .length() - 2);
+            return toArrayType(typeUtils, getTypeMirror(
+                typeUtils,
+                elementUtils,
+                componentTypeName));
         }
         if (className.startsWith("[") && className.endsWith(";")) {
             final int pos = className.indexOf("L");
-            final String componentTypeName = className.substring(pos + 1,
-                    className.length() - 1);
-            TypeMirror typeMirror = getTypeMirror(typeUtils, elementUtils,
-                    componentTypeName);
+            final String componentTypeName = className.substring(
+                pos + 1,
+                className.length() - 1);
+            TypeMirror typeMirror = getTypeMirror(
+                typeUtils,
+                elementUtils,
+                componentTypeName);
             for (int i = 0; i < pos; ++i) {
                 typeMirror = toArrayType(typeUtils, typeMirror);
             }
@@ -169,8 +176,10 @@ public class TypeMirrorUtils {
         assertNotNull("types", types);
         final List<TypeMirror> typeMirrors = newArrayList();
         for (final Class<?> type : types) {
-            final TypeMirror typeMirror = getTypeMirror(typeUtils,
-                    elementUtils, type);
+            final TypeMirror typeMirror = getTypeMirror(
+                typeUtils,
+                elementUtils,
+                type);
             if (typeMirror == null) {
                 throw new IllegalArgumentException("unknown type : " + type);
             }
@@ -199,8 +208,10 @@ public class TypeMirrorUtils {
         assertNotNull("typeNames", typeNames);
         final List<TypeMirror> typeMirrors = newArrayList();
         for (final String typeName : typeNames) {
-            final TypeMirror typeMirror = getTypeMirror(typeUtils,
-                    elementUtils, typeName);
+            final TypeMirror typeMirror = getTypeMirror(
+                typeUtils,
+                elementUtils,
+                typeName);
             if (typeMirror == null) {
                 throw new IllegalArgumentException("unknown type : " + typeName);
             }
