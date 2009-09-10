@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>org.seasar.aptina</groupId>
 		<artifactId>aptina-project</artifactId>
-		<version>0.0.0</version>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
 	<!-- More Project Information -->

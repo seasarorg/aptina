@@ -6,7 +6,7 @@
 	<!-- The Basics -->
 	<groupId>org.seasar.aptina</groupId>
 	<artifactId>aptina-project</artifactId>
-	<version>0.0.0</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>aptina-commons</module><!-- first -->
