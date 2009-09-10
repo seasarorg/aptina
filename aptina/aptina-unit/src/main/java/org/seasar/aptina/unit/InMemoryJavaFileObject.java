@@ -28,6 +28,8 @@ import java.nio.charset.Charset;
 import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 
+import org.seasar.aptina.commons.util.IOUtils;
+
 /**
  * 生成されたリソースをメモリ上に保持する{@link JavaFileObject}の実装です。
  * 
@@ -35,7 +37,9 @@ import javax.tools.SimpleJavaFileObject;
  */
 class InMemoryJavaFileObject extends SimpleJavaFileObject {
 
-    final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024);
+    byte[] content;
+
+    ByteArrayOutputStream outputStream;
 
     final Charset charset;
 
@@ -55,13 +59,36 @@ class InMemoryJavaFileObject extends SimpleJavaFileObject {
         this.charset = charset;
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param uri
+     *            ファイルオブジェクトの{@link URI}
+     * @param kind
+     *            ファイルオブジェクトの種類
+     * @param charset
+     *            文字セット
+     * @param content
+     *            ファイルの内容
+     */
+    public InMemoryJavaFileObject(final URI uri, final Kind kind,
+            final Charset charset, final byte[] content) {
+        super(uri, kind);
+        this.charset = charset;
+        this.content = content;
+    }
+
     @Override
     public InputStream openInputStream() throws IOException {
-        return new ByteArrayInputStream(outputStream.toByteArray());
+        return new ByteArrayInputStream(content != null ? content
+                : outputStream != null ? outputStream.toByteArray()
+                        : new byte[0]);
     }
 
     @Override
     public OutputStream openOutputStream() throws IOException {
+        content = null;
+        outputStream = new ByteArrayOutputStream(1024);
         return outputStream;
     }
 
@@ -73,8 +100,8 @@ class InMemoryJavaFileObject extends SimpleJavaFileObject {
     @Override
     public CharSequence getCharContent(final boolean ignoreEncodingErrors)
             throws IOException {
-        return new String(outputStream.toByteArray(), charset == null ? Charset
-                .defaultCharset() : charset);
+        return new String(IOUtils.readBytes(openInputStream()),
+                charset == null ? Charset.defaultCharset() : charset);
     }
 
 }

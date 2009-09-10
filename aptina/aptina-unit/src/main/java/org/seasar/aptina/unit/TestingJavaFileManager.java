@@ -15,6 +15,8 @@
  */
 package org.seasar.aptina.unit;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -28,6 +30,8 @@ import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.JavaFileObject.Kind;
+
+import org.seasar.aptina.commons.util.IOUtils;
 
 import static org.seasar.aptina.commons.util.CollectionUtils.*;
 
@@ -74,8 +78,19 @@ class TestingJavaFileManager extends
     public FileObject getFileForOutput(final Location location,
             final String packageName, final String relativeName,
             final FileObject sibling) throws IOException {
+        byte[] content = null;
+        try {
+            final FileObject originalFileObject = super.getFileForOutput(
+                    location, packageName, relativeName, sibling);
+            content = IOUtils.readBytes(originalFileObject.openInputStream());
+        } catch (final FileNotFoundException ignore) {
+            System.out
+                    .println(new File("src/test/resources").getAbsolutePath());
+            ignore.printStackTrace();
+        }
         final InMemoryJavaFileObject fileObject = new InMemoryJavaFileObject(
-                toURI(location, packageName, relativeName), Kind.OTHER, charset);
+                toURI(location, packageName, relativeName), Kind.OTHER,
+                charset, content);
         fileObjects.put(packageName + "::" + relativeName, fileObject);
         return fileObject;
     }
@@ -94,9 +109,16 @@ class TestingJavaFileManager extends
     public JavaFileObject getJavaFileForOutput(final Location location,
             final String className, final Kind kind, final FileObject sibling)
             throws IOException {
-        final String key = kind.name() + "::" + className;
+        byte[] content = null;
+        try {
+            final JavaFileObject originalFileObject = super
+                    .getJavaFileForOutput(location, className, kind, sibling);
+            content = IOUtils.readBytes(originalFileObject.openInputStream());
+        } catch (final FileNotFoundException ignore) {
+        }
         final InMemoryJavaFileObject fileObject = new InMemoryJavaFileObject(
-                toURI(location, className), kind, charset);
+                toURI(location, className), kind, charset, content);
+        final String key = kind.name() + "::" + className;
         fileObjects.put(key, fileObject);
         return fileObject;
     }

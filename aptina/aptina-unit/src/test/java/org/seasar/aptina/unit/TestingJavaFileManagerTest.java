@@ -30,7 +30,7 @@ import junit.framework.TestCase;
  * 
  * @author koichik
  */
-public class TestingFileManagerTest extends TestCase {
+public class TestingJavaFileManagerTest extends TestCase {
 
     TestingJavaFileManager testingFileManager;
 
