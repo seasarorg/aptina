@@ -15,6 +15,8 @@
  */
 package org.seasar.aptina.unit;
 
+import java.io.File;
+
 import javax.tools.DiagnosticCollector;
 import javax.tools.FileObject;
 import javax.tools.JavaCompiler;
@@ -25,6 +27,10 @@ import javax.tools.ToolProvider;
 import javax.tools.JavaFileObject.Kind;
 
 import junit.framework.TestCase;
+
+import org.seasar.aptina.commons.util.IOUtils;
+
+import static java.util.Arrays.*;
 
 /**
  * 
@@ -41,6 +47,9 @@ public class TestingJavaFileManagerTest extends TestCase {
         final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
         final StandardJavaFileManager standardFileManager = compiler
                 .getStandardFileManager(diagnostics, null, null);
+        standardFileManager.setLocation(StandardLocation.SOURCE_PATH, asList(
+                new File("aptina-unit/src/test/resources"), new File(
+                        "src/test/resources")));
         testingFileManager = new TestingJavaFileManager(standardFileManager,
                 null);
     }
@@ -50,10 +59,21 @@ public class TestingJavaFileManagerTest extends TestCase {
      */
     public void testFileObject() throws Exception {
         final FileObject fo = testingFileManager.getFileForOutput(
-                StandardLocation.CLASS_OUTPUT, "hoge", "foo/bar", null);
+                StandardLocation.SOURCE_PATH, "hoge", "foo/bar", null);
         assertNotNull(fo);
         assertSame(fo, testingFileManager.getFileForInput(
-                StandardLocation.CLASS_OUTPUT, "hoge", "foo/bar"));
+                StandardLocation.SOURCE_PATH, "hoge", "foo/bar"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testFileObjectFromClassOutput() throws Exception {
+        final FileObject fo = testingFileManager.getFileForOutput(
+                StandardLocation.CLASS_OUTPUT, "", "a.txt", null);
+        assertNotNull(fo);
+        assertEquals("abc\r\nあいう\r\n", IOUtils.readString(fo.openInputStream(),
+                "UTF-8"));
     }
 
     /**

@@ -15,7 +15,6 @@
  */
 package org.seasar.aptina.unit;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
@@ -29,6 +28,7 @@ import javax.tools.ForwardingJavaFileManager;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
+import javax.tools.StandardLocation;
 import javax.tools.JavaFileObject.Kind;
 
 import org.seasar.aptina.commons.util.IOUtils;
@@ -78,20 +78,29 @@ class TestingJavaFileManager extends
     public FileObject getFileForOutput(final Location location,
             final String packageName, final String relativeName,
             final FileObject sibling) throws IOException {
+        final String key = packageName + "::" + relativeName;
+        if (fileObjects.containsKey(key)) {
+            return fileObjects.get(key);
+        }
+
         byte[] content = null;
         try {
-            final FileObject originalFileObject = super.getFileForOutput(
-                    location, packageName, relativeName, sibling);
+            final FileObject originalFileObject;
+            if (location == StandardLocation.CLASS_OUTPUT) {
+                originalFileObject = getFileForInput(
+                        StandardLocation.SOURCE_PATH, packageName, relativeName);
+            } else {
+                originalFileObject = super.getFileForOutput(location,
+                        packageName, relativeName, sibling);
+            }
             content = IOUtils.readBytes(originalFileObject.openInputStream());
         } catch (final FileNotFoundException ignore) {
-            System.out
-                    .println(new File("src/test/resources").getAbsolutePath());
             ignore.printStackTrace();
         }
         final InMemoryJavaFileObject fileObject = new InMemoryJavaFileObject(
                 toURI(location, packageName, relativeName), Kind.OTHER,
                 charset, content);
-        fileObjects.put(packageName + "::" + relativeName, fileObject);
+        fileObjects.put(key, fileObject);
         return fileObject;
     }
 
@@ -109,6 +118,11 @@ class TestingJavaFileManager extends
     public JavaFileObject getJavaFileForOutput(final Location location,
             final String className, final Kind kind, final FileObject sibling)
             throws IOException {
+        final String key = kind.name() + "::" + className;
+        if (fileObjects.containsKey(key)) {
+            return fileObjects.get(key);
+        }
+
         byte[] content = null;
         try {
             final JavaFileObject originalFileObject = super
@@ -118,7 +132,6 @@ class TestingJavaFileManager extends
         }
         final InMemoryJavaFileObject fileObject = new InMemoryJavaFileObject(
                 toURI(location, className), kind, charset, content);
-        final String key = kind.name() + "::" + className;
         fileObjects.put(key, fileObject);
         return fileObject;
     }
