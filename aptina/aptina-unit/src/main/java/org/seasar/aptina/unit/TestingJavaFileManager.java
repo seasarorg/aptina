@@ -95,7 +95,6 @@ class TestingJavaFileManager extends
             }
             content = IOUtils.readBytes(originalFileObject.openInputStream());
         } catch (final FileNotFoundException ignore) {
-            ignore.printStackTrace();
         }
         final InMemoryJavaFileObject fileObject = new InMemoryJavaFileObject(
                 toURI(location, packageName, relativeName), Kind.OTHER,
