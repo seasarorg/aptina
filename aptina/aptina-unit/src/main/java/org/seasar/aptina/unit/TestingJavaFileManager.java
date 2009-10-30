@@ -84,6 +84,7 @@ class TestingJavaFileManager extends
         }
 
         byte[] content = null;
+        URI uri = null;
         try {
             final FileObject originalFileObject;
             if (location == StandardLocation.CLASS_OUTPUT) {
@@ -94,11 +95,12 @@ class TestingJavaFileManager extends
                         packageName, relativeName, sibling);
             }
             content = IOUtils.readBytes(originalFileObject.openInputStream());
+            uri = originalFileObject.toUri();
         } catch (final FileNotFoundException ignore) {
         }
         final InMemoryJavaFileObject fileObject = new InMemoryJavaFileObject(
-                toURI(location, packageName, relativeName), Kind.OTHER,
-                charset, content);
+                uri != null ? uri : toURI(location, packageName, relativeName),
+                Kind.OTHER, charset, content);
         fileObjects.put(key, fileObject);
         return fileObject;
     }
@@ -123,14 +125,17 @@ class TestingJavaFileManager extends
         }
 
         byte[] content = null;
+        URI uri = null;
         try {
             final JavaFileObject originalFileObject = super
                     .getJavaFileForOutput(location, className, kind, sibling);
             content = IOUtils.readBytes(originalFileObject.openInputStream());
+            uri = originalFileObject.toUri();
         } catch (final FileNotFoundException ignore) {
         }
         final InMemoryJavaFileObject fileObject = new InMemoryJavaFileObject(
-                toURI(location, className), kind, charset, content);
+                uri != null ? uri : toURI(location, className), kind, charset,
+                content);
         fileObjects.put(key, fileObject);
         return fileObject;
     }
