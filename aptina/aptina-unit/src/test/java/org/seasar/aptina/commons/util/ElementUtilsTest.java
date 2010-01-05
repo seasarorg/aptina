@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2009 the Seasar Foundation and the Others.
+ * Copyright 2004-2010 the Seasar Foundation and the Others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
@@ -49,10 +49,12 @@ public class ElementUtilsTest extends AptinaTestCase {
 
         final TypeElement typeElement = getTypeElement(Foo.class);
         final AnnotationMirror annotationMirror = getAnnotationMirror(
-                typeElement, Generated.class);
+            typeElement,
+            Generated.class);
         assertNotNull(annotationMirror);
         assertEquals(Generated.class.getName(), annotationMirror
-                .getAnnotationType().toString());
+            .getAnnotationType()
+            .toString());
     }
 
     /**
@@ -65,11 +67,12 @@ public class ElementUtilsTest extends AptinaTestCase {
 
         TypeElement typeElement = getTypeElement(Foo.class);
         assertEquals("", toStringOfTypeParameterDecl(typeElement
-                .getTypeParameters()));
+            .getTypeParameters()));
 
         typeElement = getTypeElement(Bar.class);
-        assertEquals("<E, T extends java.util.List<E> & java.io.Serializable>",
-                toStringOfTypeParameterDecl(typeElement.getTypeParameters()));
+        assertEquals(
+            "<E, T extends java.util.List<E> & java.io.Serializable>",
+            toStringOfTypeParameterDecl(typeElement.getTypeParameters()));
     }
 
     /**
@@ -82,11 +85,11 @@ public class ElementUtilsTest extends AptinaTestCase {
 
         TypeElement typeElement = getTypeElement(Foo.class);
         assertEquals("", toStringOfTypeParameterNames(typeElement
-                .getTypeParameters()));
+            .getTypeParameters()));
 
         typeElement = getTypeElement(Bar.class);
         assertEquals("<E, T>", toStringOfTypeParameterNames(typeElement
-                .getTypeParameters()));
+            .getTypeParameters()));
     }
 
 }

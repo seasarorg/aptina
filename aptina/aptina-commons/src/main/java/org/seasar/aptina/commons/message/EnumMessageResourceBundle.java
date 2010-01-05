@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2009 the Seasar Foundation and the Others.
+ * Copyright 2004-2010 the Seasar Foundation and the Others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
@@ -61,8 +61,9 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
      */
     public static <T extends Enum<T> & EnumMessageCode> ResourceBundle getBundle(
             final Class<T> enumClass) throws IllegalStateException {
-        return ResourceBundle.getBundle(enumClass.getName(),
-                new EnumMessageResourceBundleControl<T>(enumClass));
+        return ResourceBundle.getBundle(
+            enumClass.getName(),
+            new EnumMessageResourceBundleControl<T>(enumClass));
     }
 
     /**
@@ -82,8 +83,10 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
     public static <T extends Enum<T> & EnumMessageCode> ResourceBundle getBundle(
             final Class<T> enumClass, final Locale locale)
             throws IllegalStateException {
-        return ResourceBundle.getBundle(enumClass.getName(), locale,
-                new EnumMessageResourceBundleControl<T>(enumClass));
+        return ResourceBundle.getBundle(
+            enumClass.getName(),
+            locale,
+            new EnumMessageResourceBundleControl<T>(enumClass));
     }
 
     /**
@@ -101,8 +104,9 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
      */
     public static <T extends Enum<T> & EnumMessageCode> ResourceBundle getBundleNoFallback(
             final Class<T> enumClass) {
-        return ResourceBundle.getBundle(enumClass.getName(),
-                new EnumMessageResourceBundleControl<T>(enumClass, false));
+        return ResourceBundle.getBundle(
+            enumClass.getName(),
+            new EnumMessageResourceBundleControl<T>(enumClass, false));
     }
 
     /**
@@ -122,8 +126,10 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
      */
     public static <T extends Enum<T> & EnumMessageCode> ResourceBundle getBundleNoFallback(
             final Class<T> enumClass, final Locale locale) {
-        return ResourceBundle.getBundle(enumClass.getName(), locale,
-                new EnumMessageResourceBundleControl<T>(enumClass, false));
+        return ResourceBundle.getBundle(
+            enumClass.getName(),
+            locale,
+            new EnumMessageResourceBundleControl<T>(enumClass, false));
     }
 
     /**
@@ -144,7 +150,7 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
         final Set<String> keys = handleKeySet();
         if (parent != null) {
             for (final Enumeration<String> it = parent.getKeys(); it
-                    .hasMoreElements();) {
+                .hasMoreElements();) {
                 final String key = it.nextElement();
                 keys.add(key);
             }
@@ -253,7 +259,7 @@ public class EnumMessageResourceBundle<T extends Enum<T> & EnumMessageCode>
         protected Locale[] getSupportedLocales(final Class<T> enumClass) {
             try {
                 final Field field = enumClass
-                        .getDeclaredField(SUPPORTED_LOCALES_NAME);
+                    .getDeclaredField(SUPPORTED_LOCALES_NAME);
                 field.setAccessible(true);
                 if (field != null) {
                     return (Locale[]) field.get(null);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2009 the Seasar Foundation and the Others.
+ * Copyright 2004-2010 the Seasar Foundation and the Others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,8 +100,9 @@ class InMemoryJavaFileObject extends SimpleJavaFileObject {
     @Override
     public CharSequence getCharContent(final boolean ignoreEncodingErrors)
             throws IOException {
-        return new String(IOUtils.readBytes(openInputStream()),
-                charset == null ? Charset.defaultCharset() : charset);
+        return new String(
+            IOUtils.readBytes(openInputStream()),
+            charset == null ? Charset.defaultCharset() : charset);
     }
 
 }

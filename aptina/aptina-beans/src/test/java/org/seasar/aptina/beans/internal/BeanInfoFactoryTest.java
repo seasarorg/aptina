@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2009 the Seasar Foundation and the Others.
+ * Copyright 2004-2010 the Seasar Foundation and the Others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,12 +55,12 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
 
         final TypeElement typeElement = getTypeElement(FooBeanState.class);
         final BeanInfoFactory beanInfoFactory = new BeanInfoFactory(
-                getProcessingEnvironment());
+            getProcessingEnvironment());
         final BeanInfo beanInfo = beanInfoFactory.processType(typeElement);
 
         assertEquals(FooBeanState.class.getName(), beanInfo.getStateClassName());
         assertEquals("org.seasar.aptina.beans.example", beanInfo
-                .getPackageName());
+            .getPackageName());
         assertEquals("FooBean", beanInfo.getBeanClassName());
         assertFalse(beanInfo.isBoundProperties());
         assertFalse(beanInfo.isConstrainedProperties());
@@ -75,16 +75,18 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
 
         final TypeElement typeElement = getTypeElement(BarBeanState.class);
         final BeanInfoFactory beanInfoFactory = new BeanInfoFactory(
-                getProcessingEnvironment());
+            getProcessingEnvironment());
         final BeanInfo beanInfo = beanInfoFactory.processType(typeElement);
 
-        assertEquals("org.seasar.aptina.beans.example.BarBeanState<E, T>",
-                beanInfo.getStateClassName());
+        assertEquals(
+            "org.seasar.aptina.beans.example.BarBeanState<E, T>",
+            beanInfo.getStateClassName());
         assertEquals("org.seasar.aptina.beans.example", beanInfo
-                .getPackageName());
+            .getPackageName());
         assertEquals("BarBean", beanInfo.getBeanClassName());
-        assertEquals("<E, T extends java.util.List<E> & java.io.Serializable>",
-                beanInfo.getTypeParameter());
+        assertEquals(
+            "<E, T extends java.util.List<E> & java.io.Serializable>",
+            beanInfo.getTypeParameter());
         assertFalse(beanInfo.isBoundProperties());
         assertFalse(beanInfo.isConstrainedProperties());
     }
@@ -98,13 +100,13 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
 
         final TypeElement typeElement = getTypeElement(BoundBeanState.class);
         final BeanInfoFactory beanInfoFactory = new BeanInfoFactory(
-                getProcessingEnvironment());
+            getProcessingEnvironment());
         final BeanInfo beanInfo = beanInfoFactory.processType(typeElement);
 
         assertEquals("org.seasar.aptina.beans.example.BoundBeanState", beanInfo
-                .getStateClassName());
+            .getStateClassName());
         assertEquals("org.seasar.aptina.beans.example", beanInfo
-                .getPackageName());
+            .getPackageName());
         assertEquals("BoundBean", beanInfo.getBeanClassName());
         assertEquals("", beanInfo.getTypeParameter());
         assertTrue(beanInfo.isBoundProperties());
@@ -120,13 +122,14 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
 
         final TypeElement typeElement = getTypeElement(ConstrainedBeanState.class);
         final BeanInfoFactory beanInfoFactory = new BeanInfoFactory(
-                getProcessingEnvironment());
+            getProcessingEnvironment());
         final BeanInfo beanInfo = beanInfoFactory.processType(typeElement);
 
-        assertEquals("org.seasar.aptina.beans.example.ConstrainedBeanState",
-                beanInfo.getStateClassName());
+        assertEquals(
+            "org.seasar.aptina.beans.example.ConstrainedBeanState",
+            beanInfo.getStateClassName());
         assertEquals("org.seasar.aptina.beans.example", beanInfo
-                .getPackageName());
+            .getPackageName());
         assertEquals("ConstrainedBean", beanInfo.getBeanClassName());
         assertEquals("", beanInfo.getTypeParameter());
         assertFalse(beanInfo.isBoundProperties());
@@ -142,14 +145,14 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
 
         final TypeElement typeElement = getTypeElement(BoundAndConstrainedBeanState.class);
         final BeanInfoFactory beanInfoFactory = new BeanInfoFactory(
-                getProcessingEnvironment());
+            getProcessingEnvironment());
         final BeanInfo beanInfo = beanInfoFactory.processType(typeElement);
 
         assertEquals(
-                "org.seasar.aptina.beans.example.BoundAndConstrainedBeanState",
-                beanInfo.getStateClassName());
+            "org.seasar.aptina.beans.example.BoundAndConstrainedBeanState",
+            beanInfo.getStateClassName());
         assertEquals("org.seasar.aptina.beans.example", beanInfo
-                .getPackageName());
+            .getPackageName());
         assertEquals("BoundAndConstrainedBean", beanInfo.getBeanClassName());
         assertEquals("", beanInfo.getTypeParameter());
         assertTrue(beanInfo.isBoundProperties());
@@ -164,12 +167,12 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         compile();
 
         final BeanInfoFactory beanInfoFactory = new BeanInfoFactory(
-                getProcessingEnvironment());
+            getProcessingEnvironment());
         final TypeElement typeElement = getTypeElement(FooBeanState.class);
         assertNotNull(typeElement);
 
         PropertyInfo propertyInfo = beanInfoFactory
-                .processField(getFieldElement(typeElement, "a"));
+            .processField(getFieldElement(typeElement, "a"));
         assertNotNull(propertyInfo);
         assertEquals("a", propertyInfo.getName());
         assertEquals("int", propertyInfo.getType());
@@ -178,7 +181,8 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         assertTrue(propertyInfo.isWritable());
 
         propertyInfo = beanInfoFactory.processField(getFieldElement(
-                typeElement, "b"));
+            typeElement,
+            "b"));
         assertNotNull(propertyInfo);
         assertEquals("b", propertyInfo.getName());
         assertEquals("java.lang.String", propertyInfo.getType());
@@ -186,12 +190,15 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         assertTrue(propertyInfo.isReadable());
         assertFalse(propertyInfo.isWritable());
 
-        assertNull(beanInfoFactory.processField(getFieldElement(typeElement,
-                "c")));
-        assertNull(beanInfoFactory.processField(getFieldElement(typeElement,
-                "d")));
-        assertNull(beanInfoFactory.processField(getFieldElement(typeElement,
-                "e")));
+        assertNull(beanInfoFactory.processField(getFieldElement(
+            typeElement,
+            "c")));
+        assertNull(beanInfoFactory.processField(getFieldElement(
+            typeElement,
+            "d")));
+        assertNull(beanInfoFactory.processField(getFieldElement(
+            typeElement,
+            "e")));
     }
 
     /**
@@ -202,12 +209,12 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         compile();
 
         final BeanInfoFactory beanInfoFactory = new BeanInfoFactory(
-                getProcessingEnvironment());
+            getProcessingEnvironment());
         final TypeElement typeElement = getTypeElement(BarBeanState.class);
 
         assertNotNull(typeElement);
         PropertyInfo propertyInfo = beanInfoFactory
-                .processField(getFieldElement(typeElement, "aaa"));
+            .processField(getFieldElement(typeElement, "aaa"));
         assertNotNull(propertyInfo);
         assertEquals("aaa", propertyInfo.getName());
         assertEquals("T", propertyInfo.getType());
@@ -216,7 +223,8 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         assertTrue(propertyInfo.isWritable());
 
         propertyInfo = beanInfoFactory.processField(getFieldElement(
-                typeElement, "bbb"));
+            typeElement,
+            "bbb"));
         assertNotNull(propertyInfo);
         assertEquals("bbb", propertyInfo.getName());
         assertEquals("T[]", propertyInfo.getType());
@@ -226,7 +234,8 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         assertTrue(propertyInfo.isWritable());
 
         propertyInfo = beanInfoFactory.processField(getFieldElement(
-                typeElement, "ccc"));
+            typeElement,
+            "ccc"));
         assertNotNull(propertyInfo);
         assertEquals("ccc", propertyInfo.getName());
         assertEquals("java.util.List<? extends T>", propertyInfo.getType());
@@ -243,15 +252,15 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         compile();
 
         final BeanInfoFactory beanInfoFactory = new BeanInfoFactory(
-                getProcessingEnvironment());
+            getProcessingEnvironment());
         final TypeElement typeElement = getTypeElement(FooBeanState.class);
 
         final ExecutableElement constructor = getConstructorElement(typeElement);
         final ConstructorInfo constructorInfo = beanInfoFactory
-                .processConstructor(constructor);
+            .processConstructor(constructor);
         assertNotNull(constructorInfo);
         assertEquals("public ", toStringOfModifiers(constructorInfo
-                .getModifiers()));
+            .getModifiers()));
         assertEquals("", constructorInfo.getTypeParameters());
         assertTrue(constructorInfo.getParameterNames().isEmpty());
         assertTrue(constructorInfo.getThrownTypes().isEmpty());
@@ -265,18 +274,18 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         compile();
 
         final BeanInfoFactory beanInfoFactory = new BeanInfoFactory(
-                getProcessingEnvironment());
+            getProcessingEnvironment());
         final TypeElement typeElement = getTypeElement(BarBeanState.class);
 
         ExecutableElement constructor = getConstructorElement(typeElement);
         ConstructorInfo constructorInfo = beanInfoFactory
-                .processConstructor(constructor);
+            .processConstructor(constructor);
         assertNull(constructorInfo);
 
         constructor = getConstructorElement(typeElement, "T");
         constructorInfo = beanInfoFactory.processConstructor(constructor);
         assertEquals("protected ", toStringOfModifiers(constructorInfo
-                .getModifiers()));
+            .getModifiers()));
         assertEquals("", constructorInfo.getTypeParameters());
         List<String> parameterNames = constructorInfo.getParameterNames();
         assertEquals(1, parameterNames.size());
@@ -294,11 +303,14 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         assertEquals("hoge", parameterNames.get(1));
         assertEquals("S", constructorInfo.getParameterTypes().get(1));
 
-        constructor = getConstructorElement(typeElement, "T", "T[]",
-                "java.util.List<? extends T>");
+        constructor = getConstructorElement(
+            typeElement,
+            "T",
+            "T[]",
+            "java.util.List<? extends T>");
         constructorInfo = beanInfoFactory.processConstructor(constructor);
         assertEquals("public ", toStringOfModifiers(constructorInfo
-                .getModifiers()));
+            .getModifiers()));
         parameterNames = constructorInfo.getParameterNames();
         assertEquals(3, parameterNames.size());
         assertEquals("aaa", parameterNames.get(0));
@@ -307,7 +319,8 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         assertEquals("T[]", constructorInfo.getParameterTypes().get(1));
         assertEquals("ccc", parameterNames.get(2));
         assertEquals("java.util.List<? extends T>", constructorInfo
-                .getParameterTypes().get(2));
+            .getParameterTypes()
+            .get(2));
     }
 
     /**
@@ -318,7 +331,7 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
         compile();
 
         final BeanInfoFactory beanInfoFactory = new BeanInfoFactory(
-                getProcessingEnvironment());
+            getProcessingEnvironment());
         final TypeElement typeElement = getTypeElement(BazBeanState.class);
         final BeanInfo beanInfo = beanInfoFactory.createBeanInfo(typeElement);
 
@@ -352,11 +365,11 @@ public class BeanInfoFactoryTest extends AptinaTestCase {
      */
     public void testToBeanClassName() throws Exception {
         assertEquals("HogeBean", BeanInfoFactory
-                .toBeanClassName("AbstractHogeBean"));
+            .toBeanClassName("AbstractHogeBean"));
         assertEquals("HogeBean", BeanInfoFactory
-                .toBeanClassName("HogeBeanState"));
+            .toBeanClassName("HogeBeanState"));
         assertEquals("HogeBeanImpl", BeanInfoFactory
-                .toBeanClassName("HogeBean"));
+            .toBeanClassName("HogeBean"));
         assertEquals("HogeBean", BeanInfoFactory.toBeanClassName("Hoge"));
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2009 the Seasar Foundation and the Others.
+ * Copyright 2004-2010 the Seasar Foundation and the Others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
@@ -58,18 +58,22 @@ public class StringUtilsTest extends TestCase {
      */
     public void testJoin() throws Exception {
         assertEquals("", join(new ArrayList<String>(), ", "));
-        assertEquals("aaa, bbb, ccc", join(asList("aaa", "bbb",
-                "ccc"), ", "));
+        assertEquals("aaa, bbb, ccc", join(asList("aaa", "bbb", "ccc"), ", "));
     }
 
     /**
      * @throws Exception
      */
     public void testJoin2() throws Exception {
-        assertEquals("", join(new ArrayList<String>(),
-                new ArrayList<String>(), ":", ", "));
+        assertEquals("", join(
+            new ArrayList<String>(),
+            new ArrayList<String>(),
+            ":",
+            ", "));
         assertEquals("aaa:111, bbb:222, ccc:333", join(asList(
-                "aaa", "bbb", "ccc"), asList("111", "222", "333"), ":", ", "));
+            "aaa",
+            "bbb",
+            "ccc"), asList("111", "222", "333"), ":", ", "));
         try {
             join(asList("a", "b"), asList("1"), ":", ", ");
             fail();

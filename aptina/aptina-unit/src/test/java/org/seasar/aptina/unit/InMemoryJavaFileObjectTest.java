@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2009 the Seasar Foundation and the Others.
+ * Copyright 2004-2010 the Seasar Foundation and the Others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,9 @@ public class InMemoryJavaFileObjectTest extends TestCase {
      */
     public void test() throws Exception {
         final InMemoryJavaFileObject fileObject = new InMemoryJavaFileObject(
-                new URI("/foo"), Kind.SOURCE, Charset.forName("UTF-8"));
+            new URI("/foo"),
+            Kind.SOURCE,
+            Charset.forName("UTF-8"));
         final OutputStream os = fileObject.openOutputStream();
         final PrintWriter pw = new PrintWriter(os);
         pw.print("hoge hoge ほげ");
@@ -46,7 +48,7 @@ public class InMemoryJavaFileObjectTest extends TestCase {
 
         final InputStream is = fileObject.openInputStream();
         final BufferedReader reader = new BufferedReader(new InputStreamReader(
-                is));
+            is));
         assertEquals("hoge hoge ほげ", reader.readLine());
     }
 
@@ -55,13 +57,15 @@ public class InMemoryJavaFileObjectTest extends TestCase {
      */
     public void testReaderWriter() throws Exception {
         final InMemoryJavaFileObject fileObject = new InMemoryJavaFileObject(
-                new URI("/foo"), Kind.SOURCE, Charset.forName("UTF-8"));
+            new URI("/foo"),
+            Kind.SOURCE,
+            Charset.forName("UTF-8"));
         final PrintWriter pw = new PrintWriter(fileObject.openWriter());
         pw.print("hoge hoge ほげ");
         pw.close();
 
         final BufferedReader reader = new BufferedReader(fileObject
-                .openReader(true));
+            .openReader(true));
         assertEquals("hoge hoge ほげ", reader.readLine());
     }
 

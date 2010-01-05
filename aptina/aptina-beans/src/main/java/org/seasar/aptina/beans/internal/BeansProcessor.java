@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2009 the Seasar Foundation and the Others.
+ * Copyright 2004-2010 the Seasar Foundation and the Others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,20 +53,22 @@ public class BeansProcessor extends AbstractProcessor {
     public boolean process(final Set<? extends TypeElement> annotations,
             final RoundEnvironment roundEnv) {
         messageFormatter = new EnumMessageFormatter<DiagnosticMessageCode>(
-                DiagnosticMessageCode.class, processingEnv.getLocale());
+            DiagnosticMessageCode.class,
+            processingEnv.getLocale());
         final BeanInfoFactory beanMetaFactory = new BeanInfoFactory(
-                processingEnv);
+            processingEnv);
         final BeanClassGenerator beanClassGenerator = new BeanClassGenerator(
-                processingEnv);
+            processingEnv);
         for (final TypeElement annotation : annotations) {
             for (final TypeElement typeElement : ElementFilter.typesIn(roundEnv
-                    .getElementsAnnotatedWith(annotation))) {
+                .getElementsAnnotatedWith(annotation))) {
                 final BeanInfo beanInfo = beanMetaFactory
-                        .createBeanInfo(typeElement);
+                    .createBeanInfo(typeElement);
                 if (beanInfo != null) {
                     try {
-                        beanClassGenerator.generateAndWrite(beanInfo,
-                                typeElement);
+                        beanClassGenerator.generateAndWrite(
+                            beanInfo,
+                            typeElement);
                     } catch (final IOException e) {
                         printMessage(typeElement, APT0000, e);
                     }
@@ -88,8 +90,10 @@ public class BeansProcessor extends AbstractProcessor {
      */
     protected void printMessage(final Element element,
             final DiagnosticMessageCode messageCode, final Object... args) {
-        processingEnv.getMessager().printMessage(messageCode.getKind(),
-                messageFormatter.getMessage(messageCode, args), element);
+        processingEnv.getMessager().printMessage(
+            messageCode.getKind(),
+            messageFormatter.getMessage(messageCode, args),
+            element);
     }
 
 }

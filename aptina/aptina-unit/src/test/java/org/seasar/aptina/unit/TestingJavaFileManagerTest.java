@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2009 the Seasar Foundation and the Others.
+ * Copyright 2004-2010 the Seasar Foundation and the Others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,12 +46,13 @@ public class TestingJavaFileManagerTest extends TestCase {
         final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
         final StandardJavaFileManager standardFileManager = compiler
-                .getStandardFileManager(diagnostics, null, null);
+            .getStandardFileManager(diagnostics, null, null);
         standardFileManager.setLocation(StandardLocation.SOURCE_PATH, asList(
-                new File("aptina-unit/src/test/resources"), new File(
-                        "src/test/resources")));
-        testingFileManager = new TestingJavaFileManager(standardFileManager,
-                null);
+            new File("aptina-unit/src/test/resources"),
+            new File("src/test/resources")));
+        testingFileManager = new TestingJavaFileManager(
+            standardFileManager,
+            null);
     }
 
     /**
@@ -59,10 +60,15 @@ public class TestingJavaFileManagerTest extends TestCase {
      */
     public void testFileObject() throws Exception {
         final FileObject fo = testingFileManager.getFileForOutput(
-                StandardLocation.SOURCE_PATH, "hoge", "foo/bar", null);
+            StandardLocation.SOURCE_PATH,
+            "hoge",
+            "foo/bar",
+            null);
         assertNotNull(fo);
         assertSame(fo, testingFileManager.getFileForInput(
-                StandardLocation.SOURCE_PATH, "hoge", "foo/bar"));
+            StandardLocation.SOURCE_PATH,
+            "hoge",
+            "foo/bar"));
     }
 
     /**
@@ -70,10 +76,14 @@ public class TestingJavaFileManagerTest extends TestCase {
      */
     public void testFileObjectFromClassOutput() throws Exception {
         final FileObject fo = testingFileManager.getFileForOutput(
-                StandardLocation.CLASS_OUTPUT, "", "a.txt", null);
+            StandardLocation.CLASS_OUTPUT,
+            "",
+            "a.txt",
+            null);
         assertNotNull(fo);
-        assertEquals("abc\r\nあいう\r\n", IOUtils.readString(fo.openInputStream(),
-                "UTF-8"));
+        assertEquals("abc\r\nあいう\r\n", IOUtils.readString(
+            fo.openInputStream(),
+            "UTF-8"));
     }
 
     /**
@@ -81,11 +91,15 @@ public class TestingJavaFileManagerTest extends TestCase {
      */
     public void testJavaFileObject() throws Exception {
         final JavaFileObject jfo = testingFileManager.getJavaFileForOutput(
-                StandardLocation.SOURCE_OUTPUT, "foo.bar.Hoge", Kind.SOURCE,
-                null);
+            StandardLocation.SOURCE_OUTPUT,
+            "foo.bar.Hoge",
+            Kind.SOURCE,
+            null);
         assertNotNull(jfo);
         assertSame(jfo, testingFileManager.getJavaFileForInput(
-                StandardLocation.SOURCE_OUTPUT, "foo.bar.Hoge", Kind.SOURCE));
+            StandardLocation.SOURCE_OUTPUT,
+            "foo.bar.Hoge",
+            Kind.SOURCE));
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2009 the Seasar Foundation and the Others.
+ * Copyright 2004-2010 the Seasar Foundation and the Others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,7 +79,8 @@ public class BeanInfoFactory {
     public BeanInfoFactory(final ProcessingEnvironment env) {
         this.env = env;
         messageFormatter = new EnumMessageTextFormatter<DiagnosticMessageCode>(
-                DiagnosticMessageCode.class, env.getLocale());
+            DiagnosticMessageCode.class,
+            env.getLocale());
     }
 
     /**
@@ -97,7 +98,7 @@ public class BeanInfoFactory {
             return null;
         }
         for (final VariableElement fieldElement : ElementFilter
-                .fieldsIn(typeElement.getEnclosedElements())) {
+            .fieldsIn(typeElement.getEnclosedElements())) {
             final PropertyInfo propertyInfo = processField(fieldElement);
             if (propertyInfo != null) {
                 beanInfo.addPropertyInfo(propertyInfo);
@@ -105,7 +106,7 @@ public class BeanInfoFactory {
         }
 
         for (final ExecutableElement constructorElement : ElementFilter
-                .constructorsIn(typeElement.getEnclosedElements())) {
+            .constructorsIn(typeElement.getEnclosedElements())) {
             final ConstructorInfo constructorInfo = processConstructor(constructorElement);
             if (constructorInfo != null) {
                 beanInfo.addConstructor(constructorInfo);
@@ -116,7 +117,7 @@ public class BeanInfoFactory {
         }
 
         for (final ExecutableElement methodElement : ElementFilter
-                .methodsIn(typeElement.getEnclosedElements())) {
+            .methodsIn(typeElement.getEnclosedElements())) {
             processMethod(methodElement, beanInfo);
         }
 
@@ -166,10 +167,11 @@ public class BeanInfoFactory {
         final String stateClassName = typeElement.getQualifiedName().toString();
         final String packageName = getPackageName(stateClassName);
         beanInfo.setPackageName(packageName);
-        beanInfo.setBeanClassName(toBeanClassName(typeElement.getSimpleName()
-                .toString()));
+        beanInfo.setBeanClassName(toBeanClassName(typeElement
+            .getSimpleName()
+            .toString()));
         final List<? extends TypeParameterElement> typeParameters = typeElement
-                .getTypeParameters();
+            .getTypeParameters();
         beanInfo.setTypeParameter(toStringOfTypeParameterDecl(typeParameters));
         beanInfo.setStateClassName(stateClassName
                 + toStringOfTypeParameterNames(typeParameters));
@@ -201,7 +203,8 @@ public class BeanInfoFactory {
             }
         } else {
             final AnnotationMirror propertyAnnotationMirror = getAnnotationMirror(
-                    variableElement, Property.class);
+                variableElement,
+                Property.class);
             if (modifiers.contains(Modifier.PRIVATE)) {
                 printMessage(variableElement, propertyAnnotationMirror, FLD0000);
                 return null;
@@ -217,8 +220,10 @@ public class BeanInfoFactory {
                 return null;
             case WRITE_ONLY:
                 if (modifiers.contains(Modifier.FINAL)) {
-                    printMessage(variableElement, propertyAnnotationMirror,
-                            FLD0003);
+                    printMessage(
+                        variableElement,
+                        propertyAnnotationMirror,
+                        FLD0003);
                     return null;
                 }
                 break;
@@ -227,7 +232,7 @@ public class BeanInfoFactory {
 
         final String propertyName = variableElement.getSimpleName().toString();
         final String comment = env.getElementUtils().getDocComment(
-                variableElement);
+            variableElement);
         if (comment == null || comment.isEmpty()) {
             propertyInfo.setComment(propertyName);
         } else {
@@ -238,8 +243,10 @@ public class BeanInfoFactory {
         propertyInfo.setType(propertyType.toString());
         if (propertyType.getKind() == TypeKind.ARRAY) {
             propertyInfo.setArray(true);
-            propertyInfo.setComponentType(ArrayType.class.cast(propertyType)
-                    .getComponentType().toString());
+            propertyInfo.setComponentType(ArrayType.class
+                .cast(propertyType)
+                .getComponentType()
+                .toString());
         }
         if (property != null) {
             switch (property.access()) {
@@ -269,7 +276,7 @@ public class BeanInfoFactory {
             final ExecutableElement executableElement) {
         final ConstructorInfo constructorInfo = new ConstructorInfo();
         final List<? extends VariableElement> parameters = executableElement
-                .getParameters();
+            .getParameters();
         final Set<Modifier> modifiers = executableElement.getModifiers();
         if (parameters.isEmpty() && !modifiers.contains(Modifier.PUBLIC)) {
             printMessage(executableElement, CTOR0000);
@@ -278,16 +285,18 @@ public class BeanInfoFactory {
             return null;
         }
         constructorInfo.setComment(env.getElementUtils().getDocComment(
-                executableElement));
+            executableElement));
         constructorInfo.addModifiers(modifiers);
         constructorInfo
-                .setTypeParameters(toStringOfTypeParameterDecl(executableElement
-                        .getTypeParameters()));
+            .setTypeParameters(toStringOfTypeParameterDecl(executableElement
+                .getTypeParameters()));
         for (final VariableElement variableElement : parameters) {
-            constructorInfo.addParameterType(variableElement.asType()
-                    .toString());
-            constructorInfo.addParameterName(variableElement.getSimpleName()
-                    .toString());
+            constructorInfo.addParameterType(variableElement
+                .asType()
+                .toString());
+            constructorInfo.addParameterName(variableElement
+                .getSimpleName()
+                .toString());
         }
         for (final TypeMirror typeMirror : executableElement.getThrownTypes()) {
             constructorInfo.addThrownType(typeMirror.toString());
@@ -311,7 +320,7 @@ public class BeanInfoFactory {
                 && executableElement.getParameters().isEmpty()) {
             final String propertyName = decapitalize(methodName.substring(2));
             final PropertyInfo propertyInfo = beanInfo
-                    .getPropertyInfo(propertyName);
+                .getPropertyInfo(propertyName);
             if (propertyInfo != null) {
                 propertyInfo.setReadable(false);
             }
@@ -320,7 +329,7 @@ public class BeanInfoFactory {
                 && executableElement.getParameters().isEmpty()) {
             final String propertyName = decapitalize(methodName.substring(3));
             final PropertyInfo propertyInfo = beanInfo
-                    .getPropertyInfo(propertyName);
+                .getPropertyInfo(propertyName);
             if (propertyInfo != null) {
                 propertyInfo.setReadable(false);
             }
@@ -330,10 +339,13 @@ public class BeanInfoFactory {
                 && executableElement.getParameters().size() == 1) {
             final String propertyName = decapitalize(methodName.substring(3));
             final PropertyInfo propertyInfo = beanInfo
-                    .getPropertyInfo(propertyName);
+                .getPropertyInfo(propertyName);
             if (propertyInfo != null) {
-                final String type = executableElement.getParameters().get(0)
-                        .asType().toString();
+                final String type = executableElement
+                    .getParameters()
+                    .get(0)
+                    .asType()
+                    .toString();
                 if (propertyInfo.getType().equals(type)) {
                     propertyInfo.setWritable(false);
                 }
@@ -377,8 +389,10 @@ public class BeanInfoFactory {
         if (messageCode.getKind() == Kind.ERROR) {
             hasError = true;
         }
-        env.getMessager().printMessage(messageCode.getKind(),
-                messageFormatter.getMessage(messageCode, args), element);
+        env.getMessager().printMessage(
+            messageCode.getKind(),
+            messageFormatter.getMessage(messageCode, args),
+            element);
     }
 
     /**
@@ -399,9 +413,11 @@ public class BeanInfoFactory {
         if (messageCode.getKind() == Kind.ERROR) {
             hasError = true;
         }
-        env.getMessager().printMessage(messageCode.getKind(),
-                messageFormatter.getMessage(messageCode, args), element,
-                annotation);
+        env.getMessager().printMessage(
+            messageCode.getKind(),
+            messageFormatter.getMessage(messageCode, args),
+            element,
+            annotation);
     }
 
 }

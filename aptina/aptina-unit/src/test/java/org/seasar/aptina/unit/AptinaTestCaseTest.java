@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2009 the Seasar Foundation and the Others.
+ * Copyright 2004-2010 the Seasar Foundation and the Others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,8 +56,9 @@ public class AptinaTestCaseTest extends AptinaTestCase {
         assertNotNull(getTypeElement(TestSource.class));
         assertNotNull(getTypeMirror(TestSource.class));
         assertTrue(processor.called);
-        assertEqualsGeneratedSource("package foo.bar;public class Baz {}",
-                "foo.bar.Baz");
+        assertEqualsGeneratedSource(
+            "package foo.bar;public class Baz {}",
+            "foo.bar.Baz");
     }
 
     /**
@@ -66,8 +67,9 @@ public class AptinaTestCaseTest extends AptinaTestCase {
     public void testInMemory() throws Exception {
         final TestProcessor processor = new TestProcessor();
         addProcessor(processor);
-        addCompilationUnit("Foo",
-                "@org.seasar.aptina.unit.Hoge public class Foo {}");
+        addCompilationUnit(
+            "Foo",
+            "@org.seasar.aptina.unit.Hoge public class Foo {}");
 
         compile();
 
@@ -79,8 +81,9 @@ public class AptinaTestCaseTest extends AptinaTestCase {
         assertNotNull(getTypeMirror(TestSource.class));
         assertNull(getTypeMirror("Hoge"));
         assertTrue(processor.called);
-        assertEqualsGeneratedSource("package foo.bar;public class Baz {}",
-                "foo.bar.Baz");
+        assertEqualsGeneratedSource(
+            "package foo.bar;public class Baz {}",
+            "foo.bar.Baz");
     }
 
     /**
@@ -126,12 +129,15 @@ public class AptinaTestCaseTest extends AptinaTestCase {
 
         final TypeElement typeElement = getTypeElement(TestSource.class);
         assertNotNull(typeElement);
-        assertEquals("aaa", getFieldElement(typeElement, "aaa").getSimpleName()
-                .toString());
-        assertEquals("bbb", getFieldElement(typeElement, "bbb").getSimpleName()
-                .toString());
-        assertEquals("ccc", getFieldElement(typeElement, "ccc").getSimpleName()
-                .toString());
+        assertEquals("aaa", getFieldElement(typeElement, "aaa")
+            .getSimpleName()
+            .toString());
+        assertEquals("bbb", getFieldElement(typeElement, "bbb")
+            .getSimpleName()
+            .toString());
+        assertEquals("ccc", getFieldElement(typeElement, "ccc")
+            .getSimpleName()
+            .toString());
         assertNull(getFieldElement(typeElement, "zzz"));
     }
 
@@ -170,21 +176,31 @@ public class AptinaTestCaseTest extends AptinaTestCase {
         assertNotNull(typeElement);
 
         assertEquals("hoge", getMethodElement(typeElement, "hoge")
-                .getSimpleName().toString());
+            .getSimpleName()
+            .toString());
         assertNull(getMethodElement(typeElement, "unknown"));
 
-        assertEquals("setAaa", getMethodElement(typeElement, "setAaa",
-                int.class).getSimpleName().toString());
-        assertEquals("setBbb", getMethodElement(typeElement, "setBbb",
-                String[].class).getSimpleName().toString());
+        assertEquals("setAaa", getMethodElement(
+            typeElement,
+            "setAaa",
+            int.class).getSimpleName().toString());
+        assertEquals("setBbb", getMethodElement(
+            typeElement,
+            "setBbb",
+            String[].class).getSimpleName().toString());
         assertNull(getMethodElement(typeElement, "unknown", TestSource.class));
 
         assertEquals("setAaa", getMethodElement(typeElement, "setAaa", "int")
-                .getSimpleName().toString());
-        assertEquals("setBbb", getMethodElement(typeElement, "setBbb",
-                "java.lang.String[]").getSimpleName().toString());
-        assertEquals("setCcc", getMethodElement(typeElement, "setCcc",
-                "java.util.List<T>").getSimpleName().toString());
+            .getSimpleName()
+            .toString());
+        assertEquals("setBbb", getMethodElement(
+            typeElement,
+            "setBbb",
+            "java.lang.String[]").getSimpleName().toString());
+        assertEquals("setCcc", getMethodElement(
+            typeElement,
+            "setCcc",
+            "java.util.List<T>").getSimpleName().toString());
         assertNull(getMethodElement(typeElement, "unknown", "java.lang.Object"));
     }
 
@@ -200,13 +216,13 @@ public class AptinaTestCaseTest extends AptinaTestCase {
         assertEquals("boolean", getTypeMirror(boolean.class).toString());
         assertEquals("int[]", getTypeMirror(int[].class).toString());
         assertEquals("java.lang.String[][]", getTypeMirror(String[][].class)
-                .toString());
+            .toString());
 
         assertEquals("boolean", getTypeMirror("boolean").toString());
         assertEquals("java.lang.String[]", getTypeMirror("java.lang.String[]")
-                .toString());
+            .toString());
         assertEquals("java.lang.String[][][]", getTypeMirror(
-                String[][][].class.getName()).toString());
+            String[][][].class.getName()).toString());
     }
 
     /**
@@ -214,8 +230,10 @@ public class AptinaTestCaseTest extends AptinaTestCase {
      */
     public void testReadFromResource() throws Exception {
         final BufferedReader reader = new BufferedReader(new StringReader(
-                readFromResource(Thread.currentThread().getContextClassLoader()
-                        .getResource("a.txt"))));
+            readFromResource(Thread
+                .currentThread()
+                .getContextClassLoader()
+                .getResource("a.txt"))));
         assertEquals("abc", reader.readLine());
         assertEquals("あいう", reader.readLine());
     }

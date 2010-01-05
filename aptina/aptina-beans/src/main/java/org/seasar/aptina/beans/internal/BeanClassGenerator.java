@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2009 the Seasar Foundation and the Others.
+ * Copyright 2004-2010 the Seasar Foundation and the Others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
@@ -64,7 +64,7 @@ public class BeanClassGenerator extends SimpleSourceGenerator<BeanClassFormat> {
             final TypeElement originalElement) throws IOException {
         generate(beanInfo, originalElement);
         write(getQualifiedName(beanInfo.getPackageName(), beanInfo
-                .getBeanClassName()), originalElement);
+            .getBeanClassName()), originalElement);
     }
 
     /**
@@ -91,7 +91,7 @@ public class BeanClassGenerator extends SimpleSourceGenerator<BeanClassFormat> {
         putEventListener(beanInfo);
         for (final String propertyName : beanInfo.getPropertyNames()) {
             final PropertyInfo propertyInfo = beanInfo
-                    .getPropertyInfo(propertyName);
+                .getPropertyInfo(propertyName);
             putGetter(beanInfo, propertyInfo);
             putSetter(beanInfo, propertyInfo);
             putSpecificEventListener(beanInfo, propertyInfo);
@@ -114,8 +114,8 @@ public class BeanClassGenerator extends SimpleSourceGenerator<BeanClassFormat> {
         printf("@org.seasar.aptina.beans.JavaBean%n");
         printGeneratedAnnotation(PRODUCT_NAME, GROUP_ID, ARTIFACT_ID);
         printf("public class %1$s%2$s extends %3$s {%n", beanInfo
-                .getBeanClassName(), beanInfo.getTypeParameter(), beanInfo
-                .getStateClassName());
+            .getBeanClassName(), beanInfo.getTypeParameter(), beanInfo
+            .getStateClassName());
         printf("%n");
     }
 
@@ -159,21 +159,30 @@ public class BeanClassGenerator extends SimpleSourceGenerator<BeanClassFormat> {
     protected void putConstructor(final BeanInfo beanInfo,
             final ConstructorInfo constructorInfo) {
         final String modifiers = toStringOfModifiers(constructorInfo
-                .getModifiers());
+            .getModifiers());
         final String typeParameters = constructorInfo.getTypeParameters();
         final String className = beanInfo.getBeanClassName();
-        final String params = join(constructorInfo.getParameterTypes(),
-                constructorInfo.getParameterNames(), " ", ", ");
+        final String params = join(
+            constructorInfo.getParameterTypes(),
+            constructorInfo.getParameterNames(),
+            " ",
+            ", ");
         final String exceptions = constructorInfo.getThrownTypes().isEmpty() ? ""
                 : " throws " + join(constructorInfo.getThrownTypes(), ", ");
 
         enter();
         printJavadoc(constructorInfo.getComment());
-        printf("%1$s%2$s %3$s(%4$s)%5$s {%n", modifiers, typeParameters,
-                className, params, exceptions);
+        printf(
+            "%1$s%2$s %3$s(%4$s)%5$s {%n",
+            modifiers,
+            typeParameters,
+            className,
+            params,
+            exceptions);
         enter();
-        printf("super(%1$s);%n",
-                join(constructorInfo.getParameterNames(), ", "));
+        printf(
+            "super(%1$s);%n",
+            join(constructorInfo.getParameterNames(), ", "));
         leave();
         printf("}%n%n");
         leave();
@@ -214,8 +223,11 @@ public class BeanClassGenerator extends SimpleSourceGenerator<BeanClassFormat> {
 
         enter();
         printJavadoc(JDOC0000, comment);
-        printf("public %1$s %2$s%3$s() {%n", type,
-                type.equals("boolean") ? "is" : "get", capitalizedName);
+        printf(
+            "public %1$s %2$s%3$s() {%n",
+            type,
+            type.equals("boolean") ? "is" : "get",
+            capitalizedName);
         enter();
         printf("return %1$s;%n", name);
         leave();
@@ -243,8 +255,10 @@ public class BeanClassGenerator extends SimpleSourceGenerator<BeanClassFormat> {
         enter();
         printJavadoc(JDOC0001, comment);
         printf(
-                "public %1$s %2$s%3$s(int n) throws ArrayIndexOutOfBoundsException {%n",
-                componentType, methodPrefix, capitalizedName);
+            "public %1$s %2$s%3$s(int n) throws ArrayIndexOutOfBoundsException {%n",
+            componentType,
+            methodPrefix,
+            capitalizedName);
         enter();
         printf("return %1$s[n];%n", name);
         leave();
@@ -291,22 +305,28 @@ public class BeanClassGenerator extends SimpleSourceGenerator<BeanClassFormat> {
 
         enter();
         printJavadoc(constrained ? JDOC0004 : JDOC0002, comment, name);
-        printf("public void set%1$s(%2$s %3$s)%4$s {%n", capitalizedName, type,
-                name, exceptions);
+        printf(
+            "public void set%1$s(%2$s %3$s)%4$s {%n",
+            capitalizedName,
+            type,
+            name,
+            exceptions);
         enter();
         if (bound || constrained) {
             printf("%1$s old%2$s = this.%3$s;%n", type, capitalizedName, name);
         }
         if (constrained) {
             printf(
-                    "vetoableChangeSupport.fireVetoableChange(\"%1$s\", old%2$s, %1$s);%n",
-                    name, capitalizedName);
+                "vetoableChangeSupport.fireVetoableChange(\"%1$s\", old%2$s, %1$s);%n",
+                name,
+                capitalizedName);
         }
         printf("this.%1$s = %1$s;%n", name);
         if (bound) {
             printf(
-                    "propertyChangeSupport.firePropertyChange(\"%1$s\", old%2$s, %1$s);%n",
-                    name, capitalizedName);
+                "propertyChangeSupport.firePropertyChange(\"%1$s\", old%2$s, %1$s);%n",
+                name,
+                capitalizedName);
         }
         leave();
         printf("}%n%n");
@@ -337,18 +357,27 @@ public class BeanClassGenerator extends SimpleSourceGenerator<BeanClassFormat> {
 
         enter();
         printJavadoc(constrained ? JDOC0005 : JDOC0003, comment, name);
-        printf("public void set%1$s(int n, %2$s %3$s) throws %4$s {%n",
-                capitalizedName, componentType, name, join(exceptions, ", "));
+        printf(
+            "public void set%1$s(int n, %2$s %3$s) throws %4$s {%n",
+            capitalizedName,
+            componentType,
+            name,
+            join(exceptions, ", "));
         enter();
         if (bound || constrained) {
-            printf("%1$s old%2$s = this.%3$s[n];%n", componentType,
-                    capitalizedName, name);
+            printf(
+                "%1$s old%2$s = this.%3$s[n];%n",
+                componentType,
+                capitalizedName,
+                name);
         }
         if (constrained) {
-            printf("vetoableChangeSupport.fireVetoableChange("
-                    + "new java.beans.IndexedPropertyChangeEvent("
-                    + "this, \"%1$s\", old%2$s, %1$s, n));%n", name,
-                    capitalizedName);
+            printf(
+                "vetoableChangeSupport.fireVetoableChange("
+                        + "new java.beans.IndexedPropertyChangeEvent("
+                        + "this, \"%1$s\", old%2$s, %1$s, n));%n",
+                name,
+                capitalizedName);
         }
         printf("this.%1$s[n] = %1$s;%n", name);
         if (bound) {
@@ -461,22 +490,28 @@ public class BeanClassGenerator extends SimpleSourceGenerator<BeanClassFormat> {
 
         enter();
         if (beanInfo.isBoundProperties()) {
-            printJavadoc(JDOC0010, PropertyChangeListener.class.getName(),
-                    comment);
-            printf("public void add%1$sChangeListener("
-                    + "java.beans.PropertyChangeListener listener) {%n",
-                    capitalizeName);
+            printJavadoc(
+                JDOC0010,
+                PropertyChangeListener.class.getName(),
+                comment);
+            printf(
+                "public void add%1$sChangeListener("
+                        + "java.beans.PropertyChangeListener listener) {%n",
+                capitalizeName);
             enter();
             printf("propertyChangeSupport.addPropertyChangeListener("
                     + "\"%1$s\", listener);%n", name);
             leave();
             printf("}%n%n");
 
-            printJavadoc(JDOC0011, PropertyChangeListener.class.getName(),
-                    comment);
-            printf("public void remove%1$sChangeListener("
-                    + "java.beans.PropertyChangeListener listener) {%n",
-                    capitalizeName);
+            printJavadoc(
+                JDOC0011,
+                PropertyChangeListener.class.getName(),
+                comment);
+            printf(
+                "public void remove%1$sChangeListener("
+                        + "java.beans.PropertyChangeListener listener) {%n",
+                capitalizeName);
             enter();
             printf("propertyChangeSupport.removePropertyChangeListener("
                     + "\"%1$s\", listener);%n", name);
@@ -485,22 +520,28 @@ public class BeanClassGenerator extends SimpleSourceGenerator<BeanClassFormat> {
         }
 
         if (beanInfo.isConstrainedProperties()) {
-            printJavadoc(JDOC0010, VetoableChangeListener.class.getName(),
-                    comment);
-            printf("public void add%1$sChangeListener("
-                    + "java.beans.VetoableChangeListener listener) {%n",
-                    capitalizeName);
+            printJavadoc(
+                JDOC0010,
+                VetoableChangeListener.class.getName(),
+                comment);
+            printf(
+                "public void add%1$sChangeListener("
+                        + "java.beans.VetoableChangeListener listener) {%n",
+                capitalizeName);
             enter();
             printf("vetoableChangeSupport.addVetoableChangeListener("
                     + "\"%1$s\", listener);%n", name);
             leave();
             printf("}%n%n");
 
-            printJavadoc(JDOC0011, VetoableChangeListener.class.getName(),
-                    comment);
-            printf("public void remove%1$sChangeListener("
-                    + "java.beans.VetoableChangeListener listener) {%n",
-                    capitalizeName);
+            printJavadoc(
+                JDOC0011,
+                VetoableChangeListener.class.getName(),
+                comment);
+            printf(
+                "public void remove%1$sChangeListener("
+                        + "java.beans.VetoableChangeListener listener) {%n",
+                capitalizeName);
             enter();
             printf("vetoableChangeSupport.removeVetoableChangeListener("
                     + "\"%1$s\", listener);%n", name);
