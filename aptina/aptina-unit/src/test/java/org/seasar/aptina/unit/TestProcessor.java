@@ -26,7 +26,9 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
+import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
+import javax.tools.StandardLocation;
 import javax.tools.Diagnostic.Kind;
 
 /**
@@ -52,11 +54,26 @@ public class TestProcessor extends AbstractProcessor {
             final JavaFileObject file = filer.createSourceFile(
                 "foo.bar.Baz",
                 null);
-            final PrintWriter writer = new PrintWriter(file.openWriter());
-            writer.print("package foo.bar;");
-            writer.print("public class Baz {");
-            writer.print("}");
-            writer.close();
+            PrintWriter writer = new PrintWriter(file.openWriter());
+            try {
+                writer.print("package foo.bar;");
+                writer.print("public class Baz {");
+                writer.print("}");
+            } finally {
+                writer.close();
+            }
+
+            final FileObject resource = filer.createResource(
+                StandardLocation.SOURCE_OUTPUT,
+                "",
+                "hoge.txt",
+                null);
+            writer = new PrintWriter(resource.openWriter());
+            try {
+                writer.print("moge");
+            } finally {
+                writer.close();
+            }
         } catch (final IOException ignore) {
         }
         return false;

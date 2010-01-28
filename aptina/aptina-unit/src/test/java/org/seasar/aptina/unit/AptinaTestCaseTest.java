@@ -23,7 +23,9 @@ import java.util.Locale;
 
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
+import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
+import javax.tools.StandardLocation;
 import javax.tools.Diagnostic.Kind;
 
 /**
@@ -59,6 +61,12 @@ public class AptinaTestCaseTest extends AptinaTestCase {
         assertEqualsGeneratedSource(
             "package foo.bar;public class Baz {}",
             "foo.bar.Baz");
+
+        final FileObject resource = getProcessingEnvironment()
+            .getFiler()
+            .getResource(StandardLocation.SOURCE_OUTPUT, "", "hoge.txt");
+        final String contents = resource.getCharContent(true).toString();
+        assertEquals("moge", contents);
     }
 
     /**

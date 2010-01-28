@@ -99,8 +99,8 @@ class TestingJavaFileManager extends
                     relativeName,
                     sibling);
             }
-            content = IOUtils.readBytes(originalFileObject.openInputStream());
             uri = originalFileObject.toUri();
+            content = IOUtils.readBytes(originalFileObject.openInputStream());
         } catch (final FileNotFoundException ignore) {
         }
         final InMemoryJavaFileObject fileObject = new InMemoryJavaFileObject(
@@ -147,6 +147,17 @@ class TestingJavaFileManager extends
             content);
         fileObjects.put(key, fileObject);
         return fileObject;
+    }
+
+    @Override
+    public boolean isSameFile(final FileObject lhs, final FileObject rhs) {
+        if (lhs instanceof InMemoryJavaFileObject) {
+            if (rhs instanceof InMemoryJavaFileObject) {
+                return lhs == rhs;
+            }
+            return false;
+        }
+        return super.isSameFile(lhs, rhs);
     }
 
     /**
