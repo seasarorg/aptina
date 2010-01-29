@@ -67,7 +67,15 @@ class TestingJavaFileManager extends
     public FileObject getFileForInput(final Location location,
             final String packageName, final String relativeName)
             throws IOException {
-        final String key = packageName + "::" + relativeName;
+        if (relativeName.endsWith(".java")) {
+            return getJavaFileForInput(location, packageName + "."
+                    + relativeName, Kind.SOURCE);
+        }
+        if (relativeName.endsWith(".class")) {
+            return getJavaFileForInput(location, packageName + "."
+                    + relativeName, Kind.CLASS);
+        }
+        final String key = createKey(packageName, relativeName);
         if (fileObjects.containsKey(key)) {
             return fileObjects.get(key);
         }
@@ -78,7 +86,15 @@ class TestingJavaFileManager extends
     public FileObject getFileForOutput(final Location location,
             final String packageName, final String relativeName,
             final FileObject sibling) throws IOException {
-        final String key = packageName + "::" + relativeName;
+        if (relativeName.endsWith(".java")) {
+            return getJavaFileForOutput(location, packageName + "."
+                    + relativeName, Kind.SOURCE, sibling);
+        }
+        if (relativeName.endsWith(".class")) {
+            return getJavaFileForOutput(location, packageName + "."
+                    + relativeName, Kind.CLASS, sibling);
+        }
+        final String key = createKey(packageName, relativeName);
         if (fileObjects.containsKey(key)) {
             return fileObjects.get(key);
         }
@@ -86,13 +102,16 @@ class TestingJavaFileManager extends
         byte[] content = null;
         URI uri = null;
         try {
-            final FileObject originalFileObject;
+            FileObject originalFileObject = null;
             if (location == StandardLocation.CLASS_OUTPUT) {
-                originalFileObject = getFileForInput(
+                // 通常はコンパイル時にCLASS_OUTPUTへコピーされるリソースがAptina Unit環境ではコピーされないため，
+                // まずはSOURCE_PATHから読み込む
+                originalFileObject = super.getFileForInput(
                     StandardLocation.SOURCE_PATH,
                     packageName,
                     relativeName);
-            } else {
+            }
+            if (originalFileObject == null) {
                 originalFileObject = super.getFileForOutput(
                     location,
                     packageName,
@@ -115,7 +134,7 @@ class TestingJavaFileManager extends
     @Override
     public JavaFileObject getJavaFileForInput(final Location location,
             final String className, final Kind kind) throws IOException {
-        final String key = kind.name() + "::" + className;
+        final String key = createKey(className, kind);
         if (fileObjects.containsKey(key)) {
             return fileObjects.get(key);
         }
@@ -126,7 +145,7 @@ class TestingJavaFileManager extends
     public JavaFileObject getJavaFileForOutput(final Location location,
             final String className, final Kind kind, final FileObject sibling)
             throws IOException {
-        final String key = kind.name() + "::" + className;
+        final String key = createKey(className, kind);
         if (fileObjects.containsKey(key)) {
             return fileObjects.get(key);
         }
@@ -136,8 +155,8 @@ class TestingJavaFileManager extends
         try {
             final JavaFileObject originalFileObject = super
                 .getJavaFileForOutput(location, className, kind, sibling);
-            content = IOUtils.readBytes(originalFileObject.openInputStream());
             uri = originalFileObject.toUri();
+            content = IOUtils.readBytes(originalFileObject.openInputStream());
         } catch (final FileNotFoundException ignore) {
         }
         final InMemoryJavaFileObject fileObject = new InMemoryJavaFileObject(
@@ -199,6 +218,17 @@ class TestingJavaFileManager extends
         } catch (final URISyntaxException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    String createKey(final String packageName, final String relativeName) {
+        if (packageName == null || packageName.isEmpty()) {
+            return relativeName;
+        }
+        return packageName.replace('.', '/') + "/" + relativeName;
+    }
+
+    String createKey(final String className, final Kind kind) {
+        return className.replace('.', '/') + kind.extension;
     }
 
 }
