@@ -5,10 +5,37 @@
 		<title>変更履歴</title>
 	</properties>
 	<body>
-		<section name="変更履歴">
-			<p>
-				準備中
-			</p>
+		<section name="0.0.1">
+			<subsection name="変更内容">
+				<p>
+					0.0.0からの変更点は以下の通りです．
+				</p>
+				<ul>
+					<li>
+						Bug
+						<ul>
+							<li>
+								[
+								<a href='https://www.seasar.org/issues/browse/APTINA-1'>APTINA-1</a>
+								] - [Aptina Unit]
+								javax.annotation.processing.Filer#getResource() で実在するファイルを表す
+								FileObject を取得できない問題を修正しました．
+							</li>
+							<li>
+								[
+								<a href='https://www.seasar.org/issues/browse/APTINA-2'>APTINA-2</a>
+								] - [Aptina Unit] テストメソッドが多いと OutOfMemoryError が発生する問題を修正しました．
+							</li>
+							<li>
+								[
+								<a href='https://www.seasar.org/issues/browse/APTINA-3'>APTINA-3</a>
+								] - [Aptina Unit] Filer#createResource()/createSourceFile()
+								を複数回呼び出すと IllegalArgumentException が発生する問題を修正しました．
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</subsection>
 		</section>
 	</body>
 </document>
