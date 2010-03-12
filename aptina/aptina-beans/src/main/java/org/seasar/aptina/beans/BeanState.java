@@ -88,10 +88,9 @@ import org.seasar.aptina.beans.internal.BeansProcessor;
  * </p>
  * <ul>
  * <li>
- * {@code public &lt;PropertyType&gt; get&lt;PropertyName&gt;(int n)}</li>
+ * {@code public <PropertyType> get<PropertyName>(int n)}</li>
  * <li>
- * {@code public void set&lt;PropertyName&gt;(int n, &lt;PoerptyType&gt;
- * &lt;propertyName&gt;)}</li>
+ * {@code public void set<PropertyName>(int n, <PoerptyType> <propertyName>)}</li>
  * </ul>
  * <h3>bound プロパティ</h3>
  * <p>
@@ -117,10 +116,10 @@ import org.seasar.aptina.beans.internal.BeansProcessor;
  * </p>
  * <ul>
  * <li>
- * {@code public void add&lt;PropertyName&gt;Listener(PropertyChangeListener
+ * {@code public void add<PropertyName>Listener(PropertyChangeListener
  * listener)}</li>
  * <li>
- * {@code public void remove&lt;PropertyName&gt;Listener(PropertyChangeListener
+ * {@code public void remove<PropertyName>Listener(PropertyChangeListener
  * listener)}</li>
  * </ul>
  * <h3>constrained プロパティ</h3>
@@ -147,10 +146,10 @@ import org.seasar.aptina.beans.internal.BeansProcessor;
  * </p>
  * <ul>
  * <li>
- * {@code public void add&lt;PropertyName&gt;Listener(VetoableChangeListener
+ * {@code public void add<PropertyName>Listener(VetoableChangeListener
  * listener)}</li>
  * <li>
- * {@code public void remove&lt;PropertyName&gt;Listener(VetoableChangeListener
+ * {@code public void remove<PropertyName>Listener(VetoableChangeListener
  * listener)}</li>
  * </ul>
  * <h3>コンストラクタ</h3>
