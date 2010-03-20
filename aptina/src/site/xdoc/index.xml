@@ -58,6 +58,32 @@
 
 		<section name="News">
 			<dl>
+				<dt>2010/03/20</dt>
+				<dd>
+					<div>
+						Aptina 1.0.0 をリリースしました． (
+						<a href="downloads.html">ダウンロード</a>
+						) (
+						<a href="changelog.html#a1.0.0">Change Log</a>
+						)
+					</div>
+				</dd>
+				<dt>2010/03/20</dt>
+				<dd>
+					<div>
+						Sandbox を卒業しました．プロジェクトおよび SVN リポジトリの URL が変更になっているのでご注意ください．
+						<dl>
+							<dt>プロジェクトURL</dt>
+							<dd>
+								<a href="http://aptina.seasar.org/">http://aptina.seasar.org/</a>
+							</dd>
+							<dt>SVNリポジトリ</dt>
+							<dd>
+								<a href="https://www.seasar.org/svn/aptina/">https://www.seasar.org/svn/aptina/</a>
+							</dd>
+						</dl>
+					</div>
+				</dd>
 				<dt>2010/02/01</dt>
 				<dd>
 					<div>

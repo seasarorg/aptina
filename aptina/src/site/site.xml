@@ -27,7 +27,7 @@
 			<item name="変更履歴" href="changelog.html" />
 			<item name="メーリングリスト" href="https://ml.seasar.org/mailman/listinfo/seasar-user" />
 			<item name="トラッキング" href="https://www.seasar.org/issues/browse/APTINA" />
-			<item name="SVN リポジトリブラウザ" href="http://svn.seasar.org/browse/?root=sandbox.aptina" />
+			<item name="SVN リポジトリブラウザ" href="http://svn.seasar.org/browse/?root=aptina" />
 		</menu>
 		<menu name="サブプロジェクト">
 			<item name="Aptina Unit" href="aptina-unit/index.html" />

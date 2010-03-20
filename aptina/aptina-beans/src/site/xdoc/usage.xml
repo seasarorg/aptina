@@ -15,7 +15,8 @@
 			<p>
 				<code>BeansProcessor</code>
 				は，Eclipse など Pluggable Annotation Processing に対応した IDE や，
-				Maven などのコマンドラインツールなどで使用できます．
+				Maven
+				などのコマンドラインツールなどで使用できます．
 			</p>
 		</section>
 
@@ -40,15 +41,33 @@
 					</ul>
 				</li>
 			</ul>
+			<p>
+				Aptina Beans の Jar ファイルは
+				<a href="../downloads.html">こちら</a>
+				からダウンロードしてください．
+			</p>
 		</section>
 
 		<section name="Maven での使い方">
 			<p>
 				Maven を Java6 以降で実行する必要があります．
+			</p>
+			<p>
+				pom.xml に Seasar プロジェクトの Maven リポジトリを追加します．
+			</p>
+			<source><![CDATA[
+<repositories>
+  <repository>
+    <id>maven.seasar.org</id>
+    <name>The Seasar Foundation Maven2 Repository</name>
+    <url>http://maven.seasar.org/maven2</url>
+  </repository>
+</repositories>
+]]></source>
+			<p>
 				maven-compiler-plugin のコンパイラ引数に
 				<code>-XprintProcessorInfo</code>
-				を追加し，
-				依存ライブラリに Aptina Beans を追加してください．
+				を追加します．
 			</p>
 			<source><![CDATA[
 <build>
@@ -67,6 +86,9 @@
   </pluginManagement>
 </build>
 ]]></source>
+			<p>
+				依存ライブラリに Aptina Beans を追加します．
+			</p>
 			<source><![CDATA[
 <dependency>
   <groupId>org.seasar.aptina</groupId>
@@ -85,6 +107,11 @@
 			<source><![CDATA[
 javac -classpath aptina-beans-x.y.z.jar ...
 ]]></source>
+			<p>
+				Aptina Beans の Jar ファイルは
+				<a href="../downloads.html">こちら</a>
+				からダウンロードしてください．
+			</p>
 		</section>
 	</body>
 </document>

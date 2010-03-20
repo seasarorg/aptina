@@ -5,6 +5,14 @@
 		<title>変更履歴</title>
 	</properties>
 	<body>
+		<section name="1.0.0">
+			<subsection name="変更内容">
+				<p>
+					0.0.1からの変更点はありません．
+				</p>
+			</subsection>
+		</section>
+
 		<section name="0.0.1">
 			<subsection name="変更内容">
 				<p>

@@ -18,6 +18,46 @@
 			</p>
 		</section>
 
+		<section name="Usage">
+			<p>
+				Aptina Unit は，Aptina Unit の Jar ファイルをクラスパスに設定するだけで使うことができます．
+			</p>
+			<p>
+				Aptina Unit の Jar ファイルは
+				<a href="../downloads.html">こちら</a>
+				からダウンロードしてください．
+			</p>
+
+			<subsection name="Maven での使い方">
+				<p>
+					Maven を Java6 以降で実行する必要があります．
+			</p>
+				<p>
+					pom.xml に Seasar プロジェクトの Maven リポジトリを追加します．
+			</p>
+				<source><![CDATA[
+<repositories>
+  <repository>
+    <id>maven.seasar.org</id>
+    <name>The Seasar Foundation Maven2 Repository</name>
+    <url>http://maven.seasar.org/maven2</url>
+  </repository>
+</repositories>
+]]></source>
+				<p>
+					依存ライブラリに Aptina Unit を追加します．
+			</p>
+				<source><![CDATA[
+<dependency>
+  <groupId>org.seasar.aptina</groupId>
+  <artifactId>aptina-unit</artifactId>
+  <version>x.y.z</version>
+  <scope>test</scope>
+</dependency>
+]]></source>
+			</subsection>
+		</section>
+
 		<section name="AptinaTestCase">
 			<p>
 				<strong>
@@ -79,7 +119,16 @@ public class TestProcessorTest extends AptinaTestCase {
 }
 ]]></source>
 			<p>
+				テスト対象の Annotation Processor が生成する Java ソースやリソースは，
+				ファイルシステム上ではなくメモリ上に作成されます．
+				<code>AptinaTestCase</code>
+				は，生成された Java ソースやリソースの内容を取得するメソッドや，
+				内容を検証する assert メソッドも提供します．
+			</p>
+			<p>
 				詳細は
+				<code>AptinaTestCase</code>
+				の
 				<a href="apidocs/index.html">Javadoc</a>
 				を参照してください．
 			</p>
